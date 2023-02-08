@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -50,7 +50,7 @@ public class board implements Initializable {
     private Button button9;
 
     @FXML
-    private Text winnerText;
+    private Label winnerText;
 
     private int playerTurn = 0;
 
@@ -77,7 +77,7 @@ public class board implements Initializable {
         button.setDisable(false);
         button.setText("");
     }
-    //      how to pass information in between controllers
+    
 
    
     public void backtoMenu(ActionEvent event) throws IOException{
@@ -121,6 +121,7 @@ public class board implements Initializable {
         }
         if(count ==9)
         {
+            
             winnerText.setText("game over");
         }
  

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.board">
+<AnchorPane id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" stylesheets="file:src/css/board.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.board">
    <children>
       <FlowPane layoutX="268.0" layoutY="263.0" prefHeight="375.0" prefWidth="375.0">
          <children>
@@ -20,13 +20,18 @@
             <Button fx:id="button8" layoutX="10.0" layoutY="160.0" mnemonicParsing="false" prefHeight="125.0" prefWidth="125.0" />
             <Button fx:id="button9" layoutX="85.0" layoutY="160.0" mnemonicParsing="false" prefHeight="125.0" prefWidth="125.0" />
          </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </FlowPane>
-      <Text fx:id="winnerText" layoutX="337.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic-Tac-Toe" textAlignment="CENTER" wrappingWidth="237.9443359375">
-         <font>
-            <Font size="39.0" />
-         </font>
-      </Text>
-      <Button layoutX="287.0" layoutY="680.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="50.0" prefWidth="100.0" text="Play again" />
-      <Button layoutX="525.0" layoutY="680.0" mnemonicParsing="false" onAction="#backtoMenu" prefHeight="50.0" prefWidth="100.0" text="Exit to menu" />
+      <Button id="functionButtons" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Play again">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Button id="functionButtons" layoutX="643.0" layoutY="718.0" mnemonicParsing="false" onAction="#backtoMenu" prefHeight="75.0" prefWidth="150.0" text="Exit to menu" textAlignment="CENTER" wrapText="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Label id="titleText" fx:id="winnerText" alignment="CENTER" layoutX="136.0" layoutY="103.0" prefHeight="110.0" prefWidth="639.0" text="Goated with the Sauce" textAlignment="CENTER" />
    </children>
 </AnchorPane>

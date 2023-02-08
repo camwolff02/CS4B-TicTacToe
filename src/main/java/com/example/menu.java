@@ -56,10 +56,7 @@ public class menu {
         // stage.setScene(scene);
         // stage.show();
     // }
-    @FXML
-    private void switchToSecondary() throws IOException {
-        App.setRoot("menu");
-    }
+   
 
     @FXML
     private Button btn1;
