@@ -36,7 +36,13 @@ public class menu {
 
     public void twoPlayerButton(ActionEvent event) throws IOException
     {
-        root  = FXMLLoader.load(getClass().getResource("playerselection.fxml"));
+        //root  = FXMLLoader.load(getClass().getResource("playerselection.fxml"));
+        //EXAMPLE HOW TO PERSIST DATA THROUGH controllers
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("playerselection.fxml"));
+        root = loader.load();
+        playerselection playerselection = loader.getController();
+        playerselection.initAvatar();
+        //-----------------------------------------------------
         stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

@@ -37,6 +37,8 @@ public class playerselection {
     private Image player2Avatar;
     private String player1Name;
     private String player2Name;
+    private int p1arraylocation = 0;
+    private int p2arraylocation = 2;
     @FXML
     private TextField player1name;
     @FXML
@@ -60,8 +62,8 @@ public class playerselection {
     {
         //setPlayerName(event);
         
- 
-        initAvatar();
+        
+        
         if(checkAvatar()== false)
         {
             PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
@@ -88,7 +90,7 @@ public class playerselection {
         return true;
     }
 
-    public void initAvatar()throws IOException
+    public void initAvatar()
     {
         images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack));
         player1Avatar= images.get(0);
@@ -97,38 +99,44 @@ public class playerselection {
 
     public void changeAvatar(ActionEvent event)throws IOException
     {
+        
         String p1buttonleft = "Button[id=player1Left, styleClass=button]'<--'";
         String p1buttonright = "Button[id=player1Right, styleClass=button]'-->'";
         String p2buttonleft = "Button[id=player2Left, styleClass=button]'<--'";
         String p2buttonright = "Button[id=player2Right, styleClass=button]'-->'";
         String button = event.getSource().toString();
-        int p1arraylocation = 0;
-        int p2arraylocation = 2;
-
+  
+        // System.out.println(button);
+        // System.out.println(p1buttonleft);
+        // if(p1buttonleft.equals(button))
+        // {
+        //     System.out.println("They are equal");
+        // }else{
+        //     System.out.println("They are not equal");
+        // }
         // button1left.substring(button1left.length()-3,button1left.length());
-        System.out.print(button);
-
-        if(button == p1buttonleft ){
-            player1Avatar = images.get(p1arraylocation-1);
+            System.out.print(images.size());
+        if(p1buttonleft.equals(button) && p1arraylocation != (images.size()-images.size())){
+            player1Avatar = images.get(p1arraylocation-=1);
             player1Image.setImage(player1Avatar);
             System.out.print("1st loop");
         }
-        else if(button == p1buttonright){
-            player1Avatar = images.get(p1arraylocation+1);
+        else if(p1buttonright.equals(button)&& p1arraylocation != (images.size()-1)){
+            player1Avatar = images.get(p1arraylocation+=1);
             player1Image.setImage(player1Avatar);
             System.out.print("secondloop");
         }
-        else if(button == p2buttonleft){
-            player2Avatar = images.get(p2arraylocation-1);
+        else if(p2buttonleft.equals(button)&& p2arraylocation != (images.size()-images.size())){
+            player2Avatar = images.get(p2arraylocation-=1);
             player2Image.setImage(player2Avatar);
             System.out.print("sthree");
         }
-        else if(button == p2buttonright){
-            player2Avatar = images.get(p2arraylocation+1);
+        else if(p2buttonright.equals(button)&& p2arraylocation !=(images.size()-1)){
+            player2Avatar = images.get(p2arraylocation+=1);
             player2Image.setImage(player2Avatar);
             System.out.print("4 loop");
         }
-        System.out.println("Sugma");
+        
 
     }
     public void setPlayerName(ActionEvent event)throws IOException
