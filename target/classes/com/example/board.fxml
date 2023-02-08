@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
@@ -21,12 +23,17 @@
             <Button fx:id="button9" layoutX="85.0" layoutY="160.0" mnemonicParsing="false" prefHeight="125.0" prefWidth="125.0" />
          </children>
       </FlowPane>
-      <Text fx:id="winnerText" layoutX="337.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic-Tac-Toe" textAlignment="CENTER" wrappingWidth="237.9443359375">
+      <Text fx:id="winnerText" layoutX="292.0" layoutY="231.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tic-Tac-Toe" textAlignment="CENTER" wrappingWidth="327.9443359375">
          <font>
             <Font size="39.0" />
          </font>
       </Text>
       <Button layoutX="287.0" layoutY="680.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="50.0" prefWidth="100.0" text="Play again" />
       <Button layoutX="525.0" layoutY="680.0" mnemonicParsing="false" onAction="#backtoMenu" prefHeight="50.0" prefWidth="100.0" text="Exit to menu" />
+      <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="381.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../../../../src/images/gigachad.png" />
+         </image>
+      </ImageView>
    </children>
 </AnchorPane>

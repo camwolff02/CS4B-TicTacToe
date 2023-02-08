@@ -55,11 +55,23 @@ public class board implements Initializable {
     private int playerTurn = 0;
 
     ArrayList<Button> buttons;
+    
+    Data data1 = Data.getInstance();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
+
+        if(playerTurn == 0)
+        {
+            winnerText.setText(data1.getPlayer1Name() + "'s turn");
+        }
+        else
+        {
+            winnerText.setText(data1.getPlayer2Name() + "'s turn");
+        }
 
         buttons.forEach(button ->{
             setupButton(button);
@@ -94,6 +106,14 @@ public class board implements Initializable {
         button.setOnMouseClicked(mouseEvent -> {
             setPlayerSymbol(button);
             button.setDisable(true);
+            if(playerTurn == 0)
+            {
+                winnerText.setText(data1.getPlayer1Name() + "'s turn");
+            }
+            else
+            {
+                winnerText.setText(data1.getPlayer2Name() + "'s turn");
+            }
             checkIfGameIsOver();
         });
     }

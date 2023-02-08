@@ -10,7 +10,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.InputMethodEvent;
 import javafx.stage.Stage;
 
 public class playerselection {
@@ -29,6 +31,14 @@ public class playerselection {
     @FXML
     private Image jack     = new Image("file:src/images/jackhorner.jpg");
     ArrayList<Image> images ;
+    
+    @FXML
+    private TextField player1Text;
+    @FXML
+    private TextField player2Text;
+
+    Data data1 = Data.getInstance();
+    
     private Image player1Avatar;
     private Image player2Avatar;
     private String player1Name;
@@ -54,7 +64,11 @@ public class playerselection {
         }
         else if(checkName() == false)
         {
-            PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
+            PopupWindow.display("Unable to Start", "Players must have different names to start.");
+        }
+        else if(checkNameSize() == false)
+        {
+            PopupWindow.display("Unable to Start", "Players must be less than 15 characters.");
         }
         else
         {
@@ -77,14 +91,39 @@ public class playerselection {
         return true;
     }
 
-    public boolean checkName()throws IOException
+    public boolean checkNameSize()throws IOException
     {
-        if(player1Name ==null || player2Name == null)
+        if(player1Name.length() > 15 || player2Name.length() > 15)
         {
             //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
             return false;
         }
         return true;
+    }
+
+    public boolean checkName()throws IOException
+    {
+        if(player1Name.equals(player2Name))
+        {
+            //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
+            return false;
+        }
+        return true;
+    }
+
+    public void checkNull()throws IOException
+    {
+
+        if(player1Text.getText() == "")
+        {
+            player1Text.setText("Player 1");
+        }
+
+        if(player2Text.getText() == "")
+        {
+            player2Text.setText("Player 2");
+        }
+
     }
 
     public void initAvatar()throws IOException
@@ -101,7 +140,11 @@ public class playerselection {
 
     public void setPlayerName() throws IOException
     {
-        player1Name = "BIg JOE";
-        player2Name = "qwerty";
+        checkNull();
+        player1Name = player1Text.getText();
+        player2Name =  player2Text.getText();
+
+        data1.setPlayerNames(player1Name, player2Name);
     }
+
 }
