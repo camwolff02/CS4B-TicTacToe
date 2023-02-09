@@ -110,7 +110,8 @@ public class board implements Initializable {
 
     public void resetButton(Button button){
         button.setDisable(false);
-        button.setText("");
+        ImageView view = new ImageView();
+        button.setGraphic(view);
     }
     
 
