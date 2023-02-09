@@ -115,26 +115,26 @@ public class playerselection {
         //     System.out.println("They are not equal");
         // }
         // button1left.substring(button1left.length()-3,button1left.length());
-            System.out.print(images.size());
+            
         if(p1buttonleft.equals(button) && p1arraylocation != (images.size()-images.size())){
             player1Avatar = images.get(p1arraylocation-=1);
             player1Image.setImage(player1Avatar);
-            System.out.print("1st loop");
+            
         }
         else if(p1buttonright.equals(button)&& p1arraylocation != (images.size()-1)){
             player1Avatar = images.get(p1arraylocation+=1);
             player1Image.setImage(player1Avatar);
-            System.out.print("secondloop");
+            
         }
         else if(p2buttonleft.equals(button)&& p2arraylocation != (images.size()-images.size())){
             player2Avatar = images.get(p2arraylocation-=1);
             player2Image.setImage(player2Avatar);
-            System.out.print("sthree");
+            
         }
         else if(p2buttonright.equals(button)&& p2arraylocation !=(images.size()-1)){
             player2Avatar = images.get(p2arraylocation+=1);
             player2Image.setImage(player2Avatar);
-            System.out.print("4 loop");
+        
         }
         
 
