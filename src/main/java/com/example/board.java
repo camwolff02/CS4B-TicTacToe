@@ -176,7 +176,7 @@ public class board implements Initializable {
         if(count ==9)
         {
             
-            winnerText.setText("game over");
+            winnerText.setText("Game over\n\nTie game");
         }
  
 
