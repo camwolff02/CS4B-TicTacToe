@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -52,6 +53,9 @@ public class board implements Initializable {
     @FXML
     private Label winnerText;
 
+    @FXML 
+    private ImageView playerImage;
+
     private int playerTurn = 0;
 
     ArrayList<Button> buttons;
@@ -66,10 +70,13 @@ public class board implements Initializable {
         if(playerTurn == 0)
         {
             winnerText.setText(data.getP1Name() + "'s turn");
+            playerImage.setImage(data.getP1Avatar());
+
         }
         else
         {
             winnerText.setText(data.getP2Name() + "'s turn");
+            playerImage.setImage(data.getP2Avatar());
         }
 
         buttons.forEach(button ->{
@@ -108,12 +115,14 @@ public class board implements Initializable {
             if(playerTurn == 0)
             {
                 winnerText.setText(data.getP1Name() + "'s turn");
+                playerImage.setImage(data.getP1Avatar());
+    
             }
             else
             {
                 winnerText.setText(data.getP2Name() + "'s turn");
+                playerImage.setImage(data.getP2Avatar());
             }
-    
             checkIfGameIsOver();
         });
     }

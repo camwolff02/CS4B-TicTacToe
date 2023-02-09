@@ -63,6 +63,7 @@ public class playerselection {
     public void startGame(ActionEvent event) throws IOException
     {
         setPlayerName();
+        setAvatar();
         
         
         
@@ -178,6 +179,11 @@ public class playerselection {
         player2Name =  player2name.getText();
 
         data.setPlayerNames(player1Name, player2Name);
+    }
+
+    public void setAvatar()throws IOException
+    {
+        data.setPlayerAvatares(player1Avatar, player2Avatar);
     }
 
 }
