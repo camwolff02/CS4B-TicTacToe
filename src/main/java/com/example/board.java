@@ -150,7 +150,6 @@ public class board implements Initializable {
             ImageView view = new ImageView(data.getP1Avatar());
             view.setFitHeight(80);
             view.setFitWidth(80);
-            view.setPreserveRatio(true);
             button.setGraphic(view);
             playerTurn = 1;
         } else{
