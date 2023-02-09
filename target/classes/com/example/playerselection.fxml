@@ -32,7 +32,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField id="player1Text" fx:id="player1Text" layoutX="135.0" layoutY="458.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0" promptText="Player 1">
+                  <TextField id="textinput" fx:id="player1name" layoutX="98.0" layoutY="456.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#startGame" prefHeight="39.0" prefWidth="250.0" promptText="Default: Player 1">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor></TextField>
@@ -44,7 +44,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="player1Left" layoutX="115.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="&lt;--">
+                  <Button fx:id="player1Left" layoutX="115.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="&lt;--">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -52,7 +52,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="player1Right" layoutX="250.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
+                  <Button fx:id="player1Right" layoutX="250.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -80,11 +80,11 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <TextField id="player2Text" fx:id="player2Text" layoutX="135.0" layoutY="458.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="175.0" promptText="Player 2">
+                  <TextField id="textinput" fx:id="player2name" layoutX="98.0" layoutY="455.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#startGame" prefHeight="39.0" prefWidth="250.0" promptText="Default: Player 2">
                      <cursor>
                         <Cursor fx:constant="TEXT" />
                      </cursor></TextField>
-                  <Button fx:id="player2Left" layoutX="115.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="&lt;--">
+                  <Button fx:id="player2Left" layoutX="115.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="&lt;--">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -92,7 +92,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
-                  <Button fx:id="player2Right" layoutX="250.0" layoutY="315.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
+                  <Button fx:id="player2Right" layoutX="250.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
                      <font>
                         <Font size="18.0" />
                      </font>

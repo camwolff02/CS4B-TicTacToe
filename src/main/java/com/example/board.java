@@ -7,7 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.text.Text;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -50,27 +50,26 @@ public class board implements Initializable {
     private Button button9;
 
     @FXML
-    private Text winnerText;
+    private Label winnerText;
 
     private int playerTurn = 0;
 
     ArrayList<Button> buttons;
-    
-    Data data1 = Data.getInstance();
+
+    playerdata data = playerdata.getInstance();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
 
         if(playerTurn == 0)
         {
-            winnerText.setText(data1.getPlayer1Name() + "'s turn");
+            winnerText.setText(data.getP1Name() + "'s turn");
         }
         else
         {
-            winnerText.setText(data1.getPlayer2Name() + "'s turn");
+            winnerText.setText(data.getP2Name() + "'s turn");
         }
 
         buttons.forEach(button ->{
@@ -89,7 +88,7 @@ public class board implements Initializable {
         button.setDisable(false);
         button.setText("");
     }
-    //      how to pass information in between controllers
+    
 
    
     public void backtoMenu(ActionEvent event) throws IOException{
@@ -108,12 +107,13 @@ public class board implements Initializable {
             button.setDisable(true);
             if(playerTurn == 0)
             {
-                winnerText.setText(data1.getPlayer1Name() + "'s turn");
+                winnerText.setText(data.getP1Name() + "'s turn");
             }
             else
             {
-                winnerText.setText(data1.getPlayer2Name() + "'s turn");
+                winnerText.setText(data.getP2Name() + "'s turn");
             }
+    
             checkIfGameIsOver();
         });
     }
@@ -141,6 +141,7 @@ public class board implements Initializable {
         }
         if(count ==9)
         {
+            
             winnerText.setText("game over");
         }
  

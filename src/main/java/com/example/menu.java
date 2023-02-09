@@ -36,8 +36,16 @@ public class menu {
 
     public void twoPlayerButton(ActionEvent event) throws IOException
     {
-        root  = FXMLLoader.load(getClass().getResource("playerselection.fxml"));
+        //playerdata Playerdata = playerdata.getInstance();
+        //root  = FXMLLoader.load(getClass().getResource("playerselection.fxml"));
+        //EXAMPLE HOW TO PERSIST DATA THROUGH controllers
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("playerselection.fxml"));
+        root = loader.load();
+        playerselection playerselection = loader.getController();
+        playerselection.initAvatar();
+        //-----------------------------------------------------
         stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        // Playerdata.initAvatar();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -56,10 +64,7 @@ public class menu {
         // stage.setScene(scene);
         // stage.show();
     // }
-    @FXML
-    private void switchToSecondary() throws IOException {
-        App.setRoot("menu");
-    }
+   
 
     @FXML
     private Button btn1;

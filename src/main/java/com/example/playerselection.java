@@ -3,6 +3,7 @@ package com.example;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EventListener;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,9 +11,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputMethodEvent;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class playerselection {
@@ -31,18 +33,22 @@ public class playerselection {
     @FXML
     private Image jack     = new Image("file:src/images/jackhorner.jpg");
     ArrayList<Image> images ;
-    
-    @FXML
-    private TextField player1Text;
-    @FXML
-    private TextField player2Text;
-
-    Data data1 = Data.getInstance();
-    
     private Image player1Avatar;
     private Image player2Avatar;
     private String player1Name;
     private String player2Name;
+    private int p1arraylocation = 0;
+    private int p2arraylocation = 2;
+    @FXML
+    private TextField player1name;
+    @FXML
+    private TextField player2name;
+    @FXML 
+    private ImageView player1Image;
+    @FXML 
+    private ImageView player2Image;
+
+    playerdata data = playerdata.getInstance();
     
 
     public void goback(ActionEvent event) throws IOException
@@ -57,7 +63,9 @@ public class playerselection {
     public void startGame(ActionEvent event) throws IOException
     {
         setPlayerName();
-        initAvatar();
+        
+        
+        
         if(checkAvatar()== false)
         {
             PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
@@ -66,12 +74,9 @@ public class playerselection {
         {
             PopupWindow.display("Unable to Start", "Players must have different names to start.");
         }
-        else if(checkNameSize() == false)
-        {
-            PopupWindow.display("Unable to Start", "Players must be less than 15 characters.");
-        }
         else
         {
+            
             root  = FXMLLoader.load(getClass().getResource("board.fxml"));
             stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
             scene = new Scene(root);
@@ -91,14 +96,54 @@ public class playerselection {
         return true;
     }
 
-    public boolean checkNameSize()throws IOException
+    public void initAvatar()
     {
-        if(player1Name.length() > 15 || player2Name.length() > 15)
-        {
-            //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
-            return false;
+        images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack));
+        player1Avatar= images.get(0);
+        player2Avatar = images.get(2);
+    }
+
+    public void changeAvatar(ActionEvent event)throws IOException
+    {
+        
+        String p1buttonleft = "Button[id=player1Left, styleClass=button]'<--'";
+        String p1buttonright = "Button[id=player1Right, styleClass=button]'-->'";
+        String p2buttonleft = "Button[id=player2Left, styleClass=button]'<--'";
+        String p2buttonright = "Button[id=player2Right, styleClass=button]'-->'";
+        String button = event.getSource().toString();
+  
+        // System.out.println(button);
+        // System.out.println(p1buttonleft);
+        // if(p1buttonleft.equals(button))
+        // {
+        //     System.out.println("They are equal");
+        // }else{
+        //     System.out.println("They are not equal");
+        // }
+        // button1left.substring(button1left.length()-3,button1left.length());
+            
+        if(p1buttonleft.equals(button) && p1arraylocation != (images.size()-images.size())){
+            player1Avatar = images.get(p1arraylocation-=1);
+            player1Image.setImage(player1Avatar);
+            
         }
-        return true;
+        else if(p1buttonright.equals(button)&& p1arraylocation != (images.size()-1)){
+            player1Avatar = images.get(p1arraylocation+=1);
+            player1Image.setImage(player1Avatar);
+            
+        }
+        else if(p2buttonleft.equals(button)&& p2arraylocation != (images.size()-images.size())){
+            player2Avatar = images.get(p2arraylocation-=1);
+            player2Image.setImage(player2Avatar);
+            
+        }
+        else if(p2buttonright.equals(button)&& p2arraylocation !=(images.size()-1)){
+            player2Avatar = images.get(p2arraylocation+=1);
+            player2Image.setImage(player2Avatar);
+        
+        }
+        
+        
     }
 
     public boolean checkName()throws IOException
@@ -114,37 +159,25 @@ public class playerselection {
     public void checkNull()throws IOException
     {
 
-        if(player1Text.getText() == "")
+        if(player1name.getText() == "")
         {
-            player1Text.setText("Player 1");
+            player1name.setText("Player 1");
         }
 
-        if(player2Text.getText() == "")
+        if(player2name.getText() == "")
         {
-            player2Text.setText("Player 2");
+            player2name.setText("Player 2");
         }
 
     }
 
-    public void initAvatar()throws IOException
-    {
-        images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack));
-        player1Avatar= images.get(0);
-        player2Avatar = images.get(2);
-    }
-
-    public void changeAvatar(ActionEvent event)throws IOException
-    {
-
-    }
-
-    public void setPlayerName() throws IOException
+    public void setPlayerName()throws IOException
     {
         checkNull();
-        player1Name = player1Text.getText();
-        player2Name =  player2Text.getText();
+        player1Name = player1name.getText();
+        player2Name =  player2name.getText();
 
-        data1.setPlayerNames(player1Name, player2Name);
+        data.setPlayerNames(player1Name, player2Name);
     }
 
 }
