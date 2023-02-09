@@ -55,12 +55,16 @@ public class board implements Initializable {
 
     @FXML 
     private ImageView playerImage;
+    
 
     private int playerTurn = 0;
 
+    ArrayList<ImageView> imageButtons;
     ArrayList<Button> buttons;
 
     playerdata data = playerdata.getInstance();
+
+    ImageView view;
 
 
     @Override
@@ -83,12 +87,25 @@ public class board implements Initializable {
             setupButton(button);
             button.setFocusTraversable(false);
         });
+        
     }
 
     @FXML
     void restartGame(ActionEvent event) {
         buttons.forEach(this::resetButton);
         winnerText.setText("Tic-Tac-Toe");
+        playerTurn = 0;
+        if(playerTurn == 0)
+        {
+            winnerText.setText(data.getP1Name() + "'s turn");
+            playerImage.setImage(data.getP1Avatar());
+
+        }
+        else
+        {
+            winnerText.setText(data.getP2Name() + "'s turn");
+            playerImage.setImage(data.getP2Avatar());
+        }
     }
 
     public void resetButton(Button button){
@@ -112,6 +129,7 @@ public class board implements Initializable {
         button.setOnMouseClicked(mouseEvent -> {
             setPlayerSymbol(button);
             button.setDisable(true);
+            
             if(playerTurn == 0)
             {
                 winnerText.setText(data.getP1Name() + "'s turn");
@@ -129,10 +147,17 @@ public class board implements Initializable {
 
     public void setPlayerSymbol(Button button){
         if(playerTurn % 2 == 0){
-            button.setText("X");
+            ImageView view = new ImageView(data.getP1Avatar());
+            view.setFitHeight(80);
+            view.setFitWidth(80);
+            view.setPreserveRatio(true);
+            button.setGraphic(view);
             playerTurn = 1;
         } else{
-            button.setText("O");
+            ImageView view = new ImageView(data.getP2Avatar());
+            view.setFitHeight(80);
+            view.setFitWidth(80);
+            button.setGraphic(view);
             playerTurn = 0;
         }
     }

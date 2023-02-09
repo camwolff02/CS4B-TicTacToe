@@ -132,12 +132,30 @@ public class playerselection {
                     player1Avatar = images.get(p1arraylocation-=2);
                     player1Image.setImage(player1Avatar);
                 }
+                else
+                {
+                    player1Avatar = images.get(p1arraylocation=+images.size()-1);
+                    player1Image.setImage(player1Avatar);
+                }
             }
             else{
                 player1Avatar = images.get(p1arraylocation-=1);
                 player1Image.setImage(player1Avatar);
             }
             
+        }
+        else if(p1buttonleft.equals(button) && p1arraylocation == (images.size()-images.size()))
+        {
+            if(p2arraylocation != images.size()-1)
+            {
+                player1Avatar = images.get(p1arraylocation=+images.size()-1);
+                player1Image.setImage(player1Avatar);
+            }
+            else
+            {
+                player1Avatar = images.get(p1arraylocation=+images.size()-2);
+                player1Image.setImage(player1Avatar);
+            }
         }
         else if(p1buttonright.equals(button)&& p1arraylocation != (images.size()-1)){
 
@@ -148,12 +166,30 @@ public class playerselection {
                     player1Avatar = images.get(p1arraylocation+=2);
                     player1Image.setImage(player1Avatar);
                 }
+                else
+                {
+                    player1Avatar = images.get(p1arraylocation=images.size() - images.size());
+                    player1Image.setImage(player1Avatar);
+                }
             }
             else{
                 player1Avatar = images.get(p1arraylocation+=1);
                 player1Image.setImage(player1Avatar);
             }
             
+        }
+        else if(p1buttonright.equals(button) && p1arraylocation == (images.size()-1))
+        {
+            if(p2arraylocation != images.size() - images.size())
+            {
+                player1Avatar = images.get(p1arraylocation=images.size() - images.size());
+                player1Image.setImage(player1Avatar);
+            }
+            else
+            {
+                player1Avatar = images.get(p1arraylocation=images.size() - images.size()+1);
+                player1Image.setImage(player1Avatar);
+            }
         }
         else if(p2buttonleft.equals(button)&& p2arraylocation != (images.size()-images.size())){
 
@@ -164,12 +200,30 @@ public class playerselection {
                     player2Avatar = images.get(p2arraylocation-=2);
                     player2Image.setImage(player2Avatar);
                 }
+                else
+                {
+                    player2Avatar = images.get(p2arraylocation=+images.size()-1);
+                    player2Image.setImage(player2Avatar);
+                }
             }
             else{
                 player2Avatar = images.get(p2arraylocation-=1);
                 player2Image.setImage(player2Avatar);
             }
             
+        }
+        else if(p2buttonleft.equals(button) && p2arraylocation == (images.size()-images.size()))
+        {
+            if(p1arraylocation != images.size()-1)
+            {
+                player2Avatar = images.get(p2arraylocation=+images.size()-1);
+                player2Image.setImage(player2Avatar);
+            }
+            else
+            {
+                player2Avatar = images.get(p2arraylocation=+images.size()-2);
+                player2Image.setImage(player2Avatar);
+            }
         }
         else if(p2buttonright.equals(button)&& p2arraylocation !=(images.size()-1)){
 
@@ -180,12 +234,30 @@ public class playerselection {
                     player2Avatar = images.get(p2arraylocation+=2);
                     player2Image.setImage(player2Avatar);
                 }
+                else
+                {
+                    player2Avatar = images.get(p2arraylocation=images.size() - images.size());
+                    player2Image.setImage(player2Avatar);
+                }
             }
             else{
                 player2Avatar = images.get(p2arraylocation+=1);
                 player2Image.setImage(player2Avatar);
             }
 
+        }
+        else if(p2buttonright.equals(button) && p2arraylocation == (images.size()-1))
+        {
+            if(p1arraylocation != images.size() - images.size())
+            {
+                player2Avatar = images.get(p2arraylocation=images.size() - images.size());
+                player2Image.setImage(player2Avatar);
+            }
+            else
+            {
+                player2Avatar = images.get(p2arraylocation=images.size() - images.size()+1);
+                player2Image.setImage(player2Avatar);
+            }
         }
         
     }
