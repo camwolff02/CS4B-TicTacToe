@@ -104,163 +104,58 @@ public class playerselection {
         player2Avatar = images.get(2);
     }
 
-    public void changeAvatar(ActionEvent event)throws IOException
-    {
-        
-        String p1buttonleft = "Button[id=player1Left, styleClass=button]'<--'";
-        String p1buttonright = "Button[id=player1Right, styleClass=button]'-->'";
-        String p2buttonleft = "Button[id=player2Left, styleClass=button]'<--'";
-        String p2buttonright = "Button[id=player2Right, styleClass=button]'-->'";
+    public void changeAvatar(ActionEvent event) throws IOException {
+        String p1Left = "Button[id=player1Left, styleClass=button]'<--'";
+        String p1Right = "Button[id=player1Right, styleClass=button]'-->'";
+        String p2Left = "Button[id=player2Left, styleClass=button]'<--'";
+        String p2Right = "Button[id=player2Right, styleClass=button]'-->'";
         String button = event.getSource().toString();
-  
-        // System.out.println(button);
-        // System.out.println(p1buttonleft);
-        // if(p1buttonleft.equals(button))
-        // {
-        //     System.out.println("They are equal");
-        // }else{
-        //     System.out.println("They are not equal");
-        // }
-        // button1left.substring(button1left.length()-3,button1left.length());
-            
-        if(p1buttonleft.equals(button) && p1arraylocation != (images.size()-images.size())){
-
-            if(p1arraylocation-1 == p2arraylocation)
-            {
-                if(p1arraylocation-1 != (images.size()-images.size()))
-                {
-                    player1Avatar = images.get(p1arraylocation-=2);
-                    player1Image.setImage(player1Avatar);
-                }
-                else
-                {
-                    player1Avatar = images.get(p1arraylocation=+images.size()-1);
-                    player1Image.setImage(player1Avatar);
-                }
-            }
-            else{
-                player1Avatar = images.get(p1arraylocation-=1);
-                player1Image.setImage(player1Avatar);
-            }
-            
+        int imgCount = images.size();
+        
+        boolean isP1Left = p1Left.equals(button);
+        boolean isP1Right = p1Right.equals(button);
+        boolean isP2Left = p2Left.equals(button);
+        boolean isP2Right = p2Right.equals(button);
+    
+        ImageView playerImage = null;
+        int arrayLocation = 0;
+        if (isP1Left || isP1Right) {
+            playerImage = player1Image;
+            arrayLocation = p1arraylocation;
+        } else if (isP2Left || isP2Right) {
+            playerImage = player2Image;
+            arrayLocation = p2arraylocation;
         }
-        else if(p1buttonleft.equals(button) && p1arraylocation == (images.size()-images.size()))
-        {
-            if(p2arraylocation != images.size()-1)
-            {
-                player1Avatar = images.get(p1arraylocation=+images.size()-1);
-                player1Image.setImage(player1Avatar);
-            }
-            else
-            {
-                player1Avatar = images.get(p1arraylocation=+images.size()-2);
-                player1Image.setImage(player1Avatar);
-            }
-        }
-        else if(p1buttonright.equals(button)&& p1arraylocation != (images.size()-1)){
-
-            if(p1arraylocation+1 == p2arraylocation)
-            {
-                if(p1arraylocation+1 != (images.size()-1))
-                {
-                    player1Avatar = images.get(p1arraylocation+=2);
-                    player1Image.setImage(player1Avatar);
-                }
-                else
-                {
-                    player1Avatar = images.get(p1arraylocation=images.size() - images.size());
-                    player1Image.setImage(player1Avatar);
-                }
-            }
-            else{
-                player1Avatar = images.get(p1arraylocation+=1);
-                player1Image.setImage(player1Avatar);
-            }
-            
-        }
-        else if(p1buttonright.equals(button) && p1arraylocation == (images.size()-1))
-        {
-            if(p2arraylocation != images.size() - images.size())
-            {
-                player1Avatar = images.get(p1arraylocation=images.size() - images.size());
-                player1Image.setImage(player1Avatar);
-            }
-            else
-            {
-                player1Avatar = images.get(p1arraylocation=images.size() - images.size()+1);
-                player1Image.setImage(player1Avatar);
-            }
-        }
-        else if(p2buttonleft.equals(button)&& p2arraylocation != (images.size()-images.size())){
-
-            if(p2arraylocation-1 == p1arraylocation)
-            {
-                if(p2arraylocation-1 != (images.size()-images.size()))
-                {
-                    player2Avatar = images.get(p2arraylocation-=2);
-                    player2Image.setImage(player2Avatar);
-                }
-                else
-                {
-                    player2Avatar = images.get(p2arraylocation=+images.size()-1);
-                    player2Image.setImage(player2Avatar);
-                }
-            }
-            else{
-                player2Avatar = images.get(p2arraylocation-=1);
-                player2Image.setImage(player2Avatar);
-            }
-            
-        }
-        else if(p2buttonleft.equals(button) && p2arraylocation == (images.size()-images.size()))
-        {
-            if(p1arraylocation != images.size()-1)
-            {
-                player2Avatar = images.get(p2arraylocation=+images.size()-1);
-                player2Image.setImage(player2Avatar);
-            }
-            else
-            {
-                player2Avatar = images.get(p2arraylocation=+images.size()-2);
-                player2Image.setImage(player2Avatar);
-            }
-        }
-        else if(p2buttonright.equals(button)&& p2arraylocation !=(images.size()-1)){
-
-            if(p2arraylocation+1 == p1arraylocation)
-            {
-                if(p2arraylocation+1 !=(images.size()-1))
-                {
-                    player2Avatar = images.get(p2arraylocation+=2);
-                    player2Image.setImage(player2Avatar);
-                }
-                else
-                {
-                    player2Avatar = images.get(p2arraylocation=images.size() - images.size());
-                    player2Image.setImage(player2Avatar);
-                }
-            }
-            else{
-                player2Avatar = images.get(p2arraylocation+=1);
-                player2Image.setImage(player2Avatar);
-            }
-
-        }
-        else if(p2buttonright.equals(button) && p2arraylocation == (images.size()-1))
-        {
-            if(p1arraylocation != images.size() - images.size())
-            {
-                player2Avatar = images.get(p2arraylocation=images.size() - images.size());
-                player2Image.setImage(player2Avatar);
-            }
-            else
-            {
-                player2Avatar = images.get(p2arraylocation=images.size() - images.size()+1);
-                player2Image.setImage(player2Avatar);
-            }
+    
+        if (playerImage == null) {
+            return;
         }
         
+        int nextIndex = arrayLocation;
+        if (isP1Left || isP2Left) {
+            nextIndex = (arrayLocation - 1 + imgCount) % imgCount;
+            if (nextIndex == p2arraylocation || nextIndex == p1arraylocation) {
+                nextIndex = (arrayLocation - 2 + imgCount) % imgCount;
+            }
+        } else if (isP1Right || isP2Right) {
+            nextIndex = (arrayLocation + 1) % imgCount;
+            if (nextIndex == p2arraylocation || nextIndex == p1arraylocation) {
+                nextIndex = (arrayLocation + 2) % imgCount;
+            }
+        }
+    
+        if (isP1Left || isP1Right) {
+            p1arraylocation = nextIndex;
+            player1Avatar = images.get(p1arraylocation);
+        } else if (isP2Left || isP2Right) {
+            p2arraylocation = nextIndex;
+            player2Avatar = images.get(p2arraylocation);
+        }
+
+        player1Image.setImage(player1Avatar);
+        player2Image.setImage(player2Avatar);
     }
+    
 
     public boolean checkName()throws IOException
     {
