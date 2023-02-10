@@ -105,13 +105,15 @@ public class playerselection {
     }
 
     public void changeAvatar(ActionEvent event) throws IOException {
+        // strings representing the left and right buttons for both players
         String p1Left = "Button[id=player1Left, styleClass=button]'<--'";
         String p1Right = "Button[id=player1Right, styleClass=button]'-->'";
         String p2Left = "Button[id=player2Left, styleClass=button]'<--'";
         String p2Right = "Button[id=player2Right, styleClass=button]'-->'";
         String button = event.getSource().toString();
         int imgCount = images.size();
-        
+    
+        // check which button was pressed
         boolean isP1Left = p1Left.equals(button);
         boolean isP1Right = p1Right.equals(button);
         boolean isP2Left = p2Left.equals(button);
@@ -119,6 +121,7 @@ public class playerselection {
     
         ImageView playerImage = null;
         int arrayLocation = 0;
+        // determine which player's avatar needs to be changed
         if (isP1Left || isP1Right) {
             playerImage = player1Image;
             arrayLocation = p1arraylocation;
@@ -127,11 +130,13 @@ public class playerselection {
             arrayLocation = p2arraylocation;
         }
     
+        // return if no player's avatar needs to be changed
         if (playerImage == null) {
             return;
         }
-        
+    
         int nextIndex = arrayLocation;
+        // calculate the next index based on the button that was pressed
         if (isP1Left || isP2Left) {
             nextIndex = (arrayLocation - 1 + imgCount) % imgCount;
             if (nextIndex == p2arraylocation || nextIndex == p1arraylocation) {
@@ -144,6 +149,7 @@ public class playerselection {
             }
         }
     
+        // update the player's avatar
         if (isP1Left || isP1Right) {
             p1arraylocation = nextIndex;
             player1Avatar = images.get(p1arraylocation);
@@ -151,12 +157,12 @@ public class playerselection {
             p2arraylocation = nextIndex;
             player2Avatar = images.get(p2arraylocation);
         }
-
+    
+        // set the updated avatar images
         player1Image.setImage(player1Avatar);
         player2Image.setImage(player2Avatar);
-    }
+    }    
     
-
     public boolean checkName()throws IOException
     {
         if(player1Name.equals(player2Name))
