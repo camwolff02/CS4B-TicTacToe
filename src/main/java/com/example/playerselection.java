@@ -32,6 +32,10 @@ public class playerselection {
     private Image pika     = new Image("file:src/images/pika.jpg");
     @FXML
     private Image jack     = new Image("file:src/images/jackhorner.jpg");
+    @FXML
+    private Image bubble     = new Image("file:src/images/xbox360Bubble.jpg");
+    @FXML
+    private Image monkey     = new Image("file:src/images/xbox360Monkey.jpg");
     ArrayList<Image> images ;
     private Image player1Avatar;
     private Image player2Avatar;
@@ -99,7 +103,7 @@ public class playerselection {
 
     public void initAvatar()
     {
-        images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack));
+        images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack, bubble, monkey));
         player1Avatar= images.get(0);
         player2Avatar = images.get(2);
     }
