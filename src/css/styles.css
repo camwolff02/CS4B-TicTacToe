@@ -10,8 +10,8 @@
 
 
 #anchor {
-    -fx-background-color: #20262E;
-    background-color: #20262E;
+    -fx-background-color: #2a313a;
+    background-color: #2a313a;
 }
 
 .label{
@@ -38,7 +38,7 @@
 .button:hover{
     -fx-font: 12px "Public Pixel";
     font: 12px "Public Pixel";
-    -fx-text-fill: #20262E;
+    -fx-text-fill: #2a313a;
     -fx-background-radius: 0;
     -fx-border-style: solid;
     border-style: solid;

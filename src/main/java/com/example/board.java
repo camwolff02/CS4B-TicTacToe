@@ -51,6 +51,9 @@ public class board implements Initializable {
     private Button button9;
 
     @FXML
+    private Button playAgain;
+
+    @FXML
     private Label winnerText;
 
     @FXML 
@@ -70,6 +73,8 @@ public class board implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
+
+        playAgain.setDisable(true);
 
         if(playerTurn == 0)
         {
@@ -92,6 +97,7 @@ public class board implements Initializable {
 
     @FXML
     void restartGame(ActionEvent event) {
+        playAgain.setDisable(true);
         buttons.forEach(this::resetButton);
         winnerText.setText("Tic-Tac-Toe");
         playerTurn = 0;
@@ -122,6 +128,7 @@ public class board implements Initializable {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
 
     }
@@ -177,6 +184,7 @@ public class board implements Initializable {
         {
             
             winnerText.setText("Game over\n\nTie game");
+            playAgain.setDisable(false);
         }
  
 

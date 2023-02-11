@@ -22,20 +22,20 @@ public class playerselection {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    @FXML
-    private Image gigachad = new Image("file:src/images/gigachad.png");
-    @FXML
-    private Image soyjack  = new Image("file:src/images/soyjack.png");
-    @FXML
-    private Image mittens  = new Image("file:src/images/mittens.jpg");
-    @FXML
-    private Image pika     = new Image("file:src/images/pika.jpg");
-    @FXML
-    private Image jack     = new Image("file:src/images/jackhorner.jpg");
-    @FXML
-    private Image bubble     = new Image("file:src/images/xbox360Bubble.jpg");
-    @FXML
-    private Image monkey     = new Image("file:src/images/xbox360Monkey.jpg");
+    // @FXML
+    // private Image gigachad = new Image("file:src/images/gigachad.png");
+    // @FXML
+    // private Image soyjack  = new Image("file:src/images/soyjack.png");
+    // @FXML
+    // private Image mittens  = new Image("file:src/images/mittens.jpg");
+    // @FXML
+    // private Image pika     = new Image("file:src/images/pika.jpg");
+    // @FXML
+    // private Image jack     = new Image("file:src/images/jackhorner.jpg");
+    // @FXML
+    // private Image bubble     = new Image("file:src/images/xbox360Bubble.jpg");
+    // @FXML
+    // private Image monkey     = new Image("file:src/images/xbox360Monkey.jpg");
     ArrayList<Image> images ;
     private Image player1Avatar;
     private Image player2Avatar;
@@ -61,6 +61,7 @@ public class playerselection {
         stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
 
@@ -86,6 +87,7 @@ public class playerselection {
             stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
+            stage.centerOnScreen();
             stage.show();
         }
       
@@ -103,7 +105,9 @@ public class playerselection {
 
     public void initAvatar()
     {
-        images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack, bubble, monkey));
+        data.initAvatar();
+        images = data.images;
+        // images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack, bubble, monkey));
         player1Avatar= images.get(0);
         player2Avatar = images.get(2);
     }

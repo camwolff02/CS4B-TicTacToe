@@ -26,7 +26,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </FlowPane>
-      <Button id="functionButtons" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Play again">
+      <Button id="functionButtons" fx:id="playAgain" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Play again">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>
