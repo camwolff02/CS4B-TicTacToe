@@ -3,16 +3,27 @@
     src: url(file:src/Fonts/PublicPixel-z84yD.ttf);
 } 
 
-/* .text {
-    -fx-font: 36px "Public Pixel";
-    font: 36px "Public Pixel";
-    -fx-text-fill: #CD5888;
-} */
+#playerXName, #playerOName {
+    -fx-font: 18px "Public Pixel";
+    font: 18px "Public Pixel";
+    -fx-text-fill: #8f3174;
+} 
 
-#titleText{
+#scoreText, #gameStateText {
     -fx-font: 24px "Public Pixel";
     font: 24px "Public Pixel";
+    -fx-text-fill: #8f3174;
+} 
+
+#button1, #button2, #button3, #button4, #button5, #button6, #button7, #button8, #button9 {
+    -fx-font: 45px "Public Pixel";
+    font: 45px "Public Pixel";
     -fx-text-fill: #CD5888;
+}
+#button1:hover, #button2:hover, #button3:hover, #button4:hover, #button5:hover, #button6:hover, #button7:hover, #button8:hover, #button9:hover {
+    -fx-font: 45px "Public Pixel";
+    font: 45px "Public Pixel";
+    -fx-text-fill: #cd588948;
 }
 
 
@@ -21,7 +32,7 @@
     background-color: #20262E;
 }
 
-.button{
+.button, #modeToggle {
     -fx-font: 12px "Public Pixel";
     font: 12px "Public Pixel";
     -fx-background-insets: 0;
@@ -48,5 +59,4 @@
     border-color: #8f3174;
     -fx-border-width: 5px;
     border-width: 5px;
-   
 }
