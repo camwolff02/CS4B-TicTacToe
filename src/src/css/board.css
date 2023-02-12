@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Public Pixel' ;
+    src: url(file:src/Fonts/PublicPixel-z84yD.ttf);
+} 
+
+/* .text {
+    -fx-font: 36px "Public Pixel";
+    font: 36px "Public Pixel";
+    -fx-text-fill: #CD5888;
+} */
+
+#titleText{
+    -fx-font: 24px "Public Pixel";
+    font: 24px "Public Pixel";
+    -fx-text-fill: #CD5888;
+}
+
+
+#anchor {
+    -fx-background-color: #2a313a;
+    background-color: #2a313a;
+}
+
+.button{
+    -fx-font: 12px "Public Pixel";
+    font: 12px "Public Pixel";
+    -fx-background-insets: 0;
+    -fx-text-fill: #CD5888;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    border-style: solid;
+    -fx-border-color: #8f3174;
+    border-color: #8f3174;
+    -fx-border-width: 5px;
+    border-width: 5px;
+    -fx-focus-color: transparent;
+}
+
+
+.button:hover{
+    -fx-font: 12px "Public Pixel";
+    font: 12px "Public Pixel";
+    -fx-text-fill: #2a313a;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    border-style: solid;
+    -fx-border-color: #8f3174;
+    border-color: #8f3174;
+    -fx-border-width: 5px;
+    border-width: 5px;
+   
+}
