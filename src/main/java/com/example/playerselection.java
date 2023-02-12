@@ -1,10 +1,15 @@
 package com.example;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EventListener;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class playerselection {
@@ -53,6 +59,11 @@ public class playerselection {
     private ImageView player2Image;
 
     playerdata data = playerdata.getInstance();
+
+    // using this 
+    private FileChooser fileChooser;
+    private File filePath;
+        
     
 
     public void goback(ActionEvent event) throws IOException
@@ -208,6 +219,48 @@ public class playerselection {
     public void setAvatar()throws IOException
     {
         data.setPlayerAvatares(player1Avatar, player2Avatar);
+    }
+
+     // this function will let the player to upload their own image from their pc
+     public void uploadUserImageButton(ActionEvent event){
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Open image");
+
+        //set to user's directory or go to the default c dirve if don't have the access
+        String userDirectoString = System.getProperty("user.home") + "\\Pictures";
+        File userDirectory = new File(userDirectoString);
+
+        // check it
+        if(!userDirectory.canRead())
+            userDirectory = new File("c:/");
+
+        fileChooser.setInitialDirectory(userDirectory);
+
+        this.filePath = fileChooser.showOpenDialog(stage);
+
+        // update the image by loading the new image
+        try{
+            BufferedImage bufferedImage = ImageIO.read(filePath);
+            Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+
+            // check which user wants to upload image for their avater
+            String uploadAvater1 = "Button[id=UploadAvatarP1], styleClass=button]'Upload P1 Avatar'";
+            String uploadP2Avater = "Button[id=UploadAvatarP2], styleClass=button]'Upload P2 Avatar'";
+            String button = event.getSource().toString();
+
+            if(uploadAvater1== button)
+                player1Image.setImage(image);
+                this.player1Avatar = player1Image.getImage();
+            
+            if(uploadP2Avater == button)
+                player2Image.setImage(image);
+                this.player2Avatar = player2Image.getImage();           
+        } catch(IOException e){
+            System.err.println(e.getMessage());
+        }
+        
     }
 
 }
