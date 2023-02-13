@@ -246,17 +246,17 @@ public class playerselection {
             Image image = SwingFXUtils.toFXImage(bufferedImage, null);
 
             // check which user wants to upload image for their avater
-            String uploadAvater1 = "Button[id=UploadAvatarP1], styleClass=button]'Upload P1 Avatar'";
-            String uploadP2Avater = "Button[id=UploadAvatarP2], styleClass=button]'Upload P2 Avatar'";
+            String uploadP1Avater = "Button[id=UploadAvatarP1, styleClass=button]'Upload Avatar'";
+            String uploadP2Avater = "Button[id=UploadAvatarP2, styleClass=button]'Upload Avatar'";
             String button = event.getSource().toString();
 
-            if(uploadAvater1== button)
+            if(uploadP1Avater.equals(button)){
                 player1Image.setImage(image);
                 this.player1Avatar = player1Image.getImage();
-            
-            if(uploadP2Avater == button)
+            }else if(uploadP2Avater.equals(button)){
                 player2Image.setImage(image);
-                this.player2Avatar = player2Image.getImage();           
+                this.player2Avatar = player2Image.getImage();
+            }           
         } catch(IOException e){
             System.err.println(e.getMessage());
         }
