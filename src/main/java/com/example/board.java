@@ -47,9 +47,9 @@ public class board implements Initializable {
     private Button button9;
    
     @FXML
-    private ImageView playerXpfp;
+    private ImageView xImageViewPfp;
     @FXML
-    private ImageView playerOpfp;
+    private ImageView oImageViewPfp;
     @FXML
     private ImageView gameStateImage;
 
@@ -80,20 +80,20 @@ public class board implements Initializable {
     private ArrayList<Button> buttons;
     private ArrayList<ImageView> images;
 
-    private int xBoardMask = 0b000_000_000;
-    private int oBoardMask = 0b000_000_000;
+    private int xBoardMask;
+    private int oBoardMask;
     private int winningBoardMasks[];
 
-    private boolean playerXTurn = true;
-    private boolean imageMode = false;
+    private boolean playerXTurn;
+    private boolean imageMode;
 
     private Image playerXImage;
     private Image playerOImage;
 
-    private int xWinCount = 0;
-    private int oWinCount = 0;
-    private int tieCount  = 0;
-    private int moveCount = 0;
+    private int xWinCount;
+    private int oWinCount;
+    private int tieCount;
+    private int moveCount;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -102,10 +102,10 @@ public class board implements Initializable {
 
         playerXImage = new Image("file:src/images/mittens.jpg");
         playerOImage = new Image("file:src/images/soyjack.png");
-
-        gameStateImage = new ImageView(playerXImage);
-        playerXpfp = new ImageView(playerXImage);
-        playerOpfp = new ImageView(playerOImage);
+        
+        gameStateImage.setImage(playerXImage);
+        xImageViewPfp.setImage(playerXImage);
+        oImageViewPfp.setImage(playerOImage);
 
         winningBoardMasks = new int[] {
             0b111_000_000,  // top row win
@@ -118,20 +118,32 @@ public class board implements Initializable {
             0b100_010_001   // backward slash win
         };
 
-        buttons.forEach(button ->{
+        for (var button : buttons) {
             setupButton(button);
             resetButton(button);
-        });
+        }
+
+        xBoardMask = 0b000_000_000;
+        oBoardMask = 0b000_000_000;
+    
+        playerXTurn = true;
+        imageMode = false;
+
+        xWinCount = 0;
+        oWinCount = 0;
+        tieCount  = 0;
+        moveCount = 0;    
     }
 
     @FXML
     void restartGame(ActionEvent event) {
         buttons.forEach(this::resetButton);
-        gameStateText.setText("Player Turn: X");
+        gameStateText.setText("  Player Turn: X");
         updateScoreText();
         
         hideAllImages(true);
         gameStateImage.setImage(playerXImage);
+        if (imageMode) gameStateImage.setVisible(true);
         
         playerXTurn = true;
         moveCount   = 0;
@@ -232,7 +244,7 @@ public class board implements Initializable {
 
         if (playerXTurn) {
             button.setText("X");
-            gameStateText.setText("Player Turn: O");
+            gameStateText.setText("  Player Turn: O");
             gameStateImage.setImage(playerOImage);
 
             xBoardMask += Math.pow(2, index);  
@@ -244,7 +256,8 @@ public class board implements Initializable {
         }
         else { 
             button.setText("O");
-            gameStateText.setText("Player Turn: X");
+            gameStateText.setText("  Player Turn: X");
+            //                    "Winner! Player X"
             gameStateImage.setImage(playerXImage);
 
             oBoardMask += Math.pow(2, index);
@@ -262,24 +275,22 @@ public class board implements Initializable {
         for (var boardMask : winningBoardMasks) {
             if ((xBoardMask & boardMask) == boardMask) {
                 xWinCount++;
-                gameStateText.setText("Player X Wins!");
+                gameStateText.setText("Winner! Player X");
+                gameStateImage.setImage(playerXImage);
+
                 updateScoreText();
                 lockAllButtons();
-
-                if (imageMode) 
-                    gameStateImage.setImage(playerXImage);
 
                 return;
             }
             if ((oBoardMask & boardMask) == boardMask) {
                 oWinCount++;
-                gameStateText.setText("Player O Wins!");
+                gameStateText.setText("Winner! Player O");
+                gameStateImage.setImage(playerOImage);
+
                 updateScoreText();  
                 lockAllButtons();  
-
-                if (imageMode) 
-                    gameStateImage.setImage(playerOImage);
-                
+            
                 return;
             }
         }
@@ -288,6 +299,7 @@ public class board implements Initializable {
             tieCount++;
             updateScoreText();
             gameStateText.setText("Tie Game");
+            gameStateImage.setVisible(false);
         }
     }
 }

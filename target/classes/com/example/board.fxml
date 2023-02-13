@@ -70,14 +70,14 @@
          <font>
             <Font size="74.0" />
          </font></Label>
-      <Label id="gameStateText" fx:id="gameStateText" alignment="CENTER" layoutX="189.0" layoutY="638.0" prefHeight="66.0" prefWidth="534.0" text="Player Turn: X" textAlignment="CENTER">
+      <Label id="gameStateText" fx:id="gameStateText" alignment="CENTER" layoutX="189.0" layoutY="638.0" prefHeight="66.0" prefWidth="534.0" text="  Player Turn: X" textAlignment="CENTER">
          <font>
             <Font size="45.0" />
          </font>
       </Label>
       <VBox alignment="CENTER_LEFT" layoutX="698.0" layoutY="58.0" prefHeight="200.0" prefWidth="188.0" spacing="10.0">
          <children>
-            <ImageView fx:id="PlayerOPfp" fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="oImageViewPfp" fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="file:src/images/mittens.jpg" />
                </image>
@@ -100,7 +100,7 @@
       </VBox>
       <VBox alignment="CENTER_LEFT" layoutX="94.0" layoutY="58.0" prefHeight="200.0" prefWidth="188.0" spacing="10.0">
          <children>
-            <ImageView fx:id="playerXPfp" fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" fx:id="xImageViewPfp">
                <image>
                   <Image url="file:src/images/soyjack.png" />
                </image>
@@ -121,16 +121,16 @@
             </HBox>
          </children>
       </VBox>
-      <ImageView fx:id="image1" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="274.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image2" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="397.0" layoutY="269.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image3" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image4" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image5" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="396.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image6" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="521.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image7" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="518.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image8" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="398.0" layoutY="517.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="image9" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="516.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="gameStateImage" disable="true" fitHeight="57.0" fitWidth="70.0" layoutX="415.0" layoutY="736.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="image1" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="274.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image2" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="397.0" layoutY="269.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image3" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image4" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image5" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="396.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image6" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="521.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image7" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="518.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image8" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="398.0" layoutY="517.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image9" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="516.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="gameStateImage" disable="true" fitHeight="57.0" fitWidth="70.0" layoutX="618.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true" visible="false" />
       <ToggleButton fx:id="modeToggle" layoutX="284.0" layoutY="736.0" mnemonicParsing="false" onAction="#changeDisplayMode" prefHeight="39.0" prefWidth="343.0" text="Toggle Image Mode" AnchorPane.leftAnchor="284.0" AnchorPane.rightAnchor="273.0" />
    </children>
 </AnchorPane>
