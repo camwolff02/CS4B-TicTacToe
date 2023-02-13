@@ -12,6 +12,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -77,6 +78,11 @@ public class board implements Initializable {
     @FXML
     private Label gameStateText;
 
+    @FXML
+    private Text playerXName;
+    @FXML
+    private Text playerOName;
+
     private ArrayList<Button> buttons;
     private ArrayList<ImageView> images;
 
@@ -95,13 +101,23 @@ public class board implements Initializable {
     private int tieCount;
     private int moveCount;
 
+    playerdata data;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        data = playerdata.getInstance();
+        
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
         images  = new ArrayList<>(Arrays.asList(image1,image2,image3,image4,image5,image6,image7,image8,image9));
 
-        playerXImage = new Image("file:src/images/mittens.jpg");
-        playerOImage = new Image("file:src/images/soyjack.png");
+        //playerXImage = new Image("file:src/images/mittens.jpg");
+        //playerOImage = new Image("file:src/images/soyjack.png");
+
+        playerXName.setText(data.getP1Name());
+        playerOName.setText(data.getP2Name());
+
+        playerXImage = data.getP1Avatar();
+        playerOImage = data.getP2Avatar();
         
         gameStateImage.setImage(playerXImage);
         xImageViewPfp.setImage(playerXImage);
@@ -209,6 +225,7 @@ public class board implements Initializable {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
+        stage.centerOnScreen();
         stage.show();
     }
 

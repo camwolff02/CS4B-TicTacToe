@@ -60,6 +60,14 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Button>
+                   <Button fx:id="UploadAvatarP1" layoutX="98.0" layoutY="378.0" mnemonicParsing="false" onAction="#uploadUserImageButton" prefHeight="40.0" prefWidth="190.0" text="Upload Avatar">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
                </children>
             </AnchorPane>
           <AnchorPane maxHeight="898.0" maxWidth="450.0" minHeight="0.0" minWidth="0.0" prefHeight="898.0" prefWidth="450.0" SplitPane.resizableWithParent="false">
@@ -95,6 +103,14 @@
                   <Button fx:id="player2Right" layoutX="250.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
                      <font>
                         <Font size="18.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                 <Button fx:id="UploadAvatarP2" layoutX="100.0" layoutY="378.0" mnemonicParsing="false" onAction="#uploadUserImageButton" prefHeight="40.0" prefWidth="190.0" text="Upload Avatar">
+                     <font>
+                        <Font size="15.0" />
                      </font>
                      <cursor>
                         <Cursor fx:constant="HAND" />

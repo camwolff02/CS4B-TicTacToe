@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleButton?>
@@ -57,8 +58,11 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </FlowPane>
-      <Button id="functionButtons" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Play again">
+      <Button id="functionButtons" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Restart">
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Button>

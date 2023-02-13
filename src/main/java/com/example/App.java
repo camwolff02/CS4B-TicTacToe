@@ -25,9 +25,6 @@ public class App extends Application {
         Image image = new Image("file:src/images/tic-tac-toe.png");
         stage.getIcons().add(image);
         stage.setTitle("Tic-Tac-Toe");
-        
-        
-        
        
         stage.setScene(scene);
         stage.show();
