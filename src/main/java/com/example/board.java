@@ -110,9 +110,6 @@ public class board implements Initializable {
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
         images  = new ArrayList<>(Arrays.asList(image1,image2,image3,image4,image5,image6,image7,image8,image9));
 
-        //playerXImage = new Image("file:src/images/mittens.jpg");
-        //playerOImage = new Image("file:src/images/soyjack.png");
-
         playerXName.setText(data.getP1Name());
         playerOName.setText(data.getP2Name());
 
@@ -274,7 +271,6 @@ public class board implements Initializable {
         else { 
             button.setText("O");
             gameStateText.setText("  Player Turn: X");
-            //                    "Winner! Player X"
             gameStateImage.setImage(playerXImage);
 
             oBoardMask += Math.pow(2, index);
