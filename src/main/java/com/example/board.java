@@ -46,6 +46,9 @@ public class board implements Initializable {
     private Button button8;
     @FXML
     private Button button9;
+
+    @FXML
+    private Button restartGame;
    
     @FXML
     private ImageView xImageViewPfp;
@@ -153,6 +156,8 @@ public class board implements Initializable {
         buttons.forEach(this::resetButton);
         gameStateText.setText("  Player Turn: X");
         updateScoreText();
+        restartGame.setText("Restart");
+
         
         hideAllImages(true);
         gameStateImage.setImage(playerXImage);
@@ -294,6 +299,8 @@ public class board implements Initializable {
                 updateScoreText();
                 lockAllButtons();
 
+                restartGame.setText("Play Again");
+
                 return;
             }
             if ((oBoardMask & boardMask) == boardMask) {
@@ -302,7 +309,9 @@ public class board implements Initializable {
                 gameStateImage.setImage(playerOImage);
 
                 updateScoreText();  
-                lockAllButtons();  
+                lockAllButtons();
+
+                restartGame.setText("Play Again");
             
                 return;
             }
@@ -313,6 +322,8 @@ public class board implements Initializable {
             updateScoreText();
             gameStateText.setText("Tie Game");
             gameStateImage.setVisible(false);
+
+            restartGame.setText("Play Again");
         }
     }
 }
