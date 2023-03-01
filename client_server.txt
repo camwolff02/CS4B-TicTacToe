@@ -1,0 +1,128 @@
+CLASS Client {
+    Socket socket  
+
+    FUNCTION Client() {
+        socket = new Socket("Domain name", server port #)
+    }
+
+    FUNCTION closeSocket() {
+        socket.close()
+    }
+
+    FUNCTION sendMessage(message) {
+        OutputStream out = socket.getOutputStream();
+
+        out.write(message.getBytes());
+        out.flush();
+        out.close();
+    }
+
+    FUNCTION main() {
+        Client client = new Client()
+        
+        boolean isStopped = false
+        WHILE (!isStopped) {
+            PRINT("enter a message: ")
+            INPUT(message)
+            client.sendMessage(message)
+
+            ...implement some way to stop client
+        }
+
+        client.closeSocket()
+    }
+}
+
+
+
+CLASS Server {
+    ArrayList<ClientHandler> clientHandlerList
+    ConnectionChecker connectionChecker
+
+    FUNCTION main() {
+        clientHandlerList = new ArrayList<>()
+        connectionChecker = new ConnectionChecker()
+
+        boolean isStopped = false
+        WHILE (!isStopped) {
+            socket = serverSocket.accept()
+            Thread clientHandler = new Thread(new ClientHandler(socket, clientHandlerList)
+            clientHandler.start()
+            clientHandlerList.append(clientHandler)
+
+            ...implement some way to stop server
+        }
+
+        FOR (clientHandler IN clientHandlerList) {
+            clientHandler.closeResource()
+            clientHandler.close()
+        }
+    }
+}
+
+
+
+CLASS ConnectionChecker implements Runnable {
+    ArrayList<ClientHandler> clientHandlerList
+
+    public ConnectionChecker(clientHandlerList) {
+        clientHandlerList = clientHandlerList
+    }
+
+    public void run() {
+        FOR clientHandler IN clientHandlerList) {
+            IF (!clientHandler.isConnected()) {
+                clientHandlerList.closeResources()
+                clientHandlerList.close()
+                clientHandlerList.remove(clienthandler)
+            }
+        }
+    }
+}
+
+
+
+CLASS ClientHandler implements Runnable {
+    Socket clientSocket  
+    InputStream clientIn  
+    OutputStream clientOut  
+    ArrayList<ClientHandler> clientHandlerList
+    
+    public void run() {
+        msg = clientIn.read()
+
+        IF (msg contains sent data) {  // how do you tell if a user put data in the socket or not?
+            FOR (clinetHandler IN clientHandlerList) {
+                IF (clientHandler.getSocket() != clientSocket) {
+                    clientHandler.sendMessageToClient(msg)
+                }
+            }
+        }
+    }
+
+    FUNCTION ClientMessageHandler(socket, clientHandlerList) {
+        clientSocket = socket
+        clientHandlerList = clientHandlerList
+        clientIn = socket.getInputStream()
+        clientOut = socket.getOutputStream()
+    }
+
+    FUNCTION sendMessageToClient(msg) {
+        out.write(msg.getBytes())
+        out.flush()
+    }
+
+    FUNCTION getSocket() {
+        return clientSocket
+    }
+
+    FUNCTION isConnected() {
+        return clientSocket.isConnected()
+    }
+
+    FUNCTION closeResource() {
+        clientSocket.close()  
+        clientIn.close()  
+        clientOut.close()  
+    }
+}
