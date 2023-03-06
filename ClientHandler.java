@@ -1,6 +1,59 @@
-public class ClientHandler implements Runnable {
-    public void run() {
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.ArrayList;
 
+public class ClientHandler implements Runnable {
+    Socket clientSocket;  
+    DataInputStream clientIn;  
+    DataOutputStream clientOut;  
+    ArrayList<Thread> clientHandlerList;
+    
+    public void run() {
+        // if (!clientSocket.isConnected()) {
+        //     // stop this thread and remove this instance from list
+        //     // clean up resources
+        // }
+        // String msg = clientIn.read();
+
+        // if (true/*msg has data*/) {  // how do you tell if a user put data in the socket or not?
+        //     for (ClientHandler clinetHandler : clientHandlerList) {
+        //         if (clinetHandler.getSocket() != clientSocket) {
+        //             clinetHandler.sendMessageToClient(msg);
+        //         }
+        //     }
+        // }
+    }
+
+    public ClientHandler(Socket socket, ArrayList<Thread>clientHandlerList) {
+        this.clientSocket = socket;
+        this.clientHandlerList = clientHandlerList;
+        try {
+            this.clientIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+            this.clientOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMessageToClient(String msg) {
+        try {
+            clientOut.write(msg.getBytes());
+            clientOut.flush();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public Socket getSocket() {
+        return clientSocket;
     }
 }
 
