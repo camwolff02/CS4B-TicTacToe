@@ -99,7 +99,6 @@ public class Client {
         Client client = new Client(socket, userName);
         client.listenForMessage();
         client.sendMessage();
-
         scanner.close();
     }
 }
