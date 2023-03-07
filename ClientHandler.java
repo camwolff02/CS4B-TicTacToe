@@ -37,8 +37,9 @@ public class ClientHandler implements Runnable{
     // a method that listens for the message using a separate thread
     @Override
     public void run(){
-        String clientMessage;
+        String clientMessage;   // used for holding the message received from client
 
+        // make sur there is still a connection to the client and read the message
         while(socket.isConnected()){
             try{
                 clientMessage = bufferedReader.readLine();
