@@ -7,10 +7,10 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private BufferedWriter bufferedWriter;
-    private String userName;
+    private Socket socket;                  // used for establish a connection between the client and server
+    private BufferedReader bufferedReader;  // used for reading message that is sent from the client
+    private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
+    private String userName;                // used for identify for whitch clinet
 
     // a construter method
     public Client(Socket socket, String userName){
@@ -24,14 +24,16 @@ public class Client {
         }
     }
 
-    // a method that will send the message
+    // a method that will send the message to the clientHandler
     public void sendMessage(){
         try{
-            bufferedWriter.write(userName);
+            bufferedWriter.write(userName);     // send the user name first
             bufferedWriter.newLine();
             bufferedWriter.flush();
 
             Scanner scanner = new Scanner(System.in);
+
+            // make sure the socket is connected
             while(socket.isConnected()){
                 String messagetoSend = scanner.nextLine();
 
@@ -44,8 +46,9 @@ public class Client {
         }
     }
 
-    // a method that will listen for incoming messege and used a runnable
+    // a method that will listen for messege that has been broadcasted
     public void listenForMessage(){
+        // have to used a new thred so the program will not be halted
         new Thread(new Runnable() {
             @Override
             public void run(){

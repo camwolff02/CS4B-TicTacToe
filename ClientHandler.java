@@ -46,19 +46,21 @@ public class ClientHandler implements Runnable{
                 broadcastMessage(clientMessage);
             }catch(IOException e){
                 closeEverthing(socket, bufferedReader, bufferedWriter);
-                break;
+                break;      // when the client disconnects it will break out of the loop
             }
         }
     }
 
-    // a method that will send message
+    // a method that will send message to all the client that is connected except the client that 
+    // send the message
     public void broadcastMessage(String sendMessage){
         for(ClientHandler clientHandler: clientHandler){
             try{
                 if(!clientHandler.clientInfo.equals(clientInfo)){
                     clientHandler.bufferedWriter.write(sendMessage);
                     clientHandler.bufferedWriter.newLine();
-                    clientHandler.bufferedWriter.flush();
+                    //manually flushing the buffere because it might not be big enough
+                    clientHandler.bufferedWriter.flush();   
                 }
             }catch(IOException e){
                 closeEverthing(socket, bufferedReader, bufferedWriter);
@@ -66,7 +68,7 @@ public class ClientHandler implements Runnable{
         }
     }
 
-    // a method that will notify if a client has left
+    // a method that will remov a client handler and notify everone a client has left
     public void removeClientHandler(){
         clientHandler.remove(this);
         broadcastMessage("Sever: " + clientInfo + " has left the room");
