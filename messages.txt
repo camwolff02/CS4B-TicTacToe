@@ -1,0 +1,66 @@
+NOTE: login system is low priority, would be useful for saving data (possibly 
+SQL, JSON, or CSV) and leaderboard
+
+NOTE: stretch goal, have AI take over if player disconnects
+NOTE: stretch goal, ingame chat, EMOTES???
+
+NOTE: if we need unique names and pfp on board, can remove pfp from login, 
+have screen to select "display name" (different from username) and pfp
+
+QUESTION: should we have user select username and profile picture after both are
+connected to make sure username and pfp are unique?
+
+
+
+MESSAGES
+CreateLogin = username, password, profile picure
+AddProfilePic = profile picture (used if user uploads custom pfp)
+Login = username, password
+CreateGame = Game ID or Lobby Name
+JoinGame = Game ID or Lobby Name
+MakeMove = move position
+ListGames = <empty>
+ListOfGames = [IDs/names of non-full games]
+ActionSuccess = True or False 
+StartGame = <empty>
+ClientDisconnected = <empty>
+GameOver = Win, Lose, Tie
+PlayAgain = True or False
+Exit = <empty>
+
+
+
+MESSAGE EXAMPLES
+client (login): CreateLogin -> server
+server: ActionSuccess -> client (fails if username in use)
+
+client (login): AddProfilePic -> server
+server: ActionSuccess -> client
+
+client (login): Login -> server
+server: ActionSuccess -> client (put in menu)
+
+client (menu): CreateGame -> server
+server: ActionSuccess -> client (put in lobby)
+
+client (menu): ListGames -> server
+server: ListOfGames -> client (displayed to menu)
+
+client (menu): JoinGame -> server
+server: ActionSuccess -> client (put in lobby)
+
+client (lobby): StartGame -> server
+server: ActionSuccess -> both clients (tell client GUIs to display game IF action success)
+
+client (game screen): MakeMove -> server
+server: BoardState -> client
+
+server (game screen): GameOver -> client
+
+server (any): ClientDisconnected -> client
+
+client (game screen or loby) Exit -> server
+server: ActionSuccess -> client (booted to previous screen, send ClientDisconnected to other client if in game)
+
+client (game screen): PlayAgain -> server
+server: ActionSuccess -> client (restart game IF both players selected play again)
