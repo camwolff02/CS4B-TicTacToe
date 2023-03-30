@@ -15,12 +15,13 @@ connected to make sure username and pfp are unique?
 MESSAGES
 CreateLogin = username, password, profile picure
 AddProfilePic = profile picture (used if user uploads custom pfp)
+ClientInfo = username, profile picture
 Login = username, password
-CreateGame = Game ID or Lobby Name
-JoinGame = Game ID or Lobby Name
+CreateGame = Lobby Name
+JoinGame = Lobby Name
 MakeMove = move position
 ListGames = <empty>
-ListOfGames = [IDs/names of non-full games]
+ListOfGames = [lobby names of non-full games]
 ActionSuccess = True or False 
 StartGame = <empty>
 ClientDisconnected = <empty>
@@ -29,6 +30,11 @@ PlayAgain = True or False
 Exit = <empty>
 
 
+
+NOTE: DON'T have a generic action success for every message response
+- have a base class for request and for response
+- maybe break up message into chunks, like so:
+    | message type | client sending/receiving | data | etc. |
 
 MESSAGE EXAMPLES
 client (login): CreateLogin -> server
@@ -47,7 +53,9 @@ client (menu): ListGames -> server
 server: ListOfGames -> client (displayed to menu)
 
 client (menu): JoinGame -> server
-server: ActionSuccess -> client (put in lobby)
+server: ClientInfo -> client (put in lobby, sent info of client they just joined)
+
+server (lobby): ClientInfo -> client (sends info of client who joined lobby to client already in lobby)
 
 client (lobby): StartGame -> server
 server: ActionSuccess -> both clients (tell client GUIs to display game IF action success)
