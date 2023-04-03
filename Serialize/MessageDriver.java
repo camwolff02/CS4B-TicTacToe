@@ -94,7 +94,7 @@ public class MessageDriver {
 
     public static void testSerialization(Message message) {
         testSerialization(message, 
-            "Testing " + message.getType() + " message:\n"+ "---------------------------------------------------------" 
+            "Testing " + message.getType() + " message\n"+ "---------------------------------------------------------" 
         );
     }
 
@@ -103,95 +103,116 @@ public class MessageDriver {
 
         System.out.println(info);
         
-        // Serialize message
         try{
-            // Serialize message and send to router
-            FileOutputStream file = new FileOutputStream(filename);
-            ObjectOutputStream out = new ObjectOutputStream (file);
+            // CLIENT: Serialize message and send to router
+            FileOutputStream file1 = new FileOutputStream(filename);
+            ObjectOutputStream outClient = new ObjectOutputStream (file1);
             
-            out.writeObject(message);
-            System.out.println("Object has been serialized");
-            out.close();
-        }
-        catch (IOException ex) {
-            ex.printStackTrace(); 
-        }
-    
-        // De-serialize message
-        try {
-            // De-serialize message, look at channel, serialize and send to correct client
-            FileInputStream file = new FileInputStream(filename);
-            ObjectInputStream in = new ObjectInputStream(file);
-            
-            Message messageReceived = (Message)in.readObject();               
-            System.out.println("Object has been deserialized");
-            System.out.println(
-                "Channel: " + messageReceived.getChannel()
-                + "\nType: " + messageReceived.getType()
-            ); 
-            in.close();
+            outClient.writeObject(message);
+            System.out.println("Object has been serialized by client");
+            outClient.close();
 
-            // De-serialize message and cast to correct message
+
+
+            // ROUTER: De-serialize message, look at channel, serialize and send to correct client
+            FileInputStream file2 = new FileInputStream(filename);
+            ObjectInputStream inRouter = new ObjectInputStream(file2);
+            
+            Message messageRouter = (Message)inRouter.readObject(); 
+            inRouter.close();
+
+            String channel = messageRouter.getChannel();
+            String type = messageRouter.getType();
+              
+            System.out.println("Object has been deserialized by router");
+            System.out.println(
+                "Channel: " + channel
+                + "\nType: " + type
+            ); 
+
+            if (channel.equals("game")) {
+                System.out.println("Sending message to correct channel: " + channel);
+            }
+
+            FileOutputStream file3 = new FileOutputStream(channel + ".txt");
+            ObjectOutputStream outRouter = new ObjectOutputStream (file3);
+            
+            outRouter.writeObject(message);
+            System.out.println("Object has been serialized by router");
+            outRouter.close();
+
+
+
+            // CLIENT: De-serialize message and cast to correct message
+            FileInputStream file4 = new FileInputStream(filename);
+            ObjectInputStream inClient = new ObjectInputStream(file4);
+            
+            Message messageClient = (Message)inClient.readObject(); 
+            inClient.close();
+
+            System.out.println("Object has been deserialized by client");
+
+
             System.out.println("Message Contents: ");
             switch (message.getType()) {
                 case "create_login":
-                    System.out.println((CreateLoginRequest)messageReceived.getMessage());
+                    System.out.println((CreateLoginRequest)messageClient.getMessage());
                     break;
                 
                 case "add_profile_pic":
-                    System.out.println((AddProfilePicRequest)messageReceived.getMessage());
+                    System.out.println((AddProfilePicRequest)messageClient.getMessage());
                     break; 
 
                 case "login":
-                    System.out.println((LoginRequest)messageReceived.getMessage());
+                    System.out.println((LoginRequest)messageClient.getMessage());
                     break;
                     
                 case "create_game":
-                    System.out.println((CreateGameRequest)messageReceived.getMessage());
+                    System.out.println((CreateGameRequest)messageClient.getMessage());
                     break; 
 
                 case "join_game":
-                    System.out.println((JoinGameRequest)messageReceived.getMessage());
+                    System.out.println((JoinGameRequest)messageClient.getMessage());
                     break;
 
                 case "client_info":
-                    System.out.println((ClientInfoMessage)messageReceived.getMessage());
+                    System.out.println((ClientInfoMessage)messageClient.getMessage());
                     break;
 
                 case "make_move":
-                    System.out.println((MakeMoveRequest)messageReceived.getMessage());
+                    System.out.println((MakeMoveRequest)messageClient.getMessage());
                     break; 
 
                 case "list_games":
-                    System.out.println((ListGamesRequest)messageReceived.getMessage());
+                    System.out.println((ListGamesRequest)messageClient.getMessage());
                     break; 
 
                 case "list_of_games":
-                    System.out.println((ListOfGamesResponse)messageReceived.getMessage());
+                    System.out.println((ListOfGamesResponse)messageClient.getMessage());
                     break; 
 
                 case "action_success":
-                    System.out.println((ActionSuccessResponse)messageReceived.getMessage());
+                    System.out.println((ActionSuccessResponse)messageClient.getMessage());
                     break;
 
                 case "start_game":
-                    System.out.println((StartGameRequest)messageReceived.getMessage());
+                    System.out.println((StartGameRequest)messageClient.getMessage());
                     break;
 
                 case "client_disconnected":
-                    System.out.println((ClientDisconnectedMessage)messageReceived.getMessage());
+                    System.out.println((ClientDisconnectedMessage)messageClient.getMessage());
                     break;
 
                 case "game_over":
-                    System.out.println((GameOverMessage)messageReceived.getMessage());
+                    System.out.println((GameOverMessage)messageClient.getMessage());
                     break;
 
                 case "play_again": 
-                    System.out.println((PlayAgainRequest)messageReceived.getMessage());
+                    System.out.println((PlayAgainRequest)messageClient.getMessage());
                     break;
 
                 case "exit":
-                    System.out.println((ExitRequest)messageReceived.getMessage());
+                    System.out.println((ExitRequest)messageClient.getMessage());
             }
 
             System.out.println();
