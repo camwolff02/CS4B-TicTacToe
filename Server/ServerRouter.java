@@ -7,7 +7,7 @@ public class ServerRouter {
         // created the server socket with a port
         ServerSocket serverSocket = new ServerSocket(1234);
         // created the server object
-        Server server = new Server(serverSocket);
+        ServerRouter server = new ServerRouter(serverSocket);
         // called the run method that starts the server
         System.out.println("Server started");
         server.startServer();

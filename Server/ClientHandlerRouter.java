@@ -49,16 +49,18 @@ public class ClientHandlerRouter implements Runnable{
                 
                 if (clientMessage.startsWith("Subscribe::")) {
                     String channel = clientMessage.split("::", 1)[1]; 
+                    System.out.println("INFO: " + clientInfo + " has entered \"" + channel + "\"");
 
                     if (!channelSubscribers.containsKey(channel)) 
                         channelSubscribers.put(channel, new HashSet<>());
 
                     channelSubscribers.get(channel).add(this);
 
-                    broadcastMessage("Sever: " + clientInfo + " has enterd \"" + channel + "\"");
+                    broadcastMessage("Sever: " + clientInfo + " has entered \"" + channel + "\"");
                 }
                 else if (clientMessage.startsWith("Unsubscribe::")) {
                     String channel = clientMessage.split("::", 1)[1]; 
+                    System.out.println("INFO: " + clientInfo + " has left \"" + channel + "\"");
                     
                     for (var clientHandler : channelSubscribers.get(channel)) {
                         if (clientHandler == this) {
@@ -98,6 +100,8 @@ public class ClientHandlerRouter implements Runnable{
                 }
             }
         }
+        if (subscribedChannels.size() == 0) 
+            System.out.println("ERROR: " + clientInfo + " tried to send message without being subscribed");
             
     }
 
