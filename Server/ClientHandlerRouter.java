@@ -16,9 +16,11 @@ public class ClientHandlerRouter implements Runnable{
     // this array list is to keep track of all the clients
     public static Map<String, HashSet<ClientHandlerRouter>> channelSubscribers = new HashMap<>();
     public static ArrayList<ClientHandlerRouter> clientHandlers = new ArrayList<>();
-    public static HashSet<String> subscribedChannels = new HashSet<>();
+    
+    // this class should be unaware of other connections, abstract functionality
+    // to router
 
-
+    private HashSet<String> subscribedChannels = new HashSet<>();
     private Socket socket;                  // used for establish a connection between the client and server
     private BufferedReader bufferedReader;  // used for reading message that is sent from the client
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
@@ -27,12 +29,12 @@ public class ClientHandlerRouter implements Runnable{
 
     // a construter method
     public ClientHandlerRouter(Socket socket) {
-        try{
+        try {
             this.socket = socket;
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.clientInfo = bufferedReader.readLine();            
-        }catch(IOException e){
+        } catch(IOException e) {
             closeEverthing(socket, bufferedReader, bufferedWriter);
         }        
     }
@@ -44,11 +46,11 @@ public class ClientHandlerRouter implements Runnable{
 
         // make sur there is still a connection to the client and read the message
         while(socket.isConnected()) {
-            try{
+            try {
                 clientMessage = bufferedReader.readLine();
                 
                 if (clientMessage.startsWith("Subscribe::")) {
-                    String channel = clientMessage.split("::", 1)[1]; 
+                    String channel = clientMessage.split("::", 2)[1]; 
                     System.out.println("INFO: " + clientInfo + " has entered \"" + channel + "\"");
 
                     if (!channelSubscribers.containsKey(channel)) 
@@ -56,20 +58,24 @@ public class ClientHandlerRouter implements Runnable{
 
                     channelSubscribers.get(channel).add(this);
 
+                    subscribedChannels.add(channel);
+
                     broadcastMessage("Sever: " + clientInfo + " has entered \"" + channel + "\"");
                 }
                 else if (clientMessage.startsWith("Unsubscribe::")) {
-                    String channel = clientMessage.split("::", 1)[1]; 
+                    String channel = clientMessage.split("::", 2)[1]; 
                     System.out.println("INFO: " + clientInfo + " has left \"" + channel + "\"");
                     
+                    broadcastMessage("Sever: " + clientInfo + " has left \"" + channel + "\"");
+                    
+                    subscribedChannels.remove(channel);
+
                     for (var clientHandler : channelSubscribers.get(channel)) {
                         if (clientHandler == this) {
                             channelSubscribers.get(channel).remove(this);
                             break;
                         }
                     }
-
-                    broadcastMessage("Sever: " + clientInfo + " has left \"" + channel + "\"");
                 }
                 else {
                     broadcastMessage(clientMessage);
@@ -84,8 +90,10 @@ public class ClientHandlerRouter implements Runnable{
 
     // a method that will send message to all the client that is connected except the client that 
     // send the message
+
+    // TODO: abstract broadcast functionality to router
     public void broadcastMessage(String sendMessage) {
-        for (String channel : subscribedChannels) {  // for each channel we're subscribed to
+        for (String channel : subscribedChannels) {  // for each channel we're subscribed to (TODO change to only send to channel specified in message)
             for (var clientHandler : channelSubscribers.get(channel)) {  // for each member in that channel
                 // send message
                 try{

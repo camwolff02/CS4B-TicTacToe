@@ -27,12 +27,12 @@ public class ClientRouter {
 
     // a construter method
     public ClientRouter(Socket socket, String userName){
-        try{
+        try {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.userName = userName;
-        }catch(IOException e){
+        } catch (IOException e) {
             closeEverthing(socket, bufferedReader, bufferedWriter);
         }
     }
@@ -49,10 +49,12 @@ public class ClientRouter {
             // make sure the socket is connected
             while(socket.isConnected()){
                 String messageToSend = scanner.nextLine();
+
                 if (messageToSend.startsWith("Subscribe::") || messageToSend.startsWith("Unsubscribe::"))
                     bufferedWriter.write(messageToSend);
                 else
                     bufferedWriter.write(userName + ": " + messageToSend);
+
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
             }

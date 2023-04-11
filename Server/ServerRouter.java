@@ -2,7 +2,18 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/* inside server router, put private static ClientHandler properties here or in separate class
+ * make main private
+ * server has one public function "broadcast" (message in)
+ *  pushes message to all clients
+ */
+
 public class ServerRouter {
+    // put static ClientHandler properties here or in separate class
+
+    // public static Map<String, HashSet<ClientHandlerRouter>> channelSubscribers = new HashMap<>();
+    // public static ArrayList<ClientHandlerRouter> clientHandlers = new ArrayList<>();
+
     public static void main(String[] args) throws IOException {        
         // created the server socket with a port
         ServerSocket serverSocket = new ServerSocket(1234);
@@ -33,6 +44,7 @@ public class ServerRouter {
 
                 // a class that will be responsible for the communication with the client and have a runnable interface
                 ClientHandlerRouter clienHandler = new ClientHandlerRouter(socket);
+                // Encapsulate thread in ClientHandler, then do ClientHandler.start() 
                 Thread thread = new Thread(clienHandler);
                 thread.start();
             }
@@ -40,6 +52,26 @@ public class ServerRouter {
 
         }
     }
+
+    // public void broadcastMessage(String sendMessage) {
+    //     for (String channel : subscribedChannels) {  // for each channel we're subscribed to (TODO change to only send to channel specified in message)
+    //         for (var clientHandler : channelSubscribers.get(channel)) {  // for each member in that channel
+    //             // send message
+    //             try{
+    //                 if(clientHandler != this) {
+    //                     clientHandler.bufferedWriter.write(sendMessage);
+    //                     clientHandler.bufferedWriter.newLine();
+    //                     //manually flushing the buffere because it might not be big enough
+    //                     clientHandler.bufferedWriter.flush();   
+    //                 }
+    //             }catch(IOException e){
+    //                 closeEverthing(socket, bufferedReader, bufferedWriter);
+    //             }
+    //         }
+    //     }
+    //     if (subscribedChannels.size() == 0) 
+    //         System.out.println("ERROR: " + clientInfo + " tried to send message without being subscribed");
+    // }
 
     // a method that will close the server socket if an error has occurs
     public void closeServerSocket() {
