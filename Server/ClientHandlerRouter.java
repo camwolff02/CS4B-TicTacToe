@@ -23,8 +23,8 @@ public class ClientHandlerRouter implements Runnable {
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
     private String clientInfo;              // used for identify for whitch clinet
 
-    private ObjectOutputStream outputStream;
-    private ObjectInputStream inputStream;
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
 
 
     // a construter method
@@ -36,8 +36,8 @@ public class ClientHandlerRouter implements Runnable {
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inputStream = new ObjectInputStream(socket.getInputStream());
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
 
             this.clientInfo = bufferedReader.readLine();            
         } catch(IOException e) {
@@ -46,31 +46,35 @@ public class ClientHandlerRouter implements Runnable {
     }
 
     public Message getClientMessage() throws ClassNotFoundException, IOException{
-        return (Message) inputStream.readObject();
+        Message message = (Message) objectInputStream.readObject();
+        System.out.println(message);
+        return message;
     }
 
     public void sendMessage(Message message){
-        try{
-            outputStream.writeObject(message);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
+        // objectOutputStream.writeObject(message);
+        System.out.println(message);
     }
 
     // a method that listens for the message using a separate thread
     @Override
     public void run() {
-        // make sur there is still a connection to the client and read the message
-        while(socket.isConnected()) {
+        // make sure there is still a connection to the client and read the message
+        while (socket.isConnected()) {
             try {
-                Message clientMessage = getClientMessage();
+                Message incomingMessage = (Message) objectInputStream.readObject();
 
-                if (clientMessage.getType() == "SubscribeMessageRequest") {
-                     router.subscribeToChannel(this, clientMessage.getChannel());
-                }
-                else if(clientMessage.getType() == "UnsubscribeMessageRequest"){
-                    router.unsubscribeFromChannel(this, clientMessage.getChannel());
-                }
+                router.broadcastMessage(this, incomingMessage.getChannel(), incomingMessage);
+    
+                System.out.println("Message received: " + incomingMessage.getChannel());
+                // Message clientMessage = getClientMessage();
+
+                // if (clientMessage.getType() == "SubscribeMessageRequest") {
+                //      router.subscribeToChannel(this, clientMessage.getChannel(), clientMessage);
+                // }
+                // else if(clientMessage.getType() == "UnsubscribeMessageRequest"){
+                //     router.unsubscribeFromChannel(this, clientMessage.getChannel(), clientMessage);
+                // }
 
                 // String clientMessage = bufferedReader.readLine();
                 // if (clientMessage.startsWith("Subscribe::")) {
@@ -105,12 +109,10 @@ public class ClientHandlerRouter implements Runnable {
         return clientInfo;
     }
 
-    public void sendMessageToClient(String message) {
+    public void sendMessageToClient(Message message) {
         try {
-            this.bufferedWriter.write(message);
-            this.bufferedWriter.newLine();
-            //manually flushing the buffere because it might not be big enough
-            this.bufferedWriter.flush();  
+            this.objectOutputStream.writeObject(message);
+
         } catch(IOException e){
             closeEverthing();
         }   
@@ -134,6 +136,16 @@ public class ClientHandlerRouter implements Runnable {
             
             if(this.socket != null){
                 socket.close();
+            }
+
+            if(objectInputStream != null)
+            {
+                objectInputStream.close();
+            }
+
+            if(objectOutputStream != null)
+            {
+                objectOutputStream.close();
             }
         }catch(IOException e){
             e.printStackTrace();

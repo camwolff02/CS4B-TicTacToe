@@ -25,14 +25,20 @@ public class ClientRouter {
         Socket socket = new Socket("LocalHost", 1234);
 
         ClientRouter client = new ClientRouter(socket, userName);
-        client.listenForMessage();
         client.sendMessage(createMessage());
+        // client.listenForMessage();
         scanner.close();
     }
 
     private Socket socket;                  // used for establish a connection between the client and server
     private BufferedReader bufferedReader;  // used for reading message that is sent from the client
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
+
+    private ObjectOutputStream objectOutputStream;
+
+    private ObjectInputStream objectInputStream;
+
+    
     private String userName;                // used for identify for whitch clinet
 
     // a construter method
@@ -41,6 +47,11 @@ public class ClientRouter {
             this.socket = socket;
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+            this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+
+            this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+            
             this.userName = userName;
         } catch (IOException e) {
             closeEverthing(socket, bufferedReader, bufferedWriter);
@@ -132,29 +143,22 @@ public class ClientRouter {
     }
 
     // a method that will send the message to the clientHandler
-    public void sendMessage(Message  messageToSend) {
+    public void sendMessage(Message messageToSend) {
         try {
             bufferedWriter.write(userName);     // send the user name first
             bufferedWriter.newLine();
             bufferedWriter.flush();
-
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-
-            // make sure the socket is connected
-            while(socket.isConnected()){
-                objectOutputStream.writeObject(messageToSend);
-                
-            }
-
+    
+            objectOutputStream.writeObject(messageToSend);
+            objectOutputStream.flush();
+    
             System.out.println("Object has been serialized by client");
-
-            objectOutputStream.close();
             
-
         } catch(IOException e) {
             closeEverthing(socket, bufferedReader, bufferedWriter);
         }
     }
+    
 
     // a method that will listen for messege that has been broadcasted
     public void listenForMessage(){
@@ -167,7 +171,6 @@ public class ClientRouter {
 
                 while(socket.isConnected()){
                     try{
-                        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
                         Message incomingMessage = (Message) objectInputStream.readObject();
 
                         System.out.println(incomingMessage);
@@ -180,8 +183,6 @@ public class ClientRouter {
                     }
                     
                 }
-
-                
 
             }
         }).start();

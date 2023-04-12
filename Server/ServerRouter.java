@@ -45,7 +45,7 @@ public class ServerRouter {
     public void broadcastMessage(ClientHandlerRouter callingHandler, String channel, Message message) {        
         boolean noClientsInChannel = true;
         boolean notSubscribedToAnyChannels = true;
-
+        
         try {
             if (!channelSubscribers.get(channel).contains(callingHandler)) {
                 callingHandler.sendMessageToClient(message);  //"ERROR: not a member of channel"
@@ -74,7 +74,7 @@ public class ServerRouter {
             System.out.println("WARNING: " + callingHandler + " sent message with no other members in channel");
     }
 
-    public void subscribeToChannel(ClientHandlerRouter callingHandler, String channel) {
+    public void subscribeToChannel(ClientHandlerRouter callingHandler, String channel, Message message) {
         // if the channel doesn't exist, create the channel
         if (!channelSubscribers.containsKey(channel)) 
             channelSubscribers.put(channel, new HashSet<>());
@@ -83,24 +83,25 @@ public class ServerRouter {
         channelSubscribers.get(channel).add(callingHandler);
         
         System.out.println("INFO: " + callingHandler + " has entered \"" + channel + "\"");
-        broadcastMessage(callingHandler, channel, "Sever: " + callingHandler + " has entered \"" + channel + "\" successfully");
-        callingHandler.sendMessageToClient("Sever: channel \"" + channel + "\" entered successfully");
+        broadcastMessage(callingHandler, channel, message);
+        callingHandler.sendMessageToClient(message);
     }
 
-    public void unsubscribeFromChannel(ClientHandlerRouter callingHandler, String channel) {
+    public void unsubscribeFromChannel(ClientHandlerRouter callingHandler, String channel, Message message) {
         System.out.println("INFO: " + callingHandler + " has left \"" + channel + "\"");
         
-        broadcastMessage(callingHandler, channel, "Sever: " + callingHandler + " has left \"" + channel + "\" successfully");
-        callingHandler.sendMessageToClient("Sever: channel \"" + channel + "\" left successfully");
+        broadcastMessage(callingHandler, channel, message);
+        callingHandler.sendMessageToClient(message);
 
         try {
             channelSubscribers.get(channel).remove(callingHandler);
         }
         catch (NullPointerException e) {
-            callingHandler.sendMessageToClient("ERROR: could not leave channel");
+            callingHandler.sendMessageToClient(message);
         }
 
     }    
+    
 
     // a run method that will start the server and keeping the server running
     private void startServer() {
