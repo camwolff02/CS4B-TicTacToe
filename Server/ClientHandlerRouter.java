@@ -3,24 +3,18 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+
 
 // The sever start method will run this client handler class so there is no main here
 // implements Runnable here so the instances will be executed by a separate thread(override the run method) 
-public class ClientHandlerRouter implements Runnable{
-
-    // this array list is to keep track of all the clients
-    public static Map<String, HashSet<ClientHandlerRouter>> channelSubscribers = new HashMap<>();
-    public static ArrayList<ClientHandlerRouter> clientHandlers = new ArrayList<>();
-    
+public class ClientHandlerRouter implements Runnable {    
     // this class should be unaware of other connections, abstract functionality
     // to router
 
-    private HashSet<String> subscribedChannels = new HashSet<>();
+    private ServerRouter router;
+    
     private Socket socket;                  // used for establish a connection between the client and server
     private BufferedReader bufferedReader;  // used for reading message that is sent from the client
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
@@ -28,120 +22,90 @@ public class ClientHandlerRouter implements Runnable{
 
 
     // a construter method
-    public ClientHandlerRouter(Socket socket) {
+    public ClientHandlerRouter(ServerRouter router, Socket socket) {
+        this.router = router;
+        
         try {
             this.socket = socket;
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             this.clientInfo = bufferedReader.readLine();            
         } catch(IOException e) {
-            closeEverthing(socket, bufferedReader, bufferedWriter);
+            closeEverthing();
         }        
     }
 
     // a method that listens for the message using a separate thread
     @Override
     public void run() {
-        String clientMessage;   // used for holding the message received from client
-
         // make sur there is still a connection to the client and read the message
         while(socket.isConnected()) {
             try {
-                clientMessage = bufferedReader.readLine();
-                
+                // Message clientMessage = bufferedReader.readLine();
+
+                // if (clientMessage.getType() == "SubscribeMessageRequest") {
+                //     router.subscribeToChannel(this, clientMessage.getChannel());
+                // }
+
+                String clientMessage = bufferedReader.readLine();
+
                 if (clientMessage.startsWith("Subscribe::")) {
                     String channel = clientMessage.split("::", 2)[1]; 
-                    System.out.println("INFO: " + clientInfo + " has entered \"" + channel + "\"");
-
-                    if (!channelSubscribers.containsKey(channel)) 
-                        channelSubscribers.put(channel, new HashSet<>());
-
-                    channelSubscribers.get(channel).add(this);
-
-                    subscribedChannels.add(channel);
-
-                    broadcastMessage("Sever: " + clientInfo + " has entered \"" + channel + "\"");
+                    router.subscribeToChannel(this, channel);
                 }
                 else if (clientMessage.startsWith("Unsubscribe::")) {
                     String channel = clientMessage.split("::", 2)[1]; 
-                    System.out.println("INFO: " + clientInfo + " has left \"" + channel + "\"");
-                    
-                    broadcastMessage("Sever: " + clientInfo + " has left \"" + channel + "\"");
-                    
-                    subscribedChannels.remove(channel);
-
-                    for (var clientHandler : channelSubscribers.get(channel)) {
-                        if (clientHandler == this) {
-                            channelSubscribers.get(channel).remove(this);
-                            break;
-                        }
-                    }
+                    router.unsubscribeFromChannel(this, channel);
                 }
                 else {
-                    broadcastMessage(clientMessage);
+                    try {
+                        var arr = clientMessage.split("::", 2); 
+                        String channel = arr[0];
+                        String message = arr[1];
+                        router.broadcastMessage(this, channel, clientInfo + ": " + message);
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        sendMessageToClient("ERROR: must send message in format \"Channel::message\"");
+                    }      
                 }
-                
-            }catch(IOException e){
-                closeEverthing(socket, bufferedReader, bufferedWriter);
+            } catch(IOException e) {
+                closeEverthing();
                 break;      // when the client disconnects it will break out of the loop
             }
         }
     }
 
+    public String toString() {
+        return clientInfo;
+    }
+
+    public void sendMessageToClient(String message) {
+        try {
+            this.bufferedWriter.write(message);
+            this.bufferedWriter.newLine();
+            //manually flushing the buffere because it might not be big enough
+            this.bufferedWriter.flush();  
+        } catch(IOException e){
+            closeEverthing();
+        }   
+ 
+    }
+
     // a method that will send message to all the client that is connected except the client that 
     // send the message
 
-    // TODO: abstract broadcast functionality to router
-    public void broadcastMessage(String sendMessage) {
-        for (String channel : subscribedChannels) {  // for each channel we're subscribed to (TODO change to only send to channel specified in message)
-            for (var clientHandler : channelSubscribers.get(channel)) {  // for each member in that channel
-                // send message
-                try{
-                    if(clientHandler != this) {
-                        clientHandler.bufferedWriter.write(sendMessage);
-                        clientHandler.bufferedWriter.newLine();
-                        //manually flushing the buffere because it might not be big enough
-                        clientHandler.bufferedWriter.flush();   
-                    }
-                }catch(IOException e){
-                    closeEverthing(socket, bufferedReader, bufferedWriter);
-                }
-            }
-        }
-        if (subscribedChannels.size() == 0) 
-            System.out.println("ERROR: " + clientInfo + " tried to send message without being subscribed");
-            
-    }
-
-    // a method that will remov a client handler and notify everone a client has left
-    public void removeClientHandlerRouter(){
-        clientHandlers.remove(this);
-
-        for (String channel : subscribedChannels) {
-            for (var clientHandler : channelSubscribers.get(channel)) {
-                if (clientHandler == this) {
-                    channelSubscribers.get(channel).remove(this);
-                    break;
-                }
-            }
-        }
-            
-        broadcastMessage("Sever: " + clientInfo + " has left the room");
-    }
-
     // a method that will close the socket after a client has left or there is an error
-    public void closeEverthing(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
-        removeClientHandlerRouter();
+    private void closeEverthing(){
+        //removeClientHandlerRouter();
         try{
-            if(bufferedReader != null){
+            if(this.bufferedReader != null){
                 bufferedReader.close();
             }
 
-            if(bufferedWriter != null){
+            if(this.bufferedWriter != null){
                 bufferedWriter.close();
             }
             
-            if(socket != null){
+            if(this.socket != null){
                 socket.close();
             }
         }catch(IOException e){

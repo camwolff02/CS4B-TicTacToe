@@ -53,7 +53,7 @@ public class ClientRouter {
                 if (messageToSend.startsWith("Subscribe::") || messageToSend.startsWith("Unsubscribe::"))
                     bufferedWriter.write(messageToSend);
                 else
-                    bufferedWriter.write(userName + ": " + messageToSend);
+                    bufferedWriter.write(messageToSend);
 
                 bufferedWriter.newLine();
                 bufferedWriter.flush();
