@@ -3,8 +3,11 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+
+import Serialize.Message;
 
 
 // The sever start method will run this client handler class so there is no main here
@@ -20,6 +23,9 @@ public class ClientHandlerRouter implements Runnable {
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
     private String clientInfo;              // used for identify for whitch clinet
 
+    private ObjectOutputStream outputStream;
+    private ObjectInputStream inputStream;
+
 
     // a construter method
     public ClientHandlerRouter(ServerRouter router, Socket socket) {
@@ -29,10 +35,26 @@ public class ClientHandlerRouter implements Runnable {
             this.socket = socket;
             this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inputStream = new ObjectInputStream(socket.getInputStream());
+
             this.clientInfo = bufferedReader.readLine();            
         } catch(IOException e) {
             closeEverthing();
         }        
+    }
+
+    public Message getClientMessage() throws ClassNotFoundException, IOException{
+        return (Message) inputStream.readObject();
+    }
+
+    public void sendMessage(Message message){
+        try{
+            outputStream.writeObject(message);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     // a method that listens for the message using a separate thread
@@ -41,33 +63,38 @@ public class ClientHandlerRouter implements Runnable {
         // make sur there is still a connection to the client and read the message
         while(socket.isConnected()) {
             try {
-                // Message clientMessage = bufferedReader.readLine();
+                Message clientMessage = getClientMessage();
 
-                // if (clientMessage.getType() == "SubscribeMessageRequest") {
-                //     router.subscribeToChannel(this, clientMessage.getChannel());
+                if (clientMessage.getType() == "SubscribeMessageRequest") {
+                     router.subscribeToChannel(this, clientMessage.getChannel());
+                }
+                else if(clientMessage.getType() == "UnsubscribeMessageRequest"){
+                    router.unsubscribeFromChannel(this, clientMessage.getChannel());
+                }
+
+                // String clientMessage = bufferedReader.readLine();
+                // if (clientMessage.startsWith("Subscribe::")) {
+                //     String channel = clientMessage.split("::", 2)[1]; 
+                //     router.subscribeToChannel(this, channel);
                 // }
-
-                String clientMessage = bufferedReader.readLine();
-
-                if (clientMessage.startsWith("Subscribe::")) {
-                    String channel = clientMessage.split("::", 2)[1]; 
-                    router.subscribeToChannel(this, channel);
-                }
-                else if (clientMessage.startsWith("Unsubscribe::")) {
-                    String channel = clientMessage.split("::", 2)[1]; 
-                    router.unsubscribeFromChannel(this, channel);
-                }
-                else {
-                    try {
-                        var arr = clientMessage.split("::", 2); 
-                        String channel = arr[0];
-                        String message = arr[1];
-                        router.broadcastMessage(this, channel, clientInfo + ": " + message);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        sendMessageToClient("ERROR: must send message in format \"Channel::message\"");
-                    }      
-                }
+                // else if (clientMessage.startsWith("Unsubscribe::")) {
+                //     String channel = clientMessage.split("::", 2)[1]; 
+                //     router.unsubscribeFromChannel(this, channel);
+                // }
+                // else {
+                //     try {
+                //         var arr = clientMessage.split("::", 2); 
+                //         String channel = arr[0];
+                //         String message = arr[1];
+                //         router.broadcastMessage(this, channel, clientInfo + ": " + message);
+                //     } catch (ArrayIndexOutOfBoundsException e) {
+                //         sendMessageToClient("ERROR: must send message in format \"Channel::message\"");
+                //     }      
+                // }
             } catch(IOException e) {
+                closeEverthing();
+                break;      // when the client disconnects it will break out of the loop
+            } catch(ClassNotFoundException e){
                 closeEverthing();
                 break;      // when the client disconnects it will break out of the loop
             }

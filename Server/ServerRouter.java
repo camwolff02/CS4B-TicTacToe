@@ -6,6 +6,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import Serialize.Message;
 /* inside server router, put private static ClientHandler properties here or in separate class
  * make main private
  * server has one public function "broadcast" (message in)
@@ -37,20 +38,19 @@ public class ServerRouter {
         channelSubscribers = new HashMap<>();
     }
 
-    public void broadcastMessageAndIncludeSelf(String channel, String message) {
+    public void broadcastMessageAndIncludeSelf(String channel, Message message) {
         broadcastMessage(null, channel, message);
     }
 
-    public void broadcastMessage(ClientHandlerRouter callingHandler, String channel, String message) {
-        if (!channelSubscribers.get(channel).contains(callingHandler)) {
-            callingHandler.sendMessageToClient("ERROR: not a member of channel");
-            return;
-        }
-        
+    public void broadcastMessage(ClientHandlerRouter callingHandler, String channel, Message message) {        
         boolean noClientsInChannel = true;
         boolean notSubscribedToAnyChannels = true;
 
         try {
+            if (!channelSubscribers.get(channel).contains(callingHandler)) {
+                callingHandler.sendMessageToClient(message);  //"ERROR: not a member of channel"
+                return;
+            }
             for (var subscriber : channelSubscribers.get(channel)) {  // for each member in that channel
                 notSubscribedToAnyChannels = false;
                 
@@ -61,13 +61,13 @@ public class ServerRouter {
             }
         }
         catch (NullPointerException e) {
-            callingHandler.sendMessageToClient("ERROR: tried to send message to nonexistent channel");
+            callingHandler.sendMessageToClient(message); //"ERROR: tried to send message to nonexistent channel"
             return;
         }
         
         if (notSubscribedToAnyChannels) {
             System.out.println("ERROR: " + callingHandler + " tried to send message without being subscribed");
-            callingHandler.sendMessageToClient("ERROR: not a member of any channel");
+            callingHandler.sendMessageToClient(message); //"ERROR: not a member of any channel"
         }
         
         if (noClientsInChannel)
