@@ -26,7 +26,7 @@ public class ClientRouter {
 
         ClientRouter client = new ClientRouter(socket, userName);
         client.sendMessage(createMessage());
-        // client.listenForMessage();
+        client.listenForMessage();
         scanner.close();
     }
 
@@ -151,7 +151,7 @@ public class ClientRouter {
     
             objectOutputStream.writeObject(messageToSend);
             objectOutputStream.flush();
-    
+            
             System.out.println("Object has been serialized by client");
             
         } catch(IOException e) {

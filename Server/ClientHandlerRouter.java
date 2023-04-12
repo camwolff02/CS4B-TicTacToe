@@ -47,7 +47,6 @@ public class ClientHandlerRouter implements Runnable {
 
     public Message getClientMessage() throws ClassNotFoundException, IOException{
         Message message = (Message) objectInputStream.readObject();
-        System.out.println(message);
         return message;
     }
 
@@ -60,12 +59,11 @@ public class ClientHandlerRouter implements Runnable {
     @Override
     public void run() {
         // make sure there is still a connection to the client and read the message
-        while (socket.isConnected()) {
             try {
-                Message incomingMessage = (Message) objectInputStream.readObject();
-
+                Message incomingMessage = (Message)objectInputStream.readObject();
+                
                 router.broadcastMessage(this, incomingMessage.getChannel(), incomingMessage);
-    
+
                 System.out.println("Message received: " + incomingMessage.getChannel());
                 // Message clientMessage = getClientMessage();
 
@@ -97,12 +95,10 @@ public class ClientHandlerRouter implements Runnable {
                 // }
             } catch(IOException e) {
                 closeEverthing();
-                break;      // when the client disconnects it will break out of the loop
             } catch(ClassNotFoundException e){
                 closeEverthing();
-                break;      // when the client disconnects it will break out of the loop
             }
-        }
+        
     }
 
     public String toString() {
@@ -112,6 +108,7 @@ public class ClientHandlerRouter implements Runnable {
     public void sendMessageToClient(Message message) {
         try {
             this.objectOutputStream.writeObject(message);
+            this.objectOutputStream.flush();
 
         } catch(IOException e){
             closeEverthing();
