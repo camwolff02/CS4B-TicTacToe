@@ -85,8 +85,10 @@ public class ClientHandlerRouter implements Runnable {
                     router.broadcastMessage(this, channel, incomingMessage);
                 }
             } catch(IOException e) {
+                e.printStackTrace();
                 closeEverthing();
             } catch(ClassNotFoundException e){
+                e.printStackTrace();
                 closeEverthing();
             }
         

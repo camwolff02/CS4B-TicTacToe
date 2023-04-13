@@ -42,9 +42,6 @@ public class ServerRouter {
         return channelSubscribers.containsKey(channel);
     }
 
-    public void broadcastMessageAndIncludeSelf(String channel, Message message) {
-        broadcastMessage(null, channel, message);
-    }
 
     public void broadcastMessage(ClientHandlerRouter callingHandler, String channel, Message message) {        
         boolean noClientsInChannel = true;

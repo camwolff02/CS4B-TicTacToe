@@ -23,6 +23,8 @@ public class ClientRouter {
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
+    private boolean waiting;
+
     public static void main(String [] args) throws IOException{
         Socket socket = null;
         
@@ -52,6 +54,7 @@ public class ClientRouter {
     public ClientRouter(Socket socket){
         
         try {
+            this.waiting = false;
             this.scanner = new Scanner(System.in);
 
             this.socket = socket;
@@ -198,8 +201,8 @@ public class ClientRouter {
             objectOutputStream.writeObject(messageToSend);
             objectOutputStream.flush();
             
-            System.out.println("Message sent!\n");
-            System.out.println("Press enter when ready to execute next action");
+            System.out.println("Message sent!\n"
+                + "Press enter when ready to execute next action");
             scanner.nextLine();
             
         } catch (IOException e) {
