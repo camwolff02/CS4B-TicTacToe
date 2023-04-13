@@ -63,7 +63,8 @@ public class ClientHandlerRouter implements Runnable {
     // a method that listens for the message using a separate thread
     @Override
     public void run() {
-        // make sure there is still a connection to the client and read the message
+        while(true){
+            // make sure there is still a connection to the client and read the message
             try {
                 Message incomingMessage = (Message)objectInputStream.readObject();
                 
@@ -91,6 +92,7 @@ public class ClientHandlerRouter implements Runnable {
                 e.printStackTrace();
                 closeEverthing();
             }
+        }
         
     }
 
