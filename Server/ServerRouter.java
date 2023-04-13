@@ -24,8 +24,8 @@ public class ServerRouter {
         // created the server object
         ServerRouter server = new ServerRouter(serverSocket);
         // called the run method that starts the server
-        System.out.println("Server started");
-        server.startServer();
+        System.out.println("INFO: Server started");
+        server.runServer();
     }
 
     // this is for listening for incoming connections or clients 
@@ -36,6 +36,10 @@ public class ServerRouter {
     public ServerRouter(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
         channelSubscribers = new HashMap<>();
+    }
+
+    public boolean channelExists(String channel) {
+        return channelSubscribers.containsKey(channel);
     }
 
     public void broadcastMessageAndIncludeSelf(String channel, Message message) {
@@ -74,7 +78,7 @@ public class ServerRouter {
             System.out.println("WARNING: " + callingHandler + " sent message with no other members in channel");
     }
 
-    public void subscribeToChannel(ClientHandlerRouter callingHandler, String channel, Message message) {
+    public void subscribeToChannel(ClientHandlerRouter callingHandler, String channel) {
         // if the channel doesn't exist, create the channel
         if (!channelSubscribers.containsKey(channel)) 
             channelSubscribers.put(channel, new HashSet<>());
@@ -83,34 +87,35 @@ public class ServerRouter {
         channelSubscribers.get(channel).add(callingHandler);
         
         System.out.println("INFO: " + callingHandler + " has entered \"" + channel + "\"");
-        broadcastMessage(callingHandler, channel, message);
-        callingHandler.sendMessageToClient(message);
+        //broadcastMessage(callingHandler, channel, message);
+        //callingHandler.sendMessageToClient(message);
     }
 
-    public void unsubscribeFromChannel(ClientHandlerRouter callingHandler, String channel, Message message) {
+    public void unsubscribeFromChannel(ClientHandlerRouter callingHandler, String channel) {
         System.out.println("INFO: " + callingHandler + " has left \"" + channel + "\"");
         
-        broadcastMessage(callingHandler, channel, message);
-        callingHandler.sendMessageToClient(message);
+        // broadcastMessage(callingHandler, channel, message);
+        // callingHandler.sendMessageToClient(message);
 
         try {
             channelSubscribers.get(channel).remove(callingHandler);
         }
         catch (NullPointerException e) {
-            callingHandler.sendMessageToClient(message);
+            // TODO send error that channel could not be left
+            // callingHandler.sendMessageToClient(message);
         }
 
     }    
     
 
     // a run method that will start the server and keeping the server running
-    private void startServer() {
+    private void runServer() {
         try{
             // the server will be constantly running untill the server socket is closed
             while (!serverSocket.isClosed()){
                 // a blocking method for halting the program untill a client has conected
                 Socket socket = serverSocket.accept();
-                System.out.println("A new client has connected!");
+                System.out.println("INFO: A new client has connected!");
 
                 // a class that will be responsible for the communication with the client and have a runnable interface
                 ClientHandlerRouter clienHandler = new ClientHandlerRouter(this, socket);
@@ -122,16 +127,4 @@ public class ServerRouter {
 
         }
     }
-
-    // a method that will close the server socket if an error has occurs
-    private void closeServerSocket() {
-        // make sure the server socket is not pointed to a null
-        try{
-            if(serverSocket != null) {
-                serverSocket.close();
-            }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-    }     
 }

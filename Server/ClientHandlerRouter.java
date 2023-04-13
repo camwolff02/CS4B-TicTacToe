@@ -16,6 +16,9 @@ public class ClientHandlerRouter implements Runnable {
     // this class should be unaware of other connections, abstract functionality
     // to router
 
+    private static int currentId = 0;
+    private int id;
+
     private ServerRouter router;
     
     private Socket socket;                  // used for establish a connection between the client and server
@@ -29,31 +32,33 @@ public class ClientHandlerRouter implements Runnable {
 
     // a construter method
     public ClientHandlerRouter(ServerRouter router, Socket socket) {
-        this.router = router;
-        
         try {
+            this.id = currentId;
+            currentId++;
+        
+            this.router = router;
             this.socket = socket;
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            // this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new ObjectInputStream(socket.getInputStream());
 
-            this.clientInfo = bufferedReader.readLine();            
+            //this.clientInfo = bufferedReader.readLine();            
         } catch(IOException e) {
             closeEverthing();
         }        
     }
 
-    public Message getClientMessage() throws ClassNotFoundException, IOException{
-        Message message = (Message) objectInputStream.readObject();
-        return message;
-    }
+    // public Message getClientMessage() throws ClassNotFoundException, IOException{
+    //     Message message = (Message) objectInputStream.readObject();
+    //     return message;
+    // }
 
-    public void sendMessage(Message message){
-        // objectOutputStream.writeObject(message);
-        System.out.println(message);
-    }
+    // public void sendMessage(Message message){
+    //     // objectOutputStream.writeObject(message);
+    //     System.out.println(message);
+    // }
 
     // a method that listens for the message using a separate thread
     @Override
@@ -62,37 +67,23 @@ public class ClientHandlerRouter implements Runnable {
             try {
                 Message incomingMessage = (Message)objectInputStream.readObject();
                 
-                router.broadcastMessage(this, incomingMessage.getChannel(), incomingMessage);
+                String channel = incomingMessage.getChannel();
+                String type = incomingMessage.getType();
 
-                System.out.println("Message received: " + incomingMessage.getChannel());
-                // Message clientMessage = getClientMessage();
+                System.out.println("HANDLER: Message received: <channel: " + channel + ", type: " + type + ">" );
 
-                // if (clientMessage.getType() == "SubscribeMessageRequest") {
-                //      router.subscribeToChannel(this, clientMessage.getChannel(), clientMessage);
-                // }
-                // else if(clientMessage.getType() == "UnsubscribeMessageRequest"){
-                //     router.unsubscribeFromChannel(this, clientMessage.getChannel(), clientMessage);
-                // }
-
-                // String clientMessage = bufferedReader.readLine();
-                // if (clientMessage.startsWith("Subscribe::")) {
-                //     String channel = clientMessage.split("::", 2)[1]; 
-                //     router.subscribeToChannel(this, channel);
-                // }
-                // else if (clientMessage.startsWith("Unsubscribe::")) {
-                //     String channel = clientMessage.split("::", 2)[1]; 
-                //     router.unsubscribeFromChannel(this, channel);
-                // }
-                // else {
-                //     try {
-                //         var arr = clientMessage.split("::", 2); 
-                //         String channel = arr[0];
-                //         String message = arr[1];
-                //         router.broadcastMessage(this, channel, clientInfo + ": " + message);
-                //     } catch (ArrayIndexOutOfBoundsException e) {
-                //         sendMessageToClient("ERROR: must send message in format \"Channel::message\"");
-                //     }      
-                // }
+                if (type.equals("subscribe")) {
+                    System.out.println("HANDLER: attempting to subscribe");
+                    router.subscribeToChannel(this, channel);
+                }
+                else if (type.equals("unsubscribe")){
+                    System.out.println("HANDLER: attempting to unsubscribe");
+                    router.unsubscribeFromChannel(this, channel);
+                }
+                else {
+                    System.out.println("HANDLER: attempting to send message");
+                    router.broadcastMessage(this, channel, incomingMessage);
+                }
             } catch(IOException e) {
                 closeEverthing();
             } catch(ClassNotFoundException e){
@@ -102,7 +93,8 @@ public class ClientHandlerRouter implements Runnable {
     }
 
     public String toString() {
-        return clientInfo;
+        // return clientInfo;
+        return Integer.toString(id);
     }
 
     public void sendMessageToClient(Message message) {
@@ -115,9 +107,6 @@ public class ClientHandlerRouter implements Runnable {
         }   
  
     }
-
-    // a method that will send message to all the client that is connected except the client that 
-    // send the message
 
     // a method that will close the socket after a client has left or there is an error
     private void closeEverthing(){

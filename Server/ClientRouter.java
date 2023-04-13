@@ -1,184 +1,86 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
+
+import java.net.ConnectException;
 import java.net.Socket;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import Serialize.ApplicationMessage;
 import Serialize.Message;
 import Serialize.Messages.*;
 
+// TODO maybe include sender in message packet?
+
 public class ClientRouter {
-    public static void main(String [] args) throws IOException{
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Please enter your name to start chatting: ");
-        String userName = scanner.nextLine();
-
-
-        Socket socket = new Socket("LocalHost", 1234);
-
-        ClientRouter client = new ClientRouter(socket, userName);
-        client.sendMessage(createMessage());
-        client.listenForMessage();
-        scanner.close();
-    }
-
-    private Socket socket;                  // used for establish a connection between the client and server
-    private BufferedReader bufferedReader;  // used for reading message that is sent from the client
-    private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
+    Scanner scanner;
+    private Socket socket;  // used for establish a connection between the client and server
 
     private ObjectOutputStream objectOutputStream;
-
     private ObjectInputStream objectInputStream;
 
-    
-    private String userName;                // used for identify for whitch clinet
+    public static void main(String [] args) throws IOException{
+        Socket socket = null;
+        
+        while (socket == null) {
+            try {
+                socket = new Socket("LocalHost", 1234);
+            } 
+            catch (ConnectException e) {
+                System.out.println("waiting for server...");
+                try {
+                    TimeUnit.SECONDS.sleep(1);        
+                } catch (InterruptedException ex) {}
+            }
+        }
 
-    // a construter method
-    public ClientRouter(Socket socket, String userName){
+        System.out.println("Connected to server!");
+        ClientRouter client = new ClientRouter(socket);
+        
+        client.startMessageListener();
+
+        // TODO create proper way to break out of loop and end client
+        while (true)
+            client.sendMessage(client.createMessage());
+    }
+
+
+    public ClientRouter(Socket socket){
+        
         try {
+            this.scanner = new Scanner(System.in);
+
             this.socket = socket;
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
             
-            this.userName = userName;
         } catch (IOException e) {
-            closeEverthing(socket, bufferedReader, bufferedWriter);
+            closeEverthing();
         }
     }
 
-    static private Message createMessage() {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter Channel: ");
-        String channel = scanner.nextLine();
-
-        System.out.print("Enter type: ");
-        String type = scanner.nextLine();
-
-        scanner.close();
-        ApplicationMessage appMessage = null;
-        Message message;
-
-        switch (type) {
-            case "create_login":
-            appMessage = new CreateLoginRequest("username", "password", "picture.png");
-                break;
-            
-            case "add_profile_pic":
-            appMessage = new AddProfilePicRequest("picture.png");
-                break; 
-
-            case "login":
-            appMessage = new LoginRequest("user", "abcde");
-                break;
-                
-            case "create_game":
-            appMessage = new CreateGameRequest("Homi's Lobby");
-                break; 
-
-            case "join_game":
-            appMessage = new JoinGameRequest("Homi's Lobby");
-                break;
-
-            case "client_info":
-            appMessage = new ClientInfoMessage("username", "picture.png");
-                break;
-
-            case "make_move":
-            int[] moves = {1, 2};
-            appMessage = new MakeMoveRequest("Homi's Lobby", "Player2", moves);
-                break; 
-
-            case "list_games":
-            appMessage = new ListGamesRequest();
-                break; 
-
-            case "list_of_games":
-            ArrayList<String> games = new ArrayList<>(Arrays.asList("Homi's Lobby", "Player2's Lobby"));
-            appMessage = new ListOfGamesResponse(games);
-                break; 
-
-            case "action_success":
-            appMessage = new ActionSuccessResponse(true);
-
-                break;
-
-            case "start_game":
-            appMessage = new StartGameRequest(true, "Homi's Lobby");
-                break;
-
-            case "client_disconnected":
-            appMessage = new ClientDisconnectedMessage();
-
-                break;
-
-            case "game_over":
-            appMessage = new GameOverMessage(GameState.TIE);
-                break;
-
-            case "play_again": 
-            appMessage = new PlayAgainRequest(true);
-                break;
-
-            case "exit":
-            appMessage = new ExitRequest();
-        }
-
-        message = new Message(channel, type, appMessage);
-
-        return message;
-
-    }
-
-    // a method that will send the message to the clientHandler
-    public void sendMessage(Message messageToSend) {
-        try {
-            bufferedWriter.write(userName);     // send the user name first
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-    
-            objectOutputStream.writeObject(messageToSend);
-            objectOutputStream.flush();
-            
-            System.out.println("Object has been serialized by client");
-            
-        } catch(IOException e) {
-            closeEverthing(socket, bufferedReader, bufferedWriter);
-        }
-    }
-    
-
-    // a method that will listen for messege that has been broadcasted
-    public void listenForMessage(){
-
-        
+    // Listens for messege that has been broadcasted
+    public void startMessageListener(){
         // have to used a new thred so the program will not be halted
         new Thread(new Runnable() {
             @Override
             public void run(){
-
                 while(socket.isConnected()){
                     try{
                         Message incomingMessage = (Message) objectInputStream.readObject();
 
                         System.out.println(incomingMessage);
 
-                    }catch(IOException e){
-                        closeEverthing(socket, bufferedReader, bufferedWriter);
+                    } catch (IOException e){
+                        closeEverthing();
                     } catch (ClassNotFoundException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     
@@ -188,21 +90,141 @@ public class ClientRouter {
         }).start();
     }
 
-    // a method that will close everthing down
-    public void closeEverthing(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
-        try{
-            if(bufferedReader != null){
-                bufferedReader.close();
-            }
+    private Message createMessage() {
+        ApplicationMessage appMessage = null;
+       
+        String type = null;
+        String channel = null;
 
-            if(bufferedWriter != null){
-                bufferedWriter.close();
+        System.out.print("Please enter a channel name to interact with: ");
+        channel = scanner.nextLine();
+
+        System.out.println("Please enter 1, 2, or 3:\n" 
+        + "1. <subscribe> to a channel\n" 
+        + "2. <unsubscribe> from a channel\n"
+        + "3. <send> a message");
+
+        while (type == null) {
+            System.out.print("selection: ");
+
+            switch (scanner.nextLine()) {
+                case "1":
+                    type = "subscribe";
+                    appMessage = createApplicationMessage(channel, type);
+                    break;
+
+                case "2":
+                    type = "unsubscribe";
+                    appMessage = createApplicationMessage(channel, type);
+                    break;
+
+                case "3":
+                    while (appMessage == null) {
+                        System.out.print("Enter type: ");
+                        type = scanner.nextLine();      
+                        appMessage = createApplicationMessage(channel, type);
+                    }
+                    break;
+
+                default:
+                    System.out.println("ERROR: please enter 1, 2, or 3");
             }
+        }
+
+        return new Message(channel, type, appMessage);
+    }
+
+    private ApplicationMessage createApplicationMessage(String channel, String type) {
+        switch (type) {
+            case "subscribe":
+                return new SubscribeRequest(channel);
+
+            case "unsubscribe":
+                return new UnsubscribeRequest(channel);
+
+            case "create_login":
+                return new CreateLoginRequest("username", "password", "picture.png");
             
-            if(socket != null){
+            case "add_profile_pic":
+                return new AddProfilePicRequest("picture.png"); 
+
+            case "login":
+                return new LoginRequest("user", "abcde");
+                
+            case "create_game":
+                return new CreateGameRequest("Homi's Lobby"); 
+
+            case "join_game":
+                return new JoinGameRequest("Homi's Lobby");
+
+            case "client_info":
+                return new ClientInfoMessage("username", "picture.png");
+
+            case "make_move":
+                int[] moves = {1, 2};
+                return new MakeMoveRequest("Homi's Lobby", "Player2", moves); 
+
+            case "list_games":
+                return new ListGamesRequest(); 
+
+            case "list_of_games":
+                ArrayList<String> games = new ArrayList<>(Arrays.asList("Homi's Lobby", "Player2's Lobby"));
+                return new ListOfGamesResponse(games); 
+
+            case "action_success":
+                return new ActionSuccessResponse(true);
+
+            case "start_game":
+                return new StartGameRequest(true, "Homi's Lobby");
+
+            case "client_disconnected":
+                return new ClientDisconnectedMessage();
+
+            case "game_over":
+                return new GameOverMessage(GameState.TIE);
+
+            case "play_again": 
+                return new PlayAgainRequest(true);
+
+            case "exit":
+                return new ExitRequest();
+            default:
+                System.out.println("ERROR: please enter an existing message type");
+                return null;
+        }
+    }
+
+    // Sends the message to the clientHandler
+    public void sendMessage(Message messageToSend) {
+        try {
+            objectOutputStream.writeObject(messageToSend);
+            objectOutputStream.flush();
+            
+            System.out.println("Message sent!\n");
+            System.out.println("Press enter when ready to execute next action");
+            scanner.nextLine();
+            
+        } catch (IOException e) {
+            closeEverthing();
+        }
+    }
+
+    // Close everthing down
+    public void closeEverthing() {
+        try {
+            if (objectInputStream != null)
+                objectInputStream.close();
+
+            if (objectOutputStream != null)
+                objectOutputStream.close();
+            
+            if (socket != null) 
                 socket.close();
-            }
-        }catch(IOException e){
+
+            if (scanner != null) 
+                scanner.close();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
