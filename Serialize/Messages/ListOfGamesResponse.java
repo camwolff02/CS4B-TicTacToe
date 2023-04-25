@@ -2,9 +2,9 @@ package Serialize.Messages;
 
 import java.util.ArrayList;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ListOfGamesResponse extends ApplicationMessage {
+public class ListOfGamesResponse extends Message {
     ArrayList<String> lobbyNames;
     
     public ListOfGamesResponse(ArrayList<String> lobbyNames) {

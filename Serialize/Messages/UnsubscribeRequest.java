@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class UnsubscribeRequest extends ApplicationMessage {
+public class UnsubscribeRequest extends Message {
     private String channel;
     
     public UnsubscribeRequest(String channel) {

@@ -13,92 +13,92 @@ import Serialize.Messages.*;
 public class MessageDriver {
     public static void main(String[] args) {
         // TEST CREATE GAME LOGIN REQUEST
-        CreateLoginRequest appMessage1 = new CreateLoginRequest("username", "password", "picture.png");
-        Message message1 = new Message("game", "create_login", appMessage1);
-        testSerialization(message1);
+        CreateLoginRequest message1 = new CreateLoginRequest("username", "password", "picture.png");
+        Packet packet1 = new Packet("game", "create_login", message1);
+        testSerialization(packet1);
 
         // TEST ADD PROFILE PIC REQUEST
-        AddProfilePicRequest appMessage2 = new AddProfilePicRequest("picture.png");
-        Message message2 = new Message("game", "add_profile_pic", appMessage2);
-        testSerialization(message2);
+        AddProfilePicRequest message2 = new AddProfilePicRequest("picture.png");
+        Packet packet2 = new Packet("game", "add_profile_pic", message2);
+        testSerialization(packet2);
 
         // TEST LOGIN REQUEST
-        LoginRequest appMessage3 = new LoginRequest("user", "abcde");
-        Message message3 = new Message("game", "login", appMessage3);
-        testSerialization(message3);
+        LoginRequest message3 = new LoginRequest("user", "abcde");
+        Packet packet3 = new Packet("game", "login", message3);
+        testSerialization(packet3);
 
         // TEST CREATE GAME REQUEST
-        CreateGameRequest appMessage4 = new CreateGameRequest("Homi's Lobby");
-        Message message4 = new Message("game", "create_game", appMessage4);
-        testSerialization(message4);
+        CreateGameRequest message4 = new CreateGameRequest("Homi's Lobby");
+        Packet packet4 = new Packet("game", "create_game", message4);
+        testSerialization(packet4);
 
         
         // TEST JOIN GAME REQUEST
-        JoinGameRequest appMessage5 = new JoinGameRequest("Homi's Lobby");
-        Message message5 = new Message("game", "join_game", appMessage5);
-        testSerialization(message5);
+        JoinGameRequest message5 = new JoinGameRequest("Homi's Lobby");
+        Packet packet5 = new Packet("game", "join_game", message5);
+        testSerialization(packet5);
         
         // TEST CREATE CLIENT INFO MESSAGE
-        ClientInfoMessage appMessage6 = new ClientInfoMessage("username", "picture.png");
-        Message message6 = new Message("game", "client_info", appMessage6);
-        testSerialization(message6);
+        ClientInfopacket message6 = new ClientInfopacket("username", "picture.png");
+        Packet packet6 = new Packet("game", "client_info", message6);
+        testSerialization(packet6);
         
         // TEST MAKE MOVE REQUEST
         int[] moves = {1, 2};
-        MakeMoveRequest appMessage7 = new MakeMoveRequest("Homi's Lobby", "Player2", moves);
-        Message message7 = new Message("game", "make_move", appMessage7);
-        testSerialization(message7);
+        MakeMoveRequest message7 = new MakeMoveRequest("Homi's Lobby", "Player2", moves);
+        Packet packet7 = new Packet("game", "make_move", message7);
+        testSerialization(packet7);
 
         // TEST CREATE LIST GAME REQUEST
-        ListGamesRequest appMessage8 = new ListGamesRequest();
-        Message message8 = new Message("game", "list_games", appMessage8);
-        testSerialization(message8);
+        ListGamesRequest message8 = new ListGamesRequest();
+        Packet packet8 = new Packet("game", "list_games", message8);
+        testSerialization(packet8);
 
         // TEST LIST OF GAMES RESPONSE
         ArrayList<String> games = new ArrayList<>(Arrays.asList("Homi's Lobby", "Player2's Lobby"));
-        ListOfGamesResponse appMessage9 = new ListOfGamesResponse(games);
-        Message message9 = new Message("game", "list_of_games", appMessage9);
-        testSerialization(message9);
+        ListOfGamesResponse message9 = new ListOfGamesResponse(games);
+        Packet packet9 = new Packet("game", "list_of_games", message9);
+        testSerialization(packet9);
 
-        //TEST ACTION SUCCESS MESSAGE
-        ActionSuccessResponse appMessage10 = new ActionSuccessResponse(true);
-        Message message10 = new Message("game", "action_success", appMessage10);
-        testSerialization(message10);
+        //TEST ACTION SUCCESS packet
+        ActionSuccessResponse message10 = new ActionSuccessResponse(true);
+        Packet packet10 = new Packet("game", "action_success", message10);
+        testSerialization(packet10);
 
         // TEST CREATE START GAME REQUEST
-        StartGameRequest appMessage11 = new StartGameRequest(true, "Homi's Lobby");
-        Message message11 = new Message("game", "start_game", appMessage11);
-        testSerialization(message11);
+        StartGameRequest message11 = new StartGameRequest(true, "Homi's Lobby");
+        Packet packet11 = new Packet("game", "start_game", message11);
+        testSerialization(packet11);
 
         // TEST CLIENT DISCONNECTED MESSAGE
-        ClientDisconnectedMessage appMessage12 = new ClientDisconnectedMessage();
-        Message message12 = new Message("game", "client_disconnected", appMessage12);
-        testSerialization(message12);
+        ClientDisconnectedpacket message12 = new ClientDisconnectedpacket();
+        Packet packet12 = new Packet("game", "client_disconnected", message12);
+        testSerialization(packet12);
 
         // TEST GAME OVER MESSAGE
-        GameOverMessage appMessage13 = new GameOverMessage(GameState.TIE);
-        Message message13 = new Message("game", "game_over", appMessage13);
-        testSerialization(message13);
+        GameOverpacket message13 = new GameOverpacket(GameState.TIE);
+        Packet packet13 = new Packet("game", "game_over", message13);
+        testSerialization(packet13);
 
         // TEST CLIENT DISCONNECTED MESSAGE
-        PlayAgainRequest appMessage14 = new PlayAgainRequest(true);
-        Message message14 = new Message("game", "play_again", appMessage14);
-        testSerialization(message14);
+        PlayAgainRequest message14 = new PlayAgainRequest(true);
+        Packet packet14 = new Packet("game", "play_again", message14);
+        testSerialization(packet14);
         
         // TEST EXIT MESSAGE
-        ExitRequest appMessage15 = new ExitRequest();
-        Message message15 = new Message("game", "exit", appMessage15);
-        testSerialization(message15);
+        ExitRequest message15 = new ExitRequest();
+        Packet packet15 = new Packet("game", "exit", message15);
+        testSerialization(packet15);
         
     }
 
-    public static void testSerialization(Message message) {
+    public static void testSerialization(Packet message) {
         testSerialization(message, 
             "Testing " + message.getType() + " message\n"+ "---------------------------------------------------------" 
         );
     }
 
-    public static void testSerialization(Message message, String info) { 
+    public static void testSerialization(Packet message, String info) { 
         String filename = "MessageData.txt";
 
         System.out.println(info);
@@ -118,7 +118,7 @@ public class MessageDriver {
             FileInputStream file2 = new FileInputStream(filename);
             ObjectInputStream inRouter = new ObjectInputStream(file2);
             
-            Message messageRouter = (Message)inRouter.readObject(); 
+            Packet messageRouter = (Packet)inRouter.readObject(); 
             inRouter.close();
 
             String channel = messageRouter.getChannel();
@@ -147,7 +147,7 @@ public class MessageDriver {
             FileInputStream file4 = new FileInputStream(filename);
             ObjectInputStream inClient = new ObjectInputStream(file4);
             
-            Message messageClient = (Message)inClient.readObject(); 
+            Packet messageClient = (Packet)inClient.readObject(); 
             inClient.close();
 
             System.out.println("Object has been deserialized by client");

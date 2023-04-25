@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class SubscribeRequest extends ApplicationMessage {
+public class SubscribeRequest extends Message {
     private String channel;
     
     public SubscribeRequest(String channel) {

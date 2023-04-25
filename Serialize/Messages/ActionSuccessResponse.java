@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ActionSuccessResponse extends ApplicationMessage { 
+public class ActionSuccessResponse extends Message { 
     boolean actionSucceeded;
     String infoMessage;
 

@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class AddProfilePicRequest extends ApplicationMessage {
+public class AddProfilePicRequest extends Message {
     String profilePic;
 
     public AddProfilePicRequest(String profilePic) {

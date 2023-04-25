@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class MakeMoveRequest extends ApplicationMessage {
+public class MakeMoveRequest extends Message {
     private String currentPlayer;
     private String lobbyName;
     //private Pair<Integer, Integer> gameMove;

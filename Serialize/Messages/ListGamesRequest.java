@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ListGamesRequest extends ApplicationMessage {
+public class ListGamesRequest extends Message {
 
     public String toString() {
         return "List Games";

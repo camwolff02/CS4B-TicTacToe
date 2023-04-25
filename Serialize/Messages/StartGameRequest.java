@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class StartGameRequest extends ApplicationMessage {
+public class StartGameRequest extends Message {
     private boolean status;
     private String lobbyName;
     

@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class GameOverMessage extends ApplicationMessage {
+public class GameOverMessage extends Message {
     private GameState gameState;
 
     public GameOverMessage(GameState gameState) {

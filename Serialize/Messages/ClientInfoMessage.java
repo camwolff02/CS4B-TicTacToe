@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ClientInfoMessage extends ApplicationMessage {
+public class ClientInfoMessage extends Message {
     String username;
     String profilePic;
 

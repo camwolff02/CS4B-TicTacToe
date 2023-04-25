@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class CreateLoginRequest extends ApplicationMessage {
+public class CreateLoginRequest extends Message {
     String username;
     String password;
     String profilePic;

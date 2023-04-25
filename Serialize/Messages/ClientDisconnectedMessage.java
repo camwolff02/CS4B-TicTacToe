@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ClientDisconnectedMessage extends ApplicationMessage { 
+public class ClientDisconnectedMessage extends Message { 
 
     public ClientDisconnectedMessage() {}
 

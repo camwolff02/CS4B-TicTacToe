@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class CreateGameRequest extends ApplicationMessage {
+public class CreateGameRequest extends Message {
     private String lobbyName;
 
     public CreateGameRequest(String lobbyName) {

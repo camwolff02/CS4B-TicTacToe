@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class ServorErrorMessage extends ApplicationMessage { 
+public class ServorErrorMessage extends Message { 
 
     public String toString() {
         return "Something either failed or message does not exist";

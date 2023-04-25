@@ -1,8 +1,8 @@
 package Serialize.Messages;
 
-import Serialize.ApplicationMessage;
+import Serialize.Message;
 
-public class PlayAgainRequest extends ApplicationMessage { 
+public class PlayAgainRequest extends Message { 
     
     boolean playAgain;
 
