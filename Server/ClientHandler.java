@@ -31,7 +31,7 @@ public class ClientHandler implements Runnable {
 
 
     // a construter method
-    public ClientHandler(ServerRouter router, Socket socket) {
+    public ClientHandler(Router router, Socket socket) {
         try {
             this.id = currentId;
             currentId++;

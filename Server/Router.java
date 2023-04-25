@@ -16,7 +16,7 @@ import Serialize.Message;
 public class Router {
     // put static ClientHandler properties here or in separate class
 
-    private HashMap<String, HashSet<ClientHandlerRouter>> channelSubscribers;
+    private HashMap<String, HashSet<ClientHandler>> channelSubscribers;
 
     public static void main(String[] args) throws IOException {        
         // created the server socket with a port
@@ -43,7 +43,7 @@ public class Router {
     }
 
 
-    public void broadcastMessage(ClientHandlerRouter callingHandler, String channel, Message message) {        
+    public void broadcastMessage(ClientHandler callingHandler, String channel, Message message) {        
         boolean noClientsInChannel = true;
         boolean notSubscribedToAnyChannels = true;
         
@@ -75,7 +75,7 @@ public class Router {
             System.out.println("WARNING: " + callingHandler + " sent message with no other members in channel");
     }
 
-    public void subscribeToChannel(ClientHandlerRouter callingHandler, String channel) {
+    public void subscribeToChannel(ClientHandler callingHandler, String channel) {
         // if the channel doesn't exist, create the channel
         if (!channelSubscribers.containsKey(channel)) 
             channelSubscribers.put(channel, new HashSet<>());
@@ -88,7 +88,7 @@ public class Router {
         //callingHandler.sendMessageToClient(message);
     }
 
-    public void unsubscribeFromChannel(ClientHandlerRouter callingHandler, String channel) {
+    public void unsubscribeFromChannel(ClientHandler callingHandler, String channel) {
         System.out.println("INFO: " + callingHandler + " has left \"" + channel + "\"");
         
         // broadcastMessage(callingHandler, channel, message);
@@ -115,7 +115,7 @@ public class Router {
                 System.out.println("INFO: A new client has connected!");
 
                 // a class that will be responsible for the communication with the client and have a runnable interface
-                ClientHandlerRouter clienHandler = new ClientHandlerRouter(this, socket);
+                ClientHandler clienHandler = new ClientHandler(this, socket);
                 // Encapsulate thread in ClientHandler, then do ClientHandler.start() 
                 Thread thread = new Thread(clienHandler);
                 thread.start();
