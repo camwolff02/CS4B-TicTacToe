@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="anchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="900.0" stylesheets="file:src/css/board.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.board">
+   <children>
+      <FlowPane layoutX="268.0" layoutY="263.0" prefHeight="375.0" prefWidth="375.0">
+         <children>
+            <Button fx:id="button1" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button2" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button3" layoutX="85.0" layoutY="10.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button4" layoutX="160.0" layoutY="10.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button5" layoutX="10.0" layoutY="85.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button6" layoutX="85.0" layoutY="85.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button7" layoutX="160.0" layoutY="85.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button8" layoutX="10.0" layoutY="160.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+            <Button fx:id="button9" layoutX="85.0" layoutY="160.0" mnemonicParsing="false" onMouseEntered="#showSymbolOnHover" onMouseExited="#hideSymbolOnHover" prefHeight="125.0" prefWidth="125.0">
+               <font>
+                  <Font size="50.0" />
+               </font></Button>
+         </children>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </FlowPane>
+      <Button id="functionButtons" fx:id="restartGame" layoutX="118.0" layoutY="718.0" mnemonicParsing="false" onAction="#restartGame" prefHeight="75.0" prefWidth="150.0" text="Restart">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Button id="functionButtons" layoutX="643.0" layoutY="718.0" mnemonicParsing="false" onAction="#backtoMenu" prefHeight="75.0" prefWidth="150.0" text="Exit to menu" textAlignment="CENTER" wrapText="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
+      <Label id="scoreText" fx:id="scoreText" alignment="CENTER" layoutX="136.0" layoutY="103.0" prefHeight="110.0" prefWidth="639.0" text="0 - 0 - 0" textAlignment="CENTER">
+         <font>
+            <Font size="74.0" />
+         </font></Label>
+      <Label id="gameStateText" fx:id="gameStateText" alignment="CENTER" layoutX="189.0" layoutY="638.0" prefHeight="66.0" prefWidth="534.0" text="  Player Turn: X" textAlignment="CENTER">
+         <font>
+            <Font size="45.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER_LEFT" layoutX="698.0" layoutY="58.0" prefHeight="200.0" prefWidth="188.0" spacing="10.0">
+         <children>
+            <ImageView fx:id="oImageViewPfp" fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="file:src/images/mittens.jpg" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="94.0" spacing="10.0">
+               <children>
+                  <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:src/images/urple_o.png" />
+                     </image>
+                  </ImageView>
+                  <Text fx:id="playerOName" fill="#8f3174" strokeType="OUTSIDE" strokeWidth="0.0" text="Blungis" wrappingWidth="162.13671875">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER_LEFT" layoutX="94.0" layoutY="58.0" prefHeight="200.0" prefWidth="188.0" spacing="10.0">
+         <children>
+            <ImageView fitHeight="116.0" fitWidth="116.0" pickOnBounds="true" preserveRatio="true" fx:id="xImageViewPfp">
+               <image>
+                  <Image url="file:src/images/soyjack.png" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" prefHeight="30.0" prefWidth="94.0" spacing="10.0">
+               <children>
+                  <ImageView fitHeight="32.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:src/images/urple_x.png" />
+                     </image>
+                  </ImageView>
+                  <Text fx:id="playerXName" fill="#8f3174" strokeType="OUTSIDE" strokeWidth="0.0" text="Bingus" wrappingWidth="162.13671875">
+                     <font>
+                        <Font size="32.0" />
+                     </font>
+                  </Text>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <ImageView fx:id="image1" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="273.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image2" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="397.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image3" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="267.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image4" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image5" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="398.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image6" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="393.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image7" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="272.0" layoutY="518.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image8" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="398.0" layoutY="517.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="image9" disable="true" fitHeight="116.0" fitWidth="116.0" layoutX="522.0" layoutY="517.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ImageView fx:id="gameStateImage" disable="true" fitHeight="57.0" fitWidth="70.0" layoutX="618.0" layoutY="643.0" pickOnBounds="true" preserveRatio="true" visible="false" />
+      <ToggleButton fx:id="modeToggle" layoutX="284.0" layoutY="736.0" mnemonicParsing="false" onAction="#changeDisplayMode" prefHeight="39.0" prefWidth="343.0" text="Toggle Image Mode" AnchorPane.leftAnchor="284.0" AnchorPane.rightAnchor="273.0" />
+   </children>
+</AnchorPane>

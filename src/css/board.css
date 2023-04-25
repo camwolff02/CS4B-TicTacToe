@@ -1,0 +1,62 @@
+@font-face {
+    font-family: 'Public Pixel' ;
+    src: url(file:src/Fonts/PublicPixel-z84yD.ttf);
+} 
+
+#playerXName, #playerOName {
+    -fx-font: 18px "Public Pixel";
+    font: 18px "Public Pixel";
+    -fx-text-fill: #8f3174;
+} 
+
+#scoreText, #gameStateText {
+    -fx-font: 24px "Public Pixel";
+    font: 24px "Public Pixel";
+    -fx-text-fill: #8f3174;
+} 
+
+#button1, #button2, #button3, #button4, #button5, #button6, #button7, #button8, #button9 {
+    -fx-font: 45px "Public Pixel";
+    font: 45px "Public Pixel";
+    -fx-text-fill: #CD5888;
+}
+#button1:hover, #button2:hover, #button3:hover, #button4:hover, #button5:hover, #button6:hover, #button7:hover, #button8:hover, #button9:hover {
+    -fx-font: 45px "Public Pixel";
+    font: 45px "Public Pixel";
+    -fx-text-fill: #cd588948;
+}
+
+
+#anchor {
+    -fx-background-color: #2a313a;
+    background-color: #2a313a;
+}
+
+.button, #modeToggle {
+    -fx-font: 12px "Public Pixel";
+    font: 12px "Public Pixel";
+    -fx-background-insets: 0;
+    -fx-text-fill: #CD5888;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    border-style: solid;
+    -fx-border-color: #8f3174;
+    border-color: #8f3174;
+    -fx-border-width: 5px;
+    border-width: 5px;
+    -fx-focus-color: transparent;
+}
+
+
+.button:hover{
+    -fx-font: 12px "Public Pixel";
+    font: 12px "Public Pixel";
+    -fx-text-fill: #2a313a;
+    -fx-background-radius: 0;
+    -fx-border-style: solid;
+    border-style: solid;
+    -fx-border-color: #8f3174;
+    border-color: #8f3174;
+    -fx-border-width: 5px;
+    border-width: 5px;
+}
