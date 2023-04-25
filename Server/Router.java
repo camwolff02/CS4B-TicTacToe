@@ -13,7 +13,7 @@ import Serialize.Message;
  *  pushes message to all clients
  */
 
-public class ServerRouter {
+public class Router {
     // put static ClientHandler properties here or in separate class
 
     private HashMap<String, HashSet<ClientHandlerRouter>> channelSubscribers;
@@ -22,7 +22,7 @@ public class ServerRouter {
         // created the server socket with a port
         ServerSocket serverSocket = new ServerSocket(1234);
         // created the server object
-        ServerRouter server = new ServerRouter(serverSocket);
+        Router server = new Router(serverSocket);
         // called the run method that starts the server
         System.out.println("INFO: Server started");
         server.runServer();
@@ -33,7 +33,7 @@ public class ServerRouter {
     private ServerSocket serverSocket;
 
     //a construtor method
-    public ServerRouter(ServerSocket serverSocket) {
+    public Router(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
         channelSubscribers = new HashMap<>();
     }

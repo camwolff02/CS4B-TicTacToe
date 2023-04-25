@@ -3,91 +3,139 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
+
+import Serialize.Message;
+
 
 // The sever start method will run this client handler class so there is no main here
 // implements Runnable here so the instances will be executed by a separate thread(override the run method) 
-public class ClientHandler implements Runnable{
+public class ClientHandler implements Runnable {    
+    // this class should be unaware of other connections, abstract functionality
+    // to router
 
-    // this array list is to keep track of all the clients
-    public static ArrayList<ClientHandler> clientHandler = new ArrayList<>();
+    private static int currentId = 0;
+    private int id;
+
+    private ServerRouter router;
+    
     private Socket socket;                  // used for establish a connection between the client and server
     private BufferedReader bufferedReader;  // used for reading message that is sent from the client
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
     private String clientInfo;              // used for identify for whitch clinet
 
+    private ObjectOutputStream objectOutputStream;
+    private ObjectInputStream objectInputStream;
+
+
     // a construter method
-    public ClientHandler(Socket socket){
-        try{
+    public ClientHandler(ServerRouter router, Socket socket) {
+        try {
+            this.id = currentId;
+            currentId++;
+        
+            this.router = router;
             this.socket = socket;
-            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.clientInfo = bufferedReader.readLine();
+            // this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            // add the client to the array list and notify the other client when a new client as joint
-            clientHandler.add(this);
-            broadcastMessage("Sever: " + clientInfo + " has enterd the room");
+            objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectInputStream = new ObjectInputStream(socket.getInputStream());
 
-        }catch(IOException e){
-            closeEverthing(socket, bufferedReader, bufferedWriter);
+            //this.clientInfo = bufferedReader.readLine();            
+        } catch(IOException e) {
+            closeEverthing();
         }        
     }
 
+    // public Message getClientMessage() throws ClassNotFoundException, IOException{
+    //     Message message = (Message) objectInputStream.readObject();
+    //     return message;
+    // }
+
+    // public void sendMessage(Message message){
+    //     // objectOutputStream.writeObject(message);
+    //     System.out.println(message);
+    // }
+
     // a method that listens for the message using a separate thread
     @Override
-    public void run(){
-        String clientMessage;   // used for holding the message received from client
+    public void run() {
+        while(true){
+            // make sure there is still a connection to the client and read the message
+            try {
+                Message incomingMessage = (Message)objectInputStream.readObject();
+                
+                String channel = incomingMessage.getChannel();
+                String type = incomingMessage.getType();
 
-        // make sur there is still a connection to the client and read the message
-        while(socket.isConnected()){
-            try{
-                clientMessage = bufferedReader.readLine();
-                broadcastMessage(clientMessage);
-            }catch(IOException e){
-                closeEverthing(socket, bufferedReader, bufferedWriter);
-                break;      // when the client disconnects it will break out of the loop
-            }
-        }
-    }
+                System.out.println("HANDLER: Message received: <channel: " + channel + ", type: " + type + ">" );
 
-    // a method that will send message to all the client that is connected except the client that 
-    // send the message
-    public void broadcastMessage(String sendMessage){
-        for(ClientHandler clientHandler: clientHandler){
-            try{
-                if(!clientHandler.clientInfo.equals(clientInfo)){
-                    clientHandler.bufferedWriter.write(sendMessage);
-                    clientHandler.bufferedWriter.newLine();
-                    //manually flushing the buffere because it might not be big enough
-                    clientHandler.bufferedWriter.flush();   
+                if (type.equals("subscribe")) {
+                    System.out.println("HANDLER: attempting to subscribe");
+                    router.subscribeToChannel(this, channel);
                 }
-            }catch(IOException e){
-                closeEverthing(socket, bufferedReader, bufferedWriter);
+                else if (type.equals("unsubscribe")){
+                    System.out.println("HANDLER: attempting to unsubscribe");
+                    router.unsubscribeFromChannel(this, channel);
+                }
+                else {
+                    System.out.println("HANDLER: attempting to send message");
+                    router.broadcastMessage(this, channel, incomingMessage);
+                }
+            } catch(IOException e) {
+                e.printStackTrace();
+                closeEverthing();
+            } catch(ClassNotFoundException e){
+                e.printStackTrace();
+                closeEverthing();
             }
         }
+        
     }
 
-    // a method that will remov a client handler and notify everone a client has left
-    public void removeClientHandler(){
-        clientHandler.remove(this);
-        broadcastMessage("Sever: " + clientInfo + " has left the room");
+    public String toString() {
+        // return clientInfo;
+        return Integer.toString(id);
+    }
+
+    public void sendMessageToClient(Message message) {
+        try {
+            this.objectOutputStream.writeObject(message);
+            this.objectOutputStream.flush();
+
+        } catch(IOException e){
+            closeEverthing();
+        }   
+ 
     }
 
     // a method that will close the socket after a client has left or there is an error
-    public void closeEverthing(Socket socket, BufferedReader bufferedReader, BufferedWriter bufferedWriter){
-        removeClientHandler();
+    private void closeEverthing(){
+        //removeClientHandler();
         try{
-            if(bufferedReader != null){
+            if(this.bufferedReader != null){
                 bufferedReader.close();
             }
 
-            if(bufferedWriter != null){
+            if(this.bufferedWriter != null){
                 bufferedWriter.close();
             }
             
-            if(socket != null){
+            if(this.socket != null){
                 socket.close();
+            }
+
+            if(objectInputStream != null)
+            {
+                objectInputStream.close();
+            }
+
+            if(objectOutputStream != null)
+            {
+                objectOutputStream.close();
             }
         }catch(IOException e){
             e.printStackTrace();
