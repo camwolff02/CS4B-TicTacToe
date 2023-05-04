@@ -1,3 +1,29 @@
+1. separate different projects
+    A. Router Project
+        - ClientHandler
+        - Router
+    B. UI Project
+        - JavaFX UI (refactored)
+        - Online logic class/ Client (refactored)
+    C. Game Manager
+        - PlayerManager / Client (refactored)
+        - BoardController
+
+2. Make program PlayerManager and BoardController
+    Program PlayerManager:
+        - after starting, connects to router
+        - subscribes to some channel to see new player info
+        - spins up BoardControllers when it sees "start game message" over channel
+        - puts players in BoardControllers
+    Program BoardController:
+        - run in its own thread
+        - manages 2 players 
+        - controls game logic for 2 players
+        - sends messages to players about game logic
+        - lets 2 players play a game together 
+
+===============================================================================
+
 NOTE: login system is low priority, would be useful for saving data (possibly 
 SQL, JSON, or CSV) and leaderboard
 
