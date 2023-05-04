@@ -1,16 +1,12 @@
-package Router;
+package router;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
 import java.net.Socket;
-
-import Serialize.Message;
-
 
 // The sever start method will run this client handler class so there is no main here
 // implements Runnable here so the instances will be executed by a separate thread(override the run method) 
@@ -21,12 +17,11 @@ public class ClientHandler implements Runnable {
     private static int currentId = 0;
     private int id;
 
-    private ServerRouter router;
+    private Router router;
     
     private Socket socket;                  // used for establish a connection between the client and server
     private BufferedReader bufferedReader;  // used for reading message that is sent from the client
     private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
-    private String clientInfo;              // used for identify for whitch clinet
 
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
@@ -68,7 +63,7 @@ public class ClientHandler implements Runnable {
         while(true){
             // make sure there is still a connection to the client and read the message
             try {
-                Message incomingMessage = (Message)objectInputStream.readObject();
+                Packet incomingMessage = (Packet)objectInputStream.readObject();
                 
                 String channel = incomingMessage.getChannel();
                 String type = incomingMessage.getType();
@@ -103,7 +98,7 @@ public class ClientHandler implements Runnable {
         return Integer.toString(id);
     }
 
-    public void sendMessageToClient(Message message) {
+    public void sendMessageToClient(Packet message) {
         try {
             this.objectOutputStream.writeObject(message);
             this.objectOutputStream.flush();

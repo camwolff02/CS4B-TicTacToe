@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Public Pixel' ;
-    src: url(file:src/Fonts/PublicPixel-z84yD.ttf);
+    src: url(file:TicTacToeUI/src/Fonts/PublicPixel-z84yD.ttf);
 } 
 
 #playerXName, #playerOName {

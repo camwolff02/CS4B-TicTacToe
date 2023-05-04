@@ -18,19 +18,19 @@ public class playerdata {
     private int p2Wins;
 
     @FXML
-    private Image gigachad = new Image("file:src/images/gigachad.png");
+    private Image gigachad = new Image("file:TicTacToeUI/src/images/gigachad.png");
     @FXML
-    private Image soyjack  = new Image("file:src/images/soyjack.png");
+    private Image soyjack  = new Image("file:TicTacToeUI/src/images/soyjack.png");
     @FXML
-    private Image mittens  = new Image("file:src/images/mittens.jpg");
+    private Image mittens  = new Image("file:TicTacToeUI/src/images/mittens.jpg");
     @FXML
-    private Image pika     = new Image("file:src/images/pika.jpg");
+    private Image pika     = new Image("file:TicTacToeUI/src/images/pika.jpg");
     @FXML
-    private Image jack     = new Image("file:src/images/jackhorner.jpg");
+    private Image jack     = new Image("file:TicTacToeUI/src/images/jackhorner.jpg");
     @FXML
-    private Image bubble     = new Image("file:src/images/xbox360Bubble.jpg");
+    private Image bubble     = new Image("file:TicTacToeUI/src/images/xbox360Bubble.jpg");
     @FXML
-    private Image monkey     = new Image("file:src/images/xbox360Monkey.jpg");
+    private Image monkey     = new Image("file:TicTacToeUI/src/images/xbox360Monkey.jpg");
 
     public static playerdata getInstance(){
         return instance;

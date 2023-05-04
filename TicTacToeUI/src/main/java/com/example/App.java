@@ -22,7 +22,7 @@ public class App extends Application {
         
         stage.setResizable(false);
  
-        Image image = new Image("file:src/images/tic-tac-toe.png");
+        Image image = new Image("file:TicTacToeUI/src/images/tic-tac-toe.png");
         stage.getIcons().add(image);
         stage.setTitle("Tic-Tac-Toe");
        

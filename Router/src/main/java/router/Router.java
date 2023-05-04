@@ -1,4 +1,4 @@
-package Router;
+package router;
 
 import java.io.IOException;
 
@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import Serialize.Message;
 /* inside server router, put private static ClientHandler properties here or in separate class
  * make main private
  * server has one public function "broadcast" (message in)
@@ -45,7 +44,7 @@ public class Router {
     }
 
 
-    public void broadcastMessage(ClientHandler callingHandler, String channel, Message message) {        
+    public void broadcastMessage(ClientHandler callingHandler, String channel, Packet message) {        
         boolean noClientsInChannel = true;
         boolean notSubscribedToAnyChannels = true;
         
@@ -54,7 +53,7 @@ public class Router {
                 callingHandler.sendMessageToClient(message);  //"ERROR: not a member of channel"
                 return;
             }
-            for (var subscriber : channelSubscribers.get(channel)) {  // for each member in that channel
+            for (ClientHandler subscriber : channelSubscribers.get(channel)) {  // for each member in that channel
                 notSubscribedToAnyChannels = false;
                 
                 if (subscriber != callingHandler) {
@@ -80,7 +79,7 @@ public class Router {
     public void subscribeToChannel(ClientHandler callingHandler, String channel) {
         // if the channel doesn't exist, create the channel
         if (!channelSubscribers.containsKey(channel)) 
-            channelSubscribers.put(channel, new HashSet<>());
+            channelSubscribers.put(channel, new HashSet<ClientHandler>());
 
         // add the client to the channel
         channelSubscribers.get(channel).add(callingHandler);
