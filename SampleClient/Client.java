@@ -12,9 +12,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import Serialize.ApplicationMessage;
-import Serialize.Message;
-import Serialize.Messages.*;
+import TicTacToeMessages.*;
+import Router.src.main.java.router.*;
 
 // TODO maybe include sender in message packet?
 
@@ -49,7 +48,7 @@ public class Client {
 
         // TODO create proper way to break out of loop and end client
         while (true)
-            client.sendMessage(client.createMessage());
+            client.sendMessage(client.createPacket());
     }
 
 
@@ -93,8 +92,8 @@ public class Client {
         }).start();
     }
 
-    private Message createMessage() {
-        ApplicationMessage appMessage = null;
+    private Packet createPacket() {
+        Message appMessage = null;
        
         String type = null;
         String channel = null;
@@ -134,10 +133,10 @@ public class Client {
             }
         }
 
-        return new Message(channel, type, appMessage);
+        return new Packet(channel, type, appMessage);
     }
 
-    private ApplicationMessage createApplicationMessage(String channel, String type) {
+    private Message createApplicationMessage(String channel, String type) {
         switch (type) {
             case "subscribe":
                 return new SubscribeRequest(channel);
@@ -198,7 +197,7 @@ public class Client {
     }
 
     // Sends the message to the clientHandler
-    public void sendMessage(Message messageToSend) {
+    public void sendMessage(Packet messageToSend) {
         try {
             objectOutputStream.writeObject(messageToSend);
             objectOutputStream.flush();

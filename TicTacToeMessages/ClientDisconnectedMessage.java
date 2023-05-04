@@ -1,6 +1,6 @@
 package TicTacToeMessages;
 
-import Router.Message;
+import Router.src.main.java.router.*;
 
 public class ClientDisconnectedMessage extends Message { 
 
