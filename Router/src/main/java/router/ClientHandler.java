@@ -11,12 +11,9 @@ import java.net.Socket;
 public class ClientHandler implements Runnable {    
     private static int currId = 0;
     private int id;
-    
+
     private Router router;
-    
-    private Socket socket;                  // used for establish a connection between the client and server
-    private BufferedReader bufferedReader;  // used for reading message that is sent from the client
-    private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
+    private Socket socket;
 
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
@@ -39,7 +36,8 @@ public class ClientHandler implements Runnable {
     // a method that listens for the message using a separate thread
     @Override
     public void run() {
-        while (true) {
+        boolean connected = true;
+        while (connected) {
             // make sure there is still a connection to the client and read the message
             try {
                 Packet incomingPacket = (Packet)objectInputStream.readObject();
@@ -64,9 +62,11 @@ public class ClientHandler implements Runnable {
             } catch (IOException e) {
                 System.out.println("[ERROR] [HANDLER] problem reading object input stream");
                 closeEverthing();
+                connected = false;
             } catch (ClassNotFoundException e){
                 System.out.println("[ERROR] [HANDLER] problem casting object input stream");
                 closeEverthing();
+                connected = false;
             }
         }
         
@@ -89,29 +89,19 @@ public class ClientHandler implements Runnable {
 
     // a method that will close the socket after a client has left or there is an error
     private void closeEverthing(){
-        try{
-            if(this.bufferedReader != null){
-                bufferedReader.close();
-            }
+        try {
+            router.removeClient(this);
 
-            if(this.bufferedWriter != null){
-                bufferedWriter.close();
-            }
-            
-            if(this.socket != null){
+            if (this.socket != null)
                 socket.close();
-            }
 
-            if(objectInputStream != null)
-            {
+            if (objectInputStream != null)
                 objectInputStream.close();
-            }
 
-            if(objectOutputStream != null)
-            {
+            if (objectOutputStream != null)
                 objectOutputStream.close();
-            }
-        }catch(IOException e){
+
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

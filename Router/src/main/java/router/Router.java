@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 
 public class Router {
@@ -91,6 +92,12 @@ public class Router {
 
     }    
     
+    public void removeClient(ClientHandler handler) {
+        for (Map.Entry<String, HashSet<ClientHandler>> entry : channelSubscribers.entrySet()) {
+            if (entry.getValue().contains(handler))
+                entry.getValue().remove(handler);
+        }
+    }
 
     // a run method that will start the server and keeping the server running
     private void start() {
@@ -103,7 +110,7 @@ public class Router {
 
                 // a class that will be responsible for the communication with the client and have a runnable interface
                 ClientHandler clienHandler = new ClientHandler(this, socket);
-                // Encapsulate thread in ClientHandler, then do ClientHandler.start() 
+                // Encapsulate thread in ClientHandler, then start the thread 
                 Thread thread = new Thread(clienHandler);
                 thread.start();
             }
