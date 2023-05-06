@@ -1,7 +1,5 @@
 package router;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -41,7 +39,8 @@ public class ClientHandler implements Runnable {
             // make sure there is still a connection to the client and read the message
             try {
                 Packet incomingPacket = (Packet)objectInputStream.readObject();
-                
+                System.out.println("[INFO] [HANDLER] Packet received");
+            
                 String channel = incomingPacket.getChannel();
                 String type = incomingPacket.getType();
 
@@ -65,6 +64,7 @@ public class ClientHandler implements Runnable {
                 connected = false;
             } catch (ClassNotFoundException e){
                 System.out.println("[ERROR] [HANDLER] problem casting object input stream");
+                e.printStackTrace();
                 closeEverthing();
                 connected = false;
             }

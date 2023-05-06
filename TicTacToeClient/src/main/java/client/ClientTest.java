@@ -34,11 +34,15 @@ public class ClientTest {
             }
 
             // send outgoing messages
-            c.sendPacket(createPacket(scanner));
+            Packet packet = createPacket(scanner);
+            if (packet == null) break;
+            c.sendPacket(packet);
 
             System.out.println("[INFO] Press enter to receive messages and send next message");
             scanner.nextLine();
         }
+
+        scanner.close();
     }
 
     private static Packet createPacket(Scanner scanner) {
@@ -52,7 +56,8 @@ public class ClientTest {
         System.out.println("[INFO] Please enter 1, 2, or 3:\n" 
         + "1. <subscribe> to a channel\n" 
         + "2. <unsubscribe> from a channel\n"
-        + "3. <send> a message");
+        + "3. <send> a message"
+        + "4. exit");
 
         while (type == null) {
             System.out.print("[INPUT] selection: ");
@@ -61,7 +66,6 @@ public class ClientTest {
                 case "1":
                     type = "subscribe";
                     message = createMessage(channel, type);
-                    while (message == null)
                     break;
 
                 case "2":
@@ -77,8 +81,11 @@ public class ClientTest {
                     }
                     break;
 
+                case "4":
+                    return null;
+
                 default:
-                    System.out.println("[ERROR] please enter 1, 2, or 3");
+                    System.out.println("[ERROR] please enter 1, 2, 3, or 4");
             }
         }
 

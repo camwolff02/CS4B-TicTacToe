@@ -40,7 +40,7 @@ public class TicTacToeClient extends Thread{
                     socket = null;        
                 } catch (InterruptedException ex) {}
             }
-            catch (IOException e) {}
+            catch (IOException e) { /* expected when server not started */}
         }
 
         isConnected = true;
@@ -51,7 +51,7 @@ public class TicTacToeClient extends Thread{
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
         } 
         catch (IOException e) {
-            System.out.println("[ERROR] creating object stream");
+            System.out.println("[ERROR] [CLIENT] creating object stream");
             closeEverthing();
         }
 
@@ -70,7 +70,7 @@ public class TicTacToeClient extends Thread{
             objectOutputStream.writeObject(packet);
             objectOutputStream.flush();            
         } catch (IOException e) {
-            System.out.println("[ERROR] sending packet");
+            System.out.println("[ERROR] [CLIENT] sending packet");
             closeEverthing();
         }
     }
@@ -81,17 +81,16 @@ public class TicTacToeClient extends Thread{
         new Thread(new Runnable() {
             @Override
             public void run(){
-                while(socket.isConnected()){
+                while (socket.isConnected()){
                     try{
                         Packet incomingPacket = (Packet)objectInputStream.readObject();
                         Message incomingMessage = unwrapPacket(incomingPacket);
                         unreadMessages.add(incomingMessage);
 
-                    } catch (IOException e){
-                        System.out.println("[ERROR] receiving packet from object input stream");
-                        closeEverthing();
-                    } catch (ClassNotFoundException e) {
-                        System.out.println("[ERROR] casting packet from object input stream");
+                    } 
+                    catch (IOException e) { /* expected when no messages sent */}
+                    catch (ClassNotFoundException e) {
+                        System.out.println("[ERROR] [CLIENT] casting packet from object input stream");
                         e.printStackTrace();
                     }
                 }
