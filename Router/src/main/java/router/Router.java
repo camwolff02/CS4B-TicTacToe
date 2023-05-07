@@ -7,11 +7,14 @@ import java.net.Socket;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class Router {
     private HashMap<String, HashSet<ClientHandler>> channelSubscribers;
+    //private LinkedList<ClientHandler> waitingplayers;
     private ServerSocket serverSocket;
+    private PlayerManager playerManager;
 
     public static void main(String[] args) throws IOException {        
         // created the server socket with a port
@@ -26,6 +29,8 @@ public class Router {
     public Router(ServerSocket serverSocket) {
         this.channelSubscribers = new HashMap<>();
         this.serverSocket = serverSocket;
+        this.playerManager = new PlayerManager();
+        new Thread(playerManager).start();
     }
 
     public boolean channelExists(String channel) {
@@ -108,7 +113,7 @@ public class Router {
                 System.out.println("[INFO] [ROUTER] A new client has connected!");
 
                 // a class that will be responsible for the communication with the client and have a runnable interface
-                ClientHandler clienHandler = new ClientHandler(this, socket);
+                ClientHandler clienHandler = new ClientHandler(this, socket, playerManager);
                 // Encapsulate thread in ClientHandler, then start the thread 
                 Thread thread = new Thread(clienHandler);
                 thread.start();

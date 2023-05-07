@@ -56,8 +56,9 @@ public class ClientTest {
         System.out.println("[INFO] Please enter 1, 2, or 3:\n" 
         + "1. <subscribe> to a channel\n" 
         + "2. <unsubscribe> from a channel\n"
-        + "3. <send> a message"
-        + "4. exit");
+        + "3. <send> a message\n"
+        + "4. Queue up\n"
+        + "5. Exit");
 
         while (type == null) {
             System.out.print("[INPUT] selection: ");
@@ -80,8 +81,11 @@ public class ClientTest {
                         message = createMessage(channel, type);
                     }
                     break;
-
                 case "4":
+                    type = "create_game";
+                    message = createMessage(channel, type);
+                    break;
+                case "5":
                     return null;
 
                 default:
@@ -146,6 +150,8 @@ public class ClientTest {
 
             case "exit":
                 return new ExitRequest();
+            // case "Queue":
+            //     return new JoinQueue(channel);
             default:
                 System.out.println("[ERROR] not a proper message type");
                 return null;

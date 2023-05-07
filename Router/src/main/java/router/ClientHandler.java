@@ -14,16 +14,18 @@ public class ClientHandler implements Runnable {
 
     private Router router;
     private Socket socket;
+    private PlayerManager playerManager;
 
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
-    public ClientHandler(Router router, Socket socket) {
+    public ClientHandler(Router router, Socket socket,PlayerManager playerManager) {
         id = currId++;
         
         try {
             this.router = router;
             this.socket = socket;
+            this.playerManager = playerManager;
         
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new ObjectInputStream(socket.getInputStream());
@@ -56,6 +58,10 @@ public class ClientHandler implements Runnable {
                 else if (type.equals("unsubscribe")) {
                     System.out.println("[INFO] [HANDLER] attempting to unsubscribe");
                     router.unsubscribeFromChannel(this, channel);
+                }
+                else if(type.equals("create_game")){
+                    System.out.println("[INFO] [HANDLER] attempting to Queue up");
+                    playerManager.addPlayerToQueue(this);
                 }
                 else {
                     System.out.println("[INFO] [HANDLER] attempting to send message");
