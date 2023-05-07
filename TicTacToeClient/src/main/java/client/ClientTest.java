@@ -35,7 +35,8 @@ public class ClientTest {
 
             // send outgoing messages
             Packet packet = createPacket(scanner);
-            if (packet == null) break;
+            if (packet == null) 
+                break;
             c.sendPacket(packet);
 
             System.out.println("[INFO] Press enter to receive messages and send next message");
@@ -43,6 +44,8 @@ public class ClientTest {
         }
 
         scanner.close();
+
+        System.out.println("[SUCCESS] program exited, press 'ctrl+c' to kill client");
     }
 
     private static Packet createPacket(Scanner scanner) {
@@ -56,7 +59,7 @@ public class ClientTest {
         System.out.println("[INFO] Please enter 1, 2, or 3:\n" 
         + "1. <subscribe> to a channel\n" 
         + "2. <unsubscribe> from a channel\n"
-        + "3. <send> a message"
+        + "3. <send> a message\n"
         + "4. exit");
 
         while (type == null) {
