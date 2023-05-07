@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-
 public class Router {
     private HashMap<String, HashSet<ClientHandler>> channelSubscribers;
     private ServerSocket serverSocket;

@@ -19,12 +19,23 @@
   </properties>
 
   <dependencies>
+    <!-- tag::junit[] -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
+    <!-- end::junit[] -->
+    <!-- tag::messages[] TODO REMOVE -->
+    <dependency>
+      <groupId>cs4b</groupId>
+      <artifactId>messages</artifactId>
+      <scope>system</scope>
+      <version>1.0</version>
+      <systemPath>${basedir}/src/lib/TicTacToeMessages.jar</systemPath>
+    </dependency>
+    <!-- end::messages[] TODO REMOVE -->
   </dependencies>
 
   <build>

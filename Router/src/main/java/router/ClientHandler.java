@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 
 import java.net.Socket;
 
+import messages.*;  // TODO REMOVE
+
 public class ClientHandler implements Runnable {    
     private static int currId = 0;
     private int id;
@@ -38,9 +40,10 @@ public class ClientHandler implements Runnable {
         while (connected) {
             // make sure there is still a connection to the client and read the message
             try {
-                Packet incomingPacket = (Packet)objectInputStream.readObject();
+                Object o = objectInputStream.readObject();
                 System.out.println("[INFO] [HANDLER] Packet received");
             
+                Packet incomingPacket = (Packet)o;
                 String channel = incomingPacket.getChannel();
                 String type = incomingPacket.getType();
 
