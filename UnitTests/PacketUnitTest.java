@@ -154,7 +154,7 @@ public class MessageDriver {
 
 
             System.out.println("Message Contents: ");
-            switch (message.getType()) {
+            switch (messageClient.getType()) {
                 case "create_login":
                     System.out.println((CreateLoginRequest)messageClient.getMessage());
                     break;

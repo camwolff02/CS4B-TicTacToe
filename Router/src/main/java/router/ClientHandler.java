@@ -1,109 +1,90 @@
 package router;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import java.net.Socket;
 
-// The sever start method will run this client handler class so there is no main here
-// implements Runnable here so the instances will be executed by a separate thread(override the run method) 
-public class ClientHandler implements Runnable {    
-    // this class should be unaware of other connections, abstract functionality
-    // to router
+import messages.*;  // TODO REMOVE
 
-    private static int currentId = 0;
+public class ClientHandler implements Runnable {    
+    private static int currId = 0;
     private int id;
 
     private Router router;
-    
-    private Socket socket;                  // used for establish a connection between the client and server
-    private BufferedReader bufferedReader;  // used for reading message that is sent from the client
-    private BufferedWriter bufferedWriter;  // used for sending message to other client from a client
+    private Socket socket;
 
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
 
-
-    // a construter method
     public ClientHandler(Router router, Socket socket) {
-        try {
-            this.id = currentId;
-            currentId++;
+        id = currId++;
         
+        try {
             this.router = router;
             this.socket = socket;
-            // this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            // this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
+        
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new ObjectInputStream(socket.getInputStream());
-
-            //this.clientInfo = bufferedReader.readLine();            
         } catch(IOException e) {
+            System.out.println("[ERROR] [HANDLER] problem creating object stream");
             closeEverthing();
         }        
     }
 
-    // public Message getClientMessage() throws ClassNotFoundException, IOException{
-    //     Message message = (Message) objectInputStream.readObject();
-    //     return message;
-    // }
-
-    // public void sendMessage(Message message){
-    //     // objectOutputStream.writeObject(message);
-    //     System.out.println(message);
-    // }
-
     // a method that listens for the message using a separate thread
     @Override
     public void run() {
-        while(true){
+        boolean connected = true;
+        while (connected) {
             // make sure there is still a connection to the client and read the message
             try {
-                Packet incomingMessage = (Packet)objectInputStream.readObject();
-                
-                String channel = incomingMessage.getChannel();
-                String type = incomingMessage.getType();
+                Object o = objectInputStream.readObject();
+                System.out.println("[INFO] [HANDLER] Packet received");
+            
+                Packet incomingPacket = (Packet)o;
+                String channel = incomingPacket.getChannel();
+                String type = incomingPacket.getType();
 
-                System.out.println("HANDLER: Message received: <channel: " + channel + ", type: " + type + ">" );
+                System.out.println("[INFO] [HANDLER] Message received: <channel: " + channel + ", type: " + type + ">" );
 
                 if (type.equals("subscribe")) {
-                    System.out.println("HANDLER: attempting to subscribe");
+                    System.out.println("[INFO] [HANDLER] attempting to subscribe");
                     router.subscribeToChannel(this, channel);
                 }
-                else if (type.equals("unsubscribe")){
-                    System.out.println("HANDLER: attempting to unsubscribe");
+                else if (type.equals("unsubscribe")) {
+                    System.out.println("[INFO] [HANDLER] attempting to unsubscribe");
                     router.unsubscribeFromChannel(this, channel);
                 }
                 else {
-                    System.out.println("HANDLER: attempting to send message");
-                    router.broadcastMessage(this, channel, incomingMessage);
+                    System.out.println("[INFO] [HANDLER] attempting to send message");
+                    router.broadcastPacket(this, channel, incomingPacket);
                 }
-            } catch(IOException e) {
+            } catch (IOException e) {
+                System.out.println("[ERROR] [HANDLER] problem reading object input stream");
+                closeEverthing();
+                connected = false;
+            } catch (ClassNotFoundException e){
+                System.out.println("[ERROR] [HANDLER] problem casting object input stream");
                 e.printStackTrace();
                 closeEverthing();
-            } catch(ClassNotFoundException e){
-                e.printStackTrace();
-                closeEverthing();
+                connected = false;
             }
         }
         
     }
 
     public String toString() {
-        // return clientInfo;
-        return Integer.toString(id);
+        return "[HANDLER] [" + id + "]";
     }
 
-    public void sendMessageToClient(Packet message) {
+    public void sendPacketToClient(Packet packet) {
         try {
-            this.objectOutputStream.writeObject(message);
+            this.objectOutputStream.writeObject(packet);
             this.objectOutputStream.flush();
-
         } catch(IOException e){
+            System.out.println("[ERROR] [HANDLER] problem writing to object output stream");
             closeEverthing();
         }   
  
@@ -111,30 +92,19 @@ public class ClientHandler implements Runnable {
 
     // a method that will close the socket after a client has left or there is an error
     private void closeEverthing(){
-        //removeClientHandler();
-        try{
-            if(this.bufferedReader != null){
-                bufferedReader.close();
-            }
+        try {
+            router.removeClient(this);
 
-            if(this.bufferedWriter != null){
-                bufferedWriter.close();
-            }
-            
-            if(this.socket != null){
+            if (this.socket != null)
                 socket.close();
-            }
 
-            if(objectInputStream != null)
-            {
+            if (objectInputStream != null)
                 objectInputStream.close();
-            }
 
-            if(objectOutputStream != null)
-            {
+            if (objectOutputStream != null)
                 objectOutputStream.close();
-            }
-        }catch(IOException e){
+
+        } catch(IOException e) {
             e.printStackTrace();
         }
     }

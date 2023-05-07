@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cs4b</groupId>
-  <artifactId>router</artifactId>
+  <artifactId>messages</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>router</name>
+  <name>messages</name>
   <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+  <url>https://github.com/camwolff02/CS4B-TicTacToe</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,15 +27,15 @@
       <scope>test</scope>
     </dependency>
     <!-- end::junit[] -->
-    <!-- tag::messages[] TODO REMOVE -->
+    <!-- tag::router[] -->
     <dependency>
       <groupId>cs4b</groupId>
-      <artifactId>messages</artifactId>
+      <artifactId>router</artifactId>
       <scope>system</scope>
       <version>1.0</version>
-      <systemPath>${basedir}/src/lib/TicTacToeMessages.jar</systemPath>
+      <systemPath>${basedir}/src/lib/Router.jar</systemPath>
     </dependency>
-    <!-- end::messages[] TODO REMOVE -->
+    <!-- end::router[] -->
   </dependencies>
 
   <build>

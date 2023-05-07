@@ -1,2 +1,4 @@
 *.class
 *settings.json
+*.vscode/
+*.DS_store
