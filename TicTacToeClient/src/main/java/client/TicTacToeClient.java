@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import router.Packet;
-import router.Message;
 import messages.*;
 
-public class TicTacToeClient extends Thread{
+import router.Message;
+import router.Packet;
+
+public class TicTacToeClient extends Thread {
+    private int id;
     private Socket socket; 
     private ObjectOutputStream objectOutputStream;
     private ObjectInputStream objectInputStream;
@@ -49,6 +51,12 @@ public class TicTacToeClient extends Thread{
         try {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+            // wait to recieve our ID
+            this.id = objectInputStream.readInt();
+
+            // subscribe to the channel with our own ID
+            subscribeToChannel(Integer.toString(id));
         } 
         catch (IOException e) {
             System.out.println("[ERROR] [CLIENT] creating object stream");
@@ -59,13 +67,26 @@ public class TicTacToeClient extends Thread{
     }
 
     // UI Client public interface
+    public String getID() { return Integer.toString(id); }
     public boolean isConnected() { return this.isConnected; }
     public boolean hasUnreadMessages() { return !unreadMessages.isEmpty(); }
     public int numUnreadMessages() { return unreadMessages.size(); }
     public Message getLatestMessage() { return unreadMessages.remove(); }
     
+    // TODO implement
+    public boolean subscribeToChannel(String channel) {
+        return false;
+    }
+
+    // TODO implement
+    public boolean unsubscribeFromChannel(String channel) {
+        return false;
+    }
+
     // Sends the packet to the router
-    public void sendPacket(Packet packet) {
+    public void sendMessage(String channel, String type, Message message) {
+        Packet packet = new Packet(channel, type, message);
+
         try {
             objectOutputStream.writeObject(packet);
             objectOutputStream.flush();            

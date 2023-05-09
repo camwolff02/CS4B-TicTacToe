@@ -27,6 +27,9 @@ public class ClientHandler implements Runnable {
         
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new ObjectInputStream(socket.getInputStream());
+
+            // tell the client what their ID is
+            objectOutputStream.writeInt(id);
         } catch(IOException e) {
             System.out.println("[ERROR] [HANDLER] problem creating object stream");
             closeEverthing();
@@ -109,3 +112,35 @@ public class ClientHandler implements Runnable {
         }
     }
 }
+
+
+
+/*
+ 
+in PlayerManager:
+    playerManager has id 3
+    PlayerManager sees 2 joinGame messages
+        - players that sent messages have ids 1 and 2
+
+    PlayerManager spins up new BoardController, passing 2 client ids
+        BoardController controller = new BoardController(id1, id2)
+        controllerID = controller.getID();
+        
+        send message to each player with BoardControllerID
+        
+        controller.start()
+
+in BoardController:
+    in constructor BoardController(id1, id2):
+        - create a new Client object
+        - subscribe to channel id1, id2
+
+    have a function, like getID() so PlayerManager can get your ID
+
+in UI:
+    send joinGame message
+    wait for board id message
+    subscribe to channel boardID
+    display the Select Name screen
+
+ */
