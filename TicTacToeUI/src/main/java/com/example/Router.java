@@ -1,4 +1,4 @@
-package router;
+package com.example;
 
 import java.io.IOException;
 
@@ -21,6 +21,7 @@ public class Router {
         // called the run method that starts the server
         System.out.println("[INFO] [ROUTER] Server started");
         server.start();
+        
     }
 
     public Router(ServerSocket serverSocket) {

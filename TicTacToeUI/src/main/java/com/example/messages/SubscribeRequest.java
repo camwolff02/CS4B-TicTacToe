@@ -1,11 +1,11 @@
-package messages;
+package com.example.messages;
 
-import router.Message;
+import com.example.*;
 
-public class UnsubscribeRequest extends Message {
+public class SubscribeRequest extends Message {
     private String channel;
     
-    public UnsubscribeRequest(String channel) {
+    public SubscribeRequest(String channel) {
         this.channel = channel;
     }
 

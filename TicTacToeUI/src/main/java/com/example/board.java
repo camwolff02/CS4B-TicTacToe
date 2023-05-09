@@ -1,5 +1,6 @@
 package com.example;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,9 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
@@ -21,6 +24,39 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+
+import com.example.messages.*;
+
+class BoardUpdater extends Thread {
+    private TicTacToeClient client;
+    private board boardController;
+
+    public BoardUpdater(TicTacToeClient client, board boardController) {
+        this.client = client;
+        this.boardController = boardController;
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            if (client.hasUnreadMessages()) {
+                Message message = client.getLatestMessage();
+                if (message != null) {
+                    Platform.runLater(() -> {
+                        boardController.processMessage(message);
+                    });
+                }
+            }
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
 
 public class board implements Initializable {
 
@@ -104,6 +140,12 @@ public class board implements Initializable {
     private int tieCount;
     private int moveCount;
 
+    private String channel;
+    private String type;
+    private Message message;
+    private BoardUpdater boardUpdater;
+    private TicTacToeClient c;
+
     playerdata data;
 
     @Override
@@ -148,7 +190,34 @@ public class board implements Initializable {
         xWinCount = 0;
         oWinCount = 0;
         tieCount  = 0;
-        moveCount = 0;    
+        moveCount = 0; 
+        
+        // start client listener
+        c = new TicTacToeClient();
+        c.start();
+
+             // wait for connection
+             while (!c.isConnected()) {
+                System.out.println("[INFO] Waiting for connection...");
+                try {
+                    TimeUnit.SECONDS.sleep(1);        
+                } catch (InterruptedException ex) {}
+            }
+    
+            System.out.println("[SUCCESS] Client Connected to server");
+
+        channel = "game";
+        type = "subscribe";
+
+        message = new SubscribeRequest(channel);
+
+        Packet packet = new Packet(channel, type, message);
+
+        c.sendPacket(packet);
+
+        boardUpdater = new BoardUpdater(c, this);
+        boardUpdater.start();
+
     }
 
     @FXML
@@ -261,32 +330,33 @@ public class board implements Initializable {
         String buttonID = button.getId();
         int index = Integer.parseInt(String.valueOf(buttonID.charAt(buttonID.length()-1)))-1;
 
-        if (playerXTurn) {
-            button.setText("X");
-            gameStateText.setText("  Player Turn: O");
-            gameStateImage.setImage(playerOImage);
 
-            xBoardMask += Math.pow(2, index);  
 
-            images.get(index).setImage(playerXImage);
+        button.setText("X");
+        gameStateText.setText("  Player Turn: O");
+        gameStateImage.setImage(playerOImage);
 
-            if (imageMode) 
-                images.get(index).setVisible(true);  
-        }
-        else { 
-            button.setText("O");
-            gameStateText.setText("  Player Turn: X");
-            gameStateImage.setImage(playerXImage);
+        xBoardMask += Math.pow(2, index);  
 
-            oBoardMask += Math.pow(2, index);
+        images.get(index).setImage(playerXImage);
 
-            images.get(index).setImage(playerOImage);
-
-            if (imageMode) 
-                images.get(index).setVisible(true);
+        if (imageMode) 
+        {
+            images.get(index).setVisible(true);
         }
 
-        playerXTurn = !playerXTurn;
+
+        channel = "game";
+        type = "make_move";
+
+        String index1 = Integer.toString(index);
+        message = new MakeMoveRequest(channel, type, index1);
+
+        Packet packet = new Packet(channel, type, message);
+
+        c.sendPacket(packet);
+
+        
     }
 
     public void checkGameOver() {        
@@ -326,4 +396,16 @@ public class board implements Initializable {
             restartGame.setText("Play Again");
         }
     }
+
+    public void processMessage(Message message) {
+        MakeMoveRequest moveRequest = (MakeMoveRequest) message;
+        String index = moveRequest.getGameMove();
+
+        int num = Integer.parseInt(index);
+
+        gameStateText.setText("User sent message");
+  
+        System.out.println("Recieved");
+    }
+
 }

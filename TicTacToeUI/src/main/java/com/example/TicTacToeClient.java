@@ -1,4 +1,4 @@
-package client;
+package com.example;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,9 +10,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import router.Packet;
-import router.Message;
-import messages.*;
+import com.example.messages.*;
 
 public class TicTacToeClient extends Thread{
     private Socket socket; 

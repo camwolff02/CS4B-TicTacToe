@@ -1,12 +1,11 @@
-package messages;
+package com.example.messages;
 
-import router.Message;
+import com.example.*;
 
-
-public class CreateGameRequest extends Message {
+public class JoinGameRequest extends Message {
     private String lobbyName;
 
-    public CreateGameRequest(String lobbyName) {
+    public JoinGameRequest(String lobbyName) {
         this.lobbyName = lobbyName;
     }
 

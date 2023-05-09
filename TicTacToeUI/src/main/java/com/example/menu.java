@@ -2,6 +2,7 @@ package com.example;
 
 import java.io.IOException;
 
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,20 +16,20 @@ import javafx.stage.Stage;
 public class menu {
 
     private Stage stage;
-    
+
     private Scene scene;
     private Parent root;
-  
+
     // ImageView titleImage;
 
     // Image myImage = new Image(getClass().getResourceAsStream("file:src/images/pika.JPG"));
     // titleImage.setImage(myImage);
     public void onePlayerbutton(ActionEvent event) throws IOException
-    {
+    {   
         PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
         
     }
-    
+
     public void exitButton(ActionEvent event)throws IOException
     {
         Platform.exit();
@@ -53,8 +54,13 @@ public class menu {
     }
 
     public void onlineButton(ActionEvent event) throws IOException
-    {
-        PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
+    {   
+        root  = FXMLLoader.load(getClass().getResource("board.fxml"));
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     // public void goback(ActionEvent event) throws IOException
@@ -65,8 +71,8 @@ public class menu {
         // stage.setScene(scene);
         // stage.show();
     // }
-   
 
+        
     @FXML
     private Button btn1;
 

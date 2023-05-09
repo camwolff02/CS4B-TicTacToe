@@ -1,6 +1,6 @@
-package messages;
+package com.example.messages;
 
-import router.Message;
+import com.example.*;
 
 import java.util.ArrayList;
 
