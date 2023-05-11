@@ -12,6 +12,7 @@ import messages.*;
 public class ClientTest {
     public static void main(String [] args) {
         Scanner scanner = new Scanner(System.in);
+        boolean keep_running = true;
 
         // start client listener
         TicTacToeClient c = new TicTacToeClient();
@@ -27,17 +28,14 @@ public class ClientTest {
 
         System.out.println("[SUCCESS] Client Connected to server");
 
-        while (true) {
+        while (keep_running) {
             // handle incoming messages
             while (c.hasUnreadMessages()) {
                 System.out.println(c.getLatestMessage());
             }
 
             // send outgoing messages
-            Packet packet = createPacket(scanner);
-            if (packet == null) 
-                break;
-            c.sendPacket(packet);
+            keep_running = sendMessage(c, scanner);
 
             System.out.println("[INFO] Press enter to receive messages and send next message");
             scanner.nextLine();
@@ -48,7 +46,7 @@ public class ClientTest {
         System.out.println("[SUCCESS] program exited, press 'ctrl+c' to kill client");
     }
 
-    private static Packet createPacket(Scanner scanner) {
+    private static boolean sendMessage(TicTacToeClient client, Scanner scanner) {
         Message message = null;
         String type = null;
         String channel = null;
@@ -68,12 +66,12 @@ public class ClientTest {
             switch (scanner.nextLine()) {
                 case "1":
                     type = "subscribe";
-                    message = createMessage(channel, type);
+                    client.subscribeToChannel(channel);
                     break;
 
                 case "2":
                     type = "unsubscribe";
-                    message = createMessage(channel, type);
+                    client.unsubscribeFromChannel(channel);
                     break;
 
                 case "3":
@@ -81,18 +79,19 @@ public class ClientTest {
                         System.out.print("[INPUT] type: ");
                         type = scanner.nextLine();      
                         message = createMessage(channel, type);
+                        client.sendMessage(channel, type, message);
                     }
                     break;
 
                 case "4":
-                    return null;
+                    return false;
 
                 default:
                     System.out.println("[ERROR] please enter 1, 2, 3, or 4");
             }
         }
 
-        return new Packet(channel, type, message);
+        return true;
     }
 
     private static Message createMessage(String channel, String type) {

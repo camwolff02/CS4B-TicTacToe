@@ -73,14 +73,16 @@ public class TicTacToeClient extends Thread {
     public int numUnreadMessages() { return unreadMessages.size(); }
     public Message getLatestMessage() { return unreadMessages.remove(); }
     
-    // TODO implement
-    public boolean subscribeToChannel(String channel) {
-        return false;
+    // Join channel
+    public void subscribeToChannel(String channel) {
+        Message subMessage = new SubscribeRequest(channel);
+        sendMessage("join", "subscribe", subMessage);
     }
 
-    // TODO implement
-    public boolean unsubscribeFromChannel(String channel) {
-        return false;
+    // Leave channel
+    public void unsubscribeFromChannel(String channel) {
+        Message unsubMessage = new UnsubscribeRequest(channel);
+        sendMessage("join", "unsubscribe", unsubMessage);
     }
 
     // Sends the packet to the router

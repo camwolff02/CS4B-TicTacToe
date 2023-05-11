@@ -6,7 +6,8 @@ public class LoginRequest extends Message {
     String username;
     String password;
 
-    public LoginRequest(String username, String password) {
+    public LoginRequest(String id, String username, String password) {
+        super(id);
         this.username = username;
         this.password = password;
     }
@@ -16,7 +17,7 @@ public class LoginRequest extends Message {
     public String getPassword() { return password; }
 
     public String toString() {
-        return "Username: " + username + "\nPassword: " + password;
+        return super.toString() + "Username: " + username + "\nPassword: " + password;
     }
 
 

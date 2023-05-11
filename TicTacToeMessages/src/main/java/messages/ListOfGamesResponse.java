@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class ListOfGamesResponse extends Message {
     ArrayList<String> lobbyNames;
     
-    public ListOfGamesResponse(ArrayList<String> lobbyNames) {
+    public ListOfGamesResponse(String id, ArrayList<String> lobbyNames) {
+        super(id);
         this.lobbyNames = lobbyNames;
     }
 
@@ -22,6 +23,6 @@ public class ListOfGamesResponse extends Message {
             result += s + ", ";
         }
 
-        return "List of Games: " + result + "]";
+        return super.toString() + "List of Games: " + result + "]";
     }
 }
