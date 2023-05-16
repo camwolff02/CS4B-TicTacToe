@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 
 import java.net.Socket;
 
-import messages.*;  // TODO REMOVE
+// import messages.*;
 
 public class ClientHandler implements Runnable {    
     private static int currId = 0;

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
-import router.Packet;
+import router.IDMessage;
 import router.Message;
 import messages.*;
 
@@ -78,7 +78,7 @@ public class ClientTest {
                     while (message == null) {
                         System.out.print("[INPUT] type: ");
                         type = scanner.nextLine();      
-                        message = createMessage(channel, type);
+                        message = createMessage(client, channel, type);
                         client.sendMessage(channel, type, message);
                     }
                     break;
@@ -94,60 +94,56 @@ public class ClientTest {
         return true;
     }
 
-    private static Message createMessage(String channel, String type) {
+    private static Message createMessage(TicTacToeClient client, String channel, String type) {
         switch (type) {
-            case "subscribe":
-                return new SubscribeRequest(channel);
-
-            case "unsubscribe":
-                return new UnsubscribeRequest(channel);
-
+            case "id":
+                return new IDMessage(client.getID(), "channel");
             case "create_login":
-                return new CreateLoginRequest("username", "password", "picture.png");
+                return new CreateLoginRequest(client.getID(), "username", "password", "picture.png");
             
             case "add_profile_pic":
-                return new AddProfilePicRequest("picture.png"); 
+                return new AddProfilePicRequest(client.getID(), "picture.png"); 
 
             case "login":
-                return new LoginRequest("user", "abcde");
+                return new LoginRequest(client.getID(), "user", "abcde");
                 
             case "create_game":
-                return new CreateGameRequest("Homi's Lobby"); 
+                return new CreateGameRequest(client.getID(), "Homi's Lobby"); 
 
             case "join_game":
-                return new JoinGameRequest("Homi's Lobby");
+                return new JoinGameRequest(client.getID(), "Homi's Lobby");
 
             case "client_info":
-                return new ClientInfoMessage("username", "picture.png");
+                return new ClientInfoMessage(client.getID(), "username", "picture.png");
 
             case "make_move":
                 int[] moves = {1, 2};
-                return new MakeMoveRequest("Homi's Lobby", "Player2", moves); 
+                return new MakeMoveRequest(client.getID(), "Homi's Lobby", "Player2", moves); 
 
             case "list_games":
-                return new ListGamesRequest(); 
+                return new ListGamesRequest(client.getID()); 
 
             case "list_of_games":
                 ArrayList<String> games = new ArrayList<>(Arrays.asList("Homi's Lobby", "Player2's Lobby"));
-                return new ListOfGamesResponse(games); 
+                return new ListOfGamesResponse(client.getID(), games); 
 
             case "action_success":
-                return new ActionSuccessResponse(true);
+                return new ActionSuccessResponse(client.getID(), true);
 
             case "start_game":
-                return new StartGameRequest(true, "Homi's Lobby");
+                return new StartGameRequest(client.getID(), true, "Homi's Lobby");
 
             case "client_disconnected":
-                return new ClientDisconnectedMessage();
+                return new ClientDisconnectedMessage(client.getID());
 
             case "game_over":
-                return new GameOverMessage(GameState.TIE);
+                return new GameOverMessage(client.getID(), GameState.TIE);
 
             case "play_again": 
-                return new PlayAgainRequest(true);
+                return new PlayAgainRequest(client.getID(), true);
 
             case "exit":
-                return new ExitRequest();
+                return new ExitRequest(client.getID());
             default:
                 System.out.println("[ERROR] not a proper message type");
                 return null;

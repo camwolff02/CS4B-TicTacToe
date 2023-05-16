@@ -12,6 +12,7 @@ import java.util.Queue;
 
 import messages.*;
 
+import router.IDMessage;
 import router.Message;
 import router.Packet;
 
@@ -75,13 +76,13 @@ public class TicTacToeClient extends Thread {
     
     // Join channel
     public void subscribeToChannel(String channel) {
-        Message subMessage = new SubscribeRequest(channel);
+        Message subMessage = new SubscribeRequest(Integer.toString(id), channel);
         sendMessage("join", "subscribe", subMessage);
     }
 
     // Leave channel
     public void unsubscribeFromChannel(String channel) {
-        Message unsubMessage = new UnsubscribeRequest(channel);
+        Message unsubMessage = new UnsubscribeRequest(Integer.toString(id), channel);
         sendMessage("join", "unsubscribe", unsubMessage);
     }
 
@@ -124,6 +125,8 @@ public class TicTacToeClient extends Thread {
 
     private Message unwrapPacket(Packet packet) {
         switch (packet.getType()) {
+            case "id":
+                return (IDMessage)packet.getMessage();
             case "create_login":
                 return (CreateLoginRequest)packet.getMessage();
             case "add_profile_pic":
