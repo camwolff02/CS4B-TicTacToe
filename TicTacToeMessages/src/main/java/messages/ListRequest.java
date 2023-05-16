@@ -3,7 +3,11 @@ package messages;
 import router.Message;
 
 public class ListRequest extends Message {
+    public ListRequest(String id) {
+        super(id);
+    }
+
     public String toString() {
-        return "Request to send list";
+        return super.toString() + "Request to send list";
     }
 }

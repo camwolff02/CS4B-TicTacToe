@@ -7,7 +7,8 @@ import java.util.ArrayList;
 public class ListResponse extends Message {
     ArrayList<String> list;
     
-    public ListResponse(ArrayList<String> list) {
+    public ListResponse(String id, ArrayList<String> list) {
+        super(id);
         this.list = list;
     }
 
@@ -22,6 +23,6 @@ public class ListResponse extends Message {
             result += s + ", ";
         }
 
-        return "List of Games: " + result + "]";
+        return super.toString() + "List of Games: " + result + "]";
     }
 }

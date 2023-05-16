@@ -6,7 +6,8 @@ public class StartGameRequest extends Message {
     private boolean status;
     private String lobbyName;
     
-    public StartGameRequest(boolean status, String lobbyName) {
+    public StartGameRequest(String id, boolean status, String lobbyName) {
+        super(id);
         this.status = status;
         this.lobbyName = lobbyName;
     }
@@ -17,7 +18,7 @@ public class StartGameRequest extends Message {
     
 
     public String toString() {
-        return "Lobby name: " + lobbyName
+        return super.toString() + "Lobby name: " + lobbyName
             + "\n has" + status;
     }
 }

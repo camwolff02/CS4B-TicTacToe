@@ -6,12 +6,14 @@ public class ActionSuccessResponse extends Message {
     boolean actionSucceeded;
     String infoMessage;
 
-    public ActionSuccessResponse(boolean actionSucceeded, String infoMessage) {
+    public ActionSuccessResponse(String id, boolean actionSucceeded, String infoMessage) {
+        super(id);
         this.actionSucceeded = actionSucceeded;
         this.infoMessage = infoMessage;
     }
 
-    public ActionSuccessResponse(boolean actionSucceeded) {
+    public ActionSuccessResponse(String id, boolean actionSucceeded) {
+        super(id);
         this.actionSucceeded = actionSucceeded;
         this.infoMessage = "Action completed";
     }
@@ -22,8 +24,8 @@ public class ActionSuccessResponse extends Message {
 
     public String toString() {
         if (infoMessage == "Action completed")
-            return "Action Success State: " + actionSucceeded;
+            return super.toString() + "Action Success State: " + actionSucceeded;
         else
-            return "INFO: " + infoMessage;
+            return super.toString() + "INFO: " + infoMessage;
     }
 }

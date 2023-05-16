@@ -3,15 +3,11 @@ package messages;
 import router.Message;
 
 public class JoinGameRequest extends Message {
-    private String lobbyName;
-
-    public JoinGameRequest(String lobbyName) {
-        this.lobbyName = lobbyName;
+    public JoinGameRequest(String id) {
+        super(id);
     }
 
-    public String getLobbyName() { return lobbyName; }
-
     public String toString() {
-        return "Lobby name: " + lobbyName;
+        return super.toString() + "join game request";
     }
 }

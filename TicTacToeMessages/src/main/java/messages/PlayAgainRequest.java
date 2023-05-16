@@ -6,13 +6,14 @@ public class PlayAgainRequest extends Message {
     
     boolean playAgain;
 
-    public PlayAgainRequest(boolean playAgain) {
+    public PlayAgainRequest(String id, boolean playAgain) {
+        super(id);
         this.playAgain = playAgain;
     }
 
     public boolean getPlayAgain() { return playAgain; }
 
     public String toString() {
-        return "Client would like to play again: " + playAgain;
+        return super.toString() + "Client would like to play again: " + playAgain;
     }
 }

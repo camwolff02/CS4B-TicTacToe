@@ -1,17 +1,16 @@
-package messages;
-
-import router.Message;
+package router;
 
 public class SubscribeRequest extends Message {
     private String channel;
     
-    public SubscribeRequest(String channel) {
+    public SubscribeRequest(String id, String channel) {
+        super(id);
         this.channel = channel;
     }
 
     public String getLobbyName() { return channel; }
 
     public String toString() {
-        return "channel: " + channel;
+        return super.toString() + "channel: " + channel;
     }
 }

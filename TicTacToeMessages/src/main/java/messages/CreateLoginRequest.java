@@ -7,7 +7,8 @@ public class CreateLoginRequest extends Message {
     String password;
     String profilePic;
 
-    public CreateLoginRequest(String username, String password, String profilePic) {
+    public CreateLoginRequest(String id, String username, String password, String profilePic) {
+        super(id);
         this.username = username;
         this.password = password;
         this.profilePic = profilePic;
@@ -20,7 +21,7 @@ public class CreateLoginRequest extends Message {
     public String getProfilePic() { return profilePic; }
 
     public String toString() {
-        return "Username: " + username + "\nPassword: " + password
+        return super.toString() + "Username: " + username + "\nPassword: " + password
         + "\nProfile picture: " + profilePic;
     }
 

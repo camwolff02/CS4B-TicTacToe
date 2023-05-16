@@ -6,7 +6,8 @@ public class ClientInfoMessage extends Message {
     String username;
     String profilePic;
 
-    public ClientInfoMessage(String username, String profilePic) {
+    public ClientInfoMessage(String id, String username, String profilePic) {
+        super(id);
         this.username = username;
         this.profilePic = profilePic;
     }
@@ -16,7 +17,7 @@ public class ClientInfoMessage extends Message {
     public String getProfilePic() { return profilePic; }
 
     public String toString() {
-        return "Username: " + username + "\nProfile Picture: " + profilePic;
+        return super.toString() + "Username: " + username + "\nProfile Picture: " + profilePic;
     }
 
 
