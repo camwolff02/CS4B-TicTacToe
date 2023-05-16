@@ -2,9 +2,10 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import client.TicTacToeClient;
 import router.Message;
+import game.BoardLogic;
+import messages.MakeMoveRequest;
 
 public class BoardController implements Runnable {
     private final TicTacToeClient client;
@@ -26,7 +27,7 @@ public class BoardController implements Runnable {
     }
     
     public String getBoardID() {
-        return client.getBoardID();
+        return client.getID();
     }
     
     @Override
@@ -40,8 +41,8 @@ public class BoardController implements Runnable {
                 e.printStackTrace();
             }
             // Process incoming messages
-            List<Message> messages = client.getLatestMessage();
-            for (Message message : messages) {
+            while (client.hasUnreadMessages()) {
+                Message message = client.getLatestMessage();
                 handleMessage(message);
             }
         }
@@ -54,13 +55,15 @@ public class BoardController implements Runnable {
         String playerId = message.getSenderID();
 		
 		if (message instanceof MakeMoveRequest) {
-			handleMakeMoveRequest((MakeMoveRequest) message, playerId);
+            MakeMoveRequest makeMoveRequest = (MakeMoveRequest) message;
+            handleMakeMoveRequest(makeMoveRequest, playerId);
 		}
     }
     
     private void handleMakeMoveRequest(MakeMoveRequest message, String playerId) {
-        int row = message.getRow();
-        int col = message.getCol();
+        int[] gamemove = message.getGameMove();
+        int row = gamemove[0];
+        int col = gamemove[1];
         boolean success = boardLogic.makeMove(playerId, row, col);
         if (success) {
             // Send updated board state to other player
@@ -72,19 +75,30 @@ public class BoardController implements Runnable {
             } catch (ClientException e) {
                 e.printStackTrace();
             }
+            
+            // Check if the current player has won
+            String winner = boardLogic.getWinner();
+            if (winner != null) {
+                // Player has won, perform actions accordingly
+                handleWin(winner);
+            }
         } else {
             // Send error message to current player
             ErrorResponse response = new ErrorResponse("Invalid move");
             try {
-                client.sendMessage(playerId, "MakeMoveResponse",response);
+                client.sendMessage(playerId, "MakeMoveResponse", response);
             } catch (ClientException e) {
                 e.printStackTrace();
             }
         }
     }
-	
-	// get the other player's ID who is not the one make move on the board
-	private String getOtherPlayerId(String playerId) {
+    
+    private void handleWin(String winner) {
+        // Perform actions for winning player
+    }
+    
+    // Get the other player's ID who is not the one making the move on the board
+    private String getOtherPlayerId(String playerId) {
         return playerIds.stream()
             .filter(id -> !id.equals(playerId))
             .findFirst()

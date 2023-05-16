@@ -1,6 +1,4 @@
-package messages;
-
-import router.Message;
+package router;
 
 public class SubscribeRequest extends Message {
     private String channel;

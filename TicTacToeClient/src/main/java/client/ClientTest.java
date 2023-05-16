@@ -2,12 +2,10 @@ package client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 
-import router.Packet;
-import router.Message;
 import messages.*;
+import router.*;
 
 public class ClientTest {
     public static void main(String [] args) {
@@ -16,15 +14,8 @@ public class ClientTest {
 
         // start client listener
         TicTacToeClient c = new TicTacToeClient();
+        c.connect();
         c.start();
-        
-        // wait for connection
-        while (!c.isConnected()) {
-            System.out.println("[INFO] Waiting for connection...");
-            try {
-                TimeUnit.SECONDS.sleep(1);        
-            } catch (InterruptedException ex) {}
-        }
 
         System.out.println("[SUCCESS] Client Connected to server");
 
@@ -58,7 +49,8 @@ public class ClientTest {
         + "1. <subscribe> to a channel\n" 
         + "2. <unsubscribe> from a channel\n"
         + "3. <send> a message\n"
-        + "4. exit");
+        + "4. wait for messages\n"
+        + "5. exit\n");
 
         while (type == null) {
             System.out.print("[INPUT] selection: ");
@@ -78,12 +70,15 @@ public class ClientTest {
                     while (message == null) {
                         System.out.print("[INPUT] type: ");
                         type = scanner.nextLine();      
-                        message = createMessage(channel, type);
-                        client.sendMessage(channel, type, message);
+                        message = createMessage(client.getID(), channel, type);
                     }
+                    client.sendMessage(channel, type, message);
                     break;
 
                 case "4":
+                    return true;
+
+                case "5":
                     return false;
 
                 default:
@@ -94,60 +89,56 @@ public class ClientTest {
         return true;
     }
 
-    private static Message createMessage(String channel, String type) {
+    private static Message createMessage(String id, String channel, String type) {
         switch (type) {
-            case "subscribe":
-                return new SubscribeRequest(channel);
-
-            case "unsubscribe":
-                return new UnsubscribeRequest(channel);
-
+            case "id":
+                return new IDMessage(id, "channel");
             case "create_login":
-                return new CreateLoginRequest("username", "password", "picture.png");
+                return new CreateLoginRequest(id, "username", "password", "picture.png");
             
             case "add_profile_pic":
-                return new AddProfilePicRequest("picture.png"); 
+                return new AddProfilePicRequest(id, "picture.png"); 
 
             case "login":
-                return new LoginRequest("user", "abcde");
+                return new LoginRequest(id, "user", "abcde");
                 
             case "create_game":
-                return new CreateGameRequest("Homi's Lobby"); 
+                return new CreateGameRequest(id, "Homi's Lobby"); 
 
             case "join_game":
-                return new JoinGameRequest("Homi's Lobby");
+                return new JoinGameRequest(id);
 
             case "client_info":
-                return new ClientInfoMessage("username", "picture.png");
+                return new ClientInfoMessage(id, "username", "picture.png");
 
             case "make_move":
                 int[] moves = {1, 2};
-                return new MakeMoveRequest("Homi's Lobby", "Player2", moves); 
+                return new MakeMoveRequest(id, "Homi's Lobby", "Player2", moves); 
 
             case "list_games":
-                return new ListGamesRequest(); 
+                return new ListGamesRequest(id); 
 
             case "list_of_games":
                 ArrayList<String> games = new ArrayList<>(Arrays.asList("Homi's Lobby", "Player2's Lobby"));
-                return new ListOfGamesResponse(games); 
+                return new ListOfGamesResponse(id, games); 
 
             case "action_success":
-                return new ActionSuccessResponse(true);
+                return new ActionSuccessResponse(id, true);
 
             case "start_game":
-                return new StartGameRequest(true, "Homi's Lobby");
+                return new StartGameRequest(id, true, "Homi's Lobby");
 
             case "client_disconnected":
-                return new ClientDisconnectedMessage();
+                return new ClientDisconnectedMessage(id);
 
             case "game_over":
-                return new GameOverMessage(GameState.TIE);
+                return new GameOverMessage(id, GameState.TIE);
 
             case "play_again": 
-                return new PlayAgainRequest(true);
+                return new PlayAgainRequest(id, true);
 
             case "exit":
-                return new ExitRequest();
+                return new ExitRequest(id);
             default:
                 System.out.println("[ERROR] not a proper message type");
                 return null;

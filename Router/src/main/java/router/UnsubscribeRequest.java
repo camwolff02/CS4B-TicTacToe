@@ -1,6 +1,4 @@
-package messages;
-
-import router.Message;
+package router;
 
 public class UnsubscribeRequest extends Message {
     private String channel;

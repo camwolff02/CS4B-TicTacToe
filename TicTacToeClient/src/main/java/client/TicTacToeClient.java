@@ -11,9 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import messages.*;
-
-import router.Message;
-import router.Packet;
+import router.*;
 
 public class TicTacToeClient extends Thread {
     private int id;
@@ -29,8 +27,9 @@ public class TicTacToeClient extends Thread {
         unreadMessages = new LinkedList<Message>();
     }
 
-    @Override
-    public void run() {
+    public void connect() {
+        System.out.println("[INFO] [CLIENT] client starting");
+        
         // connect client to server
         while (socket == null) {
             try {
@@ -38,32 +37,50 @@ public class TicTacToeClient extends Thread {
             } 
             catch (UnknownHostException e) {
                 try {
+                    System.out.println("[INFO] [CLIENT] connecting...");
                     TimeUnit.SECONDS.sleep(1);
                     socket = null;        
                 } catch (InterruptedException ex) {}
             }
-            catch (IOException e) { /* expected when server not started */}
+            catch (IOException e) { 
+                try {
+                    System.out.println("[INFO] [CLIENT] connecting...");
+                    TimeUnit.SECONDS.sleep(1);
+                    socket = null;        
+                } catch (InterruptedException ex) {} 
+            }
         }
-
-        isConnected = true;
+        System.out.println("[SUCCESS] [CLIENT] connected!");
 
         // starts object stream to communicate with server
         try {
             this.objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             this.objectInputStream = new ObjectInputStream(socket.getInputStream());
+        
+            System.out.println("[INFO] [CLIENT] communication with router connected");
 
-            // wait to recieve our ID
-            this.id = objectInputStream.readInt();
 
-            // subscribe to the channel with our own ID
-            subscribeToChannel(Integer.toString(id));
+            boolean hasId = false;
+            while (!hasId) {
+                try {
+                    // wait to recieve our ID
+                    this.id = objectInputStream.readInt();
+                    System.out.println("[INFO] [CLIENT] ID received, subscribing to personal channel");
+        
+                    // subscribe to the channel with our own ID
+                    subscribeToChannel(Integer.toString(id));
+                    hasId = true;
+                } catch (IOException e) { /* expected when no messages sent */ }
+            }
+        
         } 
         catch (IOException e) {
             System.out.println("[ERROR] [CLIENT] creating object stream");
             closeEverthing();
         }
 
-        startMessageListener();
+        isConnected = true;
+        System.out.println("[INFO] [CLIENT] client ready to run");
     }
 
     // UI Client public interface
@@ -75,14 +92,14 @@ public class TicTacToeClient extends Thread {
     
     // Join channel
     public void subscribeToChannel(String channel) {
-        Message subMessage = new SubscribeRequest(channel);
-        sendMessage("join", "subscribe", subMessage);
+        Message subMessage = new SubscribeRequest(Integer.toString(id), channel);
+        sendMessage("router", "subscribe", subMessage);
     }
 
     // Leave channel
     public void unsubscribeFromChannel(String channel) {
-        Message unsubMessage = new UnsubscribeRequest(channel);
-        sendMessage("join", "unsubscribe", unsubMessage);
+        Message unsubMessage = new UnsubscribeRequest(Integer.toString(id), channel);
+        sendMessage("router", "unsubscribe", unsubMessage);
     }
 
     // Sends the packet to the router
@@ -99,11 +116,14 @@ public class TicTacToeClient extends Thread {
     }
 
     // Listens for messege that has been broadcasted
-    private void startMessageListener() {
+    @Override
+    public void start() {
         // have to used a new thred so the program will not be halted
         new Thread(new Runnable() {
             @Override
             public void run(){
+                System.out.println("[INFO] [CLIENT] starting message listener");
+
                 while (socket.isConnected()){
                     try{
                         Packet incomingPacket = (Packet)objectInputStream.readObject();
@@ -111,7 +131,7 @@ public class TicTacToeClient extends Thread {
                         unreadMessages.add(incomingMessage);
 
                     } 
-                    catch (IOException e) { /* expected when no messages sent */}
+                    catch (IOException e) { /* expected when no messages sent */ }
                     catch (ClassNotFoundException e) {
                         System.out.println("[ERROR] [CLIENT] casting packet from object input stream");
                         e.printStackTrace();
@@ -124,6 +144,8 @@ public class TicTacToeClient extends Thread {
 
     private Message unwrapPacket(Packet packet) {
         switch (packet.getType()) {
+            case "id":
+                return (IDMessage)packet.getMessage();
             case "create_login":
                 return (CreateLoginRequest)packet.getMessage();
             case "add_profile_pic":
