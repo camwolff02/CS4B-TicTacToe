@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Router {
     private HashMap<String, HashSet<ClientHandler>> channelSubscribers;
@@ -38,26 +39,27 @@ public class Router {
         boolean notSubscribedToChannel = true;
         
         try {
-            if (!channelSubscribers.get(channel).contains(callingHandler)) {
-                callingHandler.sendPacketToClient(packet);  //"ERROR: not a member of channel"
-                return;
-            }
             for (ClientHandler subscriber : channelSubscribers.get(channel)) {  // for each member in that channel
                 notSubscribedToChannel = false;
                 
                 if (subscriber != callingHandler) {
                     noClientsInChannel = false;
                     subscriber.sendPacketToClient(packet);
+                } 
+                else {
+                    notSubscribedToChannel = false;
                 }
             }
+
+            System.out.println("[SUCCESS] [ROUTER] message broadcasted");
         }
         catch (NullPointerException e) {
-            System.out.println("[ERROR] [HANDLER] tried to send message to nonexistent channel");
+            System.out.println("[ERROR] [ROUTER] tried to send message to nonexistent channel");
             return;
         }
         
         if (notSubscribedToChannel) {
-            System.out.println("[ERROR] [ROUTER]" + callingHandler + " tried to send message without being subscribed");
+            System.out.println("[WARNING] [ROUTER]" + callingHandler + " tried to send message without being subscribed");
         }
         
         if (noClientsInChannel)
@@ -106,12 +108,10 @@ public class Router {
                 // a blocking method for halting the program untill a client has conected
                 Socket socket = serverSocket.accept();
                 System.out.println("[INFO] [ROUTER] A new client has connected!");
-
                 // a class that will be responsible for the communication with the client and have a runnable interface
-                ClientHandler clienHandler = new ClientHandler(this, socket);
+                ClientHandler clientHandler = new ClientHandler(this, socket);
                 // Encapsulate thread in ClientHandler, then start the thread 
-                Thread thread = new Thread(clienHandler);
-                thread.start();
+                new Thread(clientHandler).start();
             }
         } catch (IOException e){
             System.out.println("[ERROR] [ROUTER] problem connecting to client's socket");
