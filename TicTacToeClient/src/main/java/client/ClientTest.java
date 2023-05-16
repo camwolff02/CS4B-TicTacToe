@@ -17,7 +17,7 @@ public class ClientTest {
         // start client listener
         TicTacToeClient c = new TicTacToeClient();
         c.start();
-
+        
         // wait for connection
         while (!c.isConnected()) {
             System.out.println("[INFO] Waiting for connection...");
