@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 
 import java.net.Socket;
 
-import messages.*;  // TODO REMOVE
+import messages.*;
 
 public class ClientHandler implements Runnable {    
     private static int currId = 0;
@@ -27,9 +27,13 @@ public class ClientHandler implements Runnable {
         
             objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectInputStream = new ObjectInputStream(socket.getInputStream());
+            
+            // try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ex) {} 
 
             // tell the client what their ID is
             objectOutputStream.writeInt(id);
+            objectOutputStream.flush();
+            System.out.println("[INFO] [HANDLER] client handler started, id {" + id + "} sent to client");
         } catch(IOException e) {
             System.out.println("[ERROR] [HANDLER] problem creating object stream");
             closeEverthing();
@@ -52,23 +56,25 @@ public class ClientHandler implements Runnable {
 
                 System.out.println("[INFO] [HANDLER] Message received: <channel: " + channel + ", type: " + type + ">" );
 
-                if (type.equals("subscribe")) {
-                    System.out.println("[INFO] [HANDLER] attempting to subscribe");
-                    router.subscribeToChannel(this, channel);
-                }
-                else if (type.equals("unsubscribe")) {
-                    System.out.println("[INFO] [HANDLER] attempting to unsubscribe");
-                    router.unsubscribeFromChannel(this, channel);
+                if (channel.equals("router")) {
+                    if (type.equals("subscribe")) {
+                        System.out.println("[INFO] [HANDLER] attempting to subscribe");
+                        String lobbyName = ((SubscribeRequest)incomingPacket.getMessage()).getLobbyName();
+                        router.subscribeToChannel(this, lobbyName);
+                    }
+                    else if (type.equals("unsubscribe")) {
+                        System.out.println("[INFO] [HANDLER] attempting to unsubscribe");
+                        String lobbyName = ((UnsubscribeRequest)incomingPacket.getMessage()).getLobbyName();
+                        router.unsubscribeFromChannel(this, lobbyName);
+                    }
                 }
                 else {
                     System.out.println("[INFO] [HANDLER] attempting to send message");
                     router.broadcastPacket(this, channel, incomingPacket);
                 }
-            } catch (IOException e) {
-                System.out.println("[ERROR] [HANDLER] problem reading object input stream");
-                closeEverthing();
-                connected = false;
-            } catch (ClassNotFoundException e){
+            } 
+            catch (IOException e) { /* expected when no messages sent */ } 
+            catch (ClassNotFoundException e){
                 System.out.println("[ERROR] [HANDLER] problem casting object input stream");
                 e.printStackTrace();
                 closeEverthing();

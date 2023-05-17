@@ -6,7 +6,6 @@ import client.TicTacToeClient;
 import router.Message;
 import game.BoardLogic;
 import messages.MakeMoveRequest;
-import messages.MakeMoveResponse;
 
 public class BoardController implements Runnable {
     private final TicTacToeClient client;
@@ -62,8 +61,9 @@ public class BoardController implements Runnable {
     }
     
     private void handleMakeMoveRequest(MakeMoveRequest message, String playerId) {
-        int row = message.getRow();
-        int col = message.getCol();
+        int[] gamemove = message.getGameMove();
+        int row = gamemove[0];
+        int col = gamemove[1];
         boolean success = boardLogic.makeMove(playerId, row, col);
         if (success) {
             // Send updated board state to other player
