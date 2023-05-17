@@ -7,6 +7,11 @@ import java.util.Arrays;
 import java.util.EventListener;
 
 import javax.imageio.ImageIO;
+
+import com.example.client.TicTacToeClient;
+import com.example.messages.ClientInfoMessage;
+import com.example.messages.StartGameRequest;
+
 import java.awt.image.BufferedImage;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -23,7 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class playerselection {
+public class onlineselection {
 
     private Stage stage;
     private Scene scene;
@@ -44,19 +49,16 @@ public class playerselection {
     // private Image monkey     = new Image("file:src/images/xbox360Monkey.jpg");
     ArrayList<Image> images ;
     private Image player1Avatar;
-    private Image player2Avatar;
+    private int player1AvatarIndex;
     private String player1Name;
-    private String player2Name;
     private int p1arraylocation = 0;
-    private int p2arraylocation = 2;
     @FXML
     private TextField player1name;
-    @FXML
-    private TextField player2name;
     @FXML 
     private ImageView player1Image;
-    @FXML 
-    private ImageView player2Image;
+
+    private TicTacToeClient c;
+    private String boardID;
 
     playerdata data = playerdata.getInstance();
 
@@ -64,7 +66,11 @@ public class playerselection {
     private FileChooser fileChooser;
     private File filePath;
         
-    
+    public void setClient(TicTacToeClient client, String boardID) throws IOException
+    {
+        this.c = client;
+        this.boardID = boardID;
+    }
 
     public void goback(ActionEvent event) throws IOException
     {
@@ -78,21 +84,28 @@ public class playerselection {
 
     public void startGame(ActionEvent event) throws IOException
     {
+        c.sendMessage(boardID, "start_game", new StartGameRequest(c.getID(), true));
+        c.sendMessage(boardID, "client_info", new ClientInfoMessage(c.getID(), player1Name, player1AvatarIndex));
+
+
+        // wait for messages from other client
+        // update playerdata to have both clients data
+        // go to board
         setPlayerName();
         setAvatar();
         
         
         
-        // if(checkAvatar()== false)
-        // {
-        //     PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
-        // }
-        // else if(checkName() == false)
-        // {
-        //     PopupWindow.display("Unable to Start", "Players must have different names to start.");
-        // }
-        // else
-        // {
+        if(checkAvatar()== false)
+        {
+            PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
+        }
+        else if(checkName() == false)
+        {
+            PopupWindow.display("Unable to Start", "Players must have different names to start.");
+        }
+        else
+        {
             
             root  = FXMLLoader.load(getClass().getResource("board.fxml"));
             stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
@@ -100,16 +113,17 @@ public class playerselection {
             stage.setScene(scene);
             stage.centerOnScreen();
             stage.show();
-        // }
+        }
+      
     }
 
     public boolean checkAvatar()throws IOException
     {
-        if(player1Avatar ==player2Avatar)
-        {
-            //PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
-            return false;
-        }
+        // if(player1Avatar ==player2Avatar)
+        // {
+        //     //PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
+        //     return false;
+        // }
         return true;
     }
 
@@ -119,23 +133,18 @@ public class playerselection {
         images = data.images;
         // images = new ArrayList<>(Arrays.asList(gigachad, soyjack, mittens, pika, jack, bubble, monkey));
         player1Avatar= images.get(0);
-        player2Avatar = images.get(2);
     }
 
     public void changeAvatar(ActionEvent event) throws IOException {
         // strings representing the left and right buttons for both players
         String p1Left = "Button[id=player1Left, styleClass=button]'<--'";
         String p1Right = "Button[id=player1Right, styleClass=button]'-->'";
-        String p2Left = "Button[id=player2Left, styleClass=button]'<--'";
-        String p2Right = "Button[id=player2Right, styleClass=button]'-->'";
         String button = event.getSource().toString();
         int imgCount = images.size();
     
         // check which button was pressed
         boolean isP1Left = p1Left.equals(button);
         boolean isP1Right = p1Right.equals(button);
-        boolean isP2Left = p2Left.equals(button);
-        boolean isP2Right = p2Right.equals(button);
     
         ImageView playerImage = null;
         int arrayLocation = 0;
@@ -143,9 +152,7 @@ public class playerselection {
         if (isP1Left || isP1Right) {
             playerImage = player1Image;
             arrayLocation = p1arraylocation;
-        } else if (isP2Left || isP2Right) {
-            playerImage = player2Image;
-            arrayLocation = p2arraylocation;
+
         }
     
         // return if no player's avatar needs to be changed
@@ -155,35 +162,25 @@ public class playerselection {
     
         int nextIndex = arrayLocation;
         // calculate the next index based on the button that was pressed
-        if (isP1Left || isP2Left) {
+        if (isP1Left) {
             nextIndex = (arrayLocation - 1 + imgCount) % imgCount;
-            if (nextIndex == p2arraylocation || nextIndex == p1arraylocation) {
-                nextIndex = (arrayLocation - 2 + imgCount) % imgCount;
-            }
-        } else if (isP1Right || isP2Right) {
+        } else if (isP1Right) {
             nextIndex = (arrayLocation + 1) % imgCount;
-            if (nextIndex == p2arraylocation || nextIndex == p1arraylocation) {
-                nextIndex = (arrayLocation + 2) % imgCount;
-            }
         }
     
         // update the player's avatar
         if (isP1Left || isP1Right) {
             p1arraylocation = nextIndex;
             player1Avatar = images.get(p1arraylocation);
-        } else if (isP2Left || isP2Right) {
-            p2arraylocation = nextIndex;
-            player2Avatar = images.get(p2arraylocation);
         }
     
         // set the updated avatar images
         player1Image.setImage(player1Avatar);
-        player2Image.setImage(player2Avatar);
     }    
     
     public boolean checkName()throws IOException
     {
-        if(player1Name.equals(player2Name))
+        if(player1Name.equals(player1Name))
         {
             //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
             return false;
@@ -199,25 +196,19 @@ public class playerselection {
             player1name.setText("Player 1");
         }
 
-        if(player2name.getText() == "")
-        {
-            player2name.setText("Player 2");
-        }
-
     }
 
     public void setPlayerName()throws IOException
     {
         checkNull();
         player1Name = player1name.getText();
-        player2Name =  player2name.getText();
 
-        data.setPlayerNames(player1Name, player2Name);
+        data.setPlayerNames(player1Name, player1Name);
     }
 
     public void setAvatar()throws IOException
     {
-        data.setPlayerAvatares(player1Avatar, player2Avatar);
+        data.setPlayerAvatares(player1Avatar, player1Avatar);
     }
 
      // this function will let the player to upload their own image from their pc
@@ -251,15 +242,14 @@ public class playerselection {
 
             if(uploadP1Avater.equals(button)){
                 player1Image.setImage(image);
-                this.player1Avatar = player1Image.getImage();
-            }else if(uploadP2Avater.equals(button)){
-                player2Image.setImage(image);
-                this.player2Avatar = player2Image.getImage();
-            }           
+                this.player1Avatar = player1Image.getImage();  
+            }      
         } catch(IOException e){
             System.err.println(e.getMessage());
         }
-        
-    }
+    } 
+    
 
 }
+
+

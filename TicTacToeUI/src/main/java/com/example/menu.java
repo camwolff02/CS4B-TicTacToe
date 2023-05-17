@@ -2,6 +2,8 @@ package com.example;
 
 import java.io.IOException;
 
+import com.example.client.TicTacToeClient;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -54,7 +56,12 @@ public class menu {
 
     public void onlineButton(ActionEvent event) throws IOException
     {
-        PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
+        root  = FXMLLoader.load(getClass().getResource("matchmaking.fxml"));
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     // public void goback(ActionEvent event) throws IOException
