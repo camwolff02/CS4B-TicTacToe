@@ -5,7 +5,7 @@ import java.util.List;
 import client.TicTacToeClient;
 import router.Message;
 import game.BoardLogic;
-import messages.MakeMoveRequest;
+import messages.*;
 
 public class BoardController implements Runnable {
     private final TicTacToeClient client;
@@ -52,7 +52,7 @@ public class BoardController implements Runnable {
     
     private void handleMessage(Message message) {
         // Handle messages received from the player channels
-        String playerId = message.getPlayerId();
+        String playerId = message.getSenderID();
 		
 		if (message instanceof MakeMoveRequest) {
             MakeMoveRequest makeMoveRequest = (MakeMoveRequest) message;
@@ -69,10 +69,10 @@ public class BoardController implements Runnable {
             // Send updated board state to other player
             String[][] cells = boardLogic.getCells();
             String otherPlayerId = getOtherPlayerId(playerId);
-            MakeMoveResponse response = new MakeMoveResponse(cells);
+            MakeMoveResponse response = new MakeMoveResponse(otherPlayerId, cells);
             try {
                 client.sendMessage(otherPlayerId,"MakeMoveResponse", response);
-            } catch (ClientException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             
@@ -84,10 +84,10 @@ public class BoardController implements Runnable {
             }
         } else {
             // Send error message to current player
-            ErrorResponse response = new ErrorResponse("Invalid move");
+            ErrorResponse response = new ErrorResponse(playerId,"Invalid move");
             try {
                 client.sendMessage(playerId, "MakeMoveResponse", response);
-            } catch (ClientException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }

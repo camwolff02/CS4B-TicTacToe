@@ -1,12 +1,8 @@
 package game;
-
-//import java.net.Socket;
 import java.util.concurrent.TimeUnit;
-
 import client.TicTacToeClient;
-import router.Message;
-import router.IDMessage;
-
+import messages.*;
+import router.*;
 public class PlayerManager{
     
     public static void main(String [] args) {
@@ -17,22 +13,19 @@ public class PlayerManager{
         c.start();
         
         // wait for connection
-        while (!c.isConnected()) {
-            System.out.println("[INFO] Waiting for connection...");
-            try {
-                TimeUnit.SECONDS.sleep(1);        
-            } catch (InterruptedException ex) {}
-        }
 
         System.out.println("[SUCCESS] PlayerManager Connected to server, waiting for players to Manage");
         
-        //c.subscribeToChannel("join"); // creates and subscribes to own channel
+        c.subscribeToChannel("join"); // creates and subscribes to own channel
         
         while (c.isConnected()) {
-             
-                
-                while(c.numUnreadMessages()>=2)
+       
+            try
+            { 
+                TimeUnit.SECONDS.sleep(1);
+                while(c.numUnreadMessages() >= 2)
                 {
+                    //System.out.println(c.getLatestMessage());
                     Message getMessage =c.getLatestMessage();
                     String Player1ID =getMessage.getSenderID();
                     System.out.println("Player: "+ Player1ID+  " Accepted");
@@ -41,13 +34,17 @@ public class PlayerManager{
                     String Player2ID = getMessage.getSenderID();
                     System.out.println("Player: "+ Player2ID+  " Accepted");
                     //c.sendMessage(Player1ID, "message", new IDMessage(c.getID(),Player2ID));  //subs player2
-                  //  BoardController boardController = new BoardController(Player1ID, Player2ID);
-                   // String boardID = boardController.getBoardID();
-                    c.sendMessage(Player1ID, "message", new IDMessage(c.getID(),"boardID1"));
-                    c.sendMessage(Player2ID, "message", new IDMessage(c.getID(),"boardID1"));
-                    //new Thread(boardController).start();
+                    BoardController boardController = new BoardController(Player1ID, Player2ID);
+                    String boardID = boardController.getBoardID();
+                    c.sendMessage(Player1ID, "id", new IDMessage(c.getID(),boardID));
+                    c.sendMessage(Player2ID, "id", new IDMessage(c.getID(),boardID));
+                    new Thread(boardController).start();
                     System.out.println("[SUCCESS] YAY YAY YAY YAY");
-                }       
+                }  
+            }catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }      
             
         }
 
