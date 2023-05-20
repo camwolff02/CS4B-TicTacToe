@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import com.example.client.TicTacToeClient;
+import com.example.messages.ExitRequest;
 import com.example.messages.GameOverMessage;
 import com.example.messages.MakeMoveResponse;
+import com.example.messages.PlayAgainRequest;
 import com.example.router.Message;
 
 public class onlineboard implements Initializable {
@@ -349,5 +351,11 @@ public class onlineboard implements Initializable {
 
     public void processWin(GameOverMessage message) {
 
+    }
+
+    public void processRestart(PlayAgainRequest restartMessage) {
+    }
+
+    public void processExit(ExitRequest exitMessage) {
     }
 }
