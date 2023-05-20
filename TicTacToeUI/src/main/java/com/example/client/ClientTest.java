@@ -114,8 +114,12 @@ public class ClientTest {
                 return new ClientInfoMessage(id, "username", 0);
 
             case "make_move":
-                int[] moves = {1, 2};
-                return new MakeMoveRequest(id, "Homi's Lobby", "Player2", moves); 
+                int move = 1;
+                return new MakeMoveRequest(id, "Player2", move);
+
+            case "move_response":
+            int move1 = 1;
+            return new MakeMoveResponse(id, move1);
 
             case "list_games":
                 return new ListGamesRequest(id); 

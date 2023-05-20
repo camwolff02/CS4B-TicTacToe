@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="455.0" style="-fx-background-color: black;" stylesheets="file:TicTacToeUI/src/css/playerstyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineselection">
+<AnchorPane id ="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="455.0" stylesheets="file:TicTacToeUI/src/css/playerstyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineselection">
    <children>
-      <Label id="players" alignment="CENTER" layoutX="127.0" layoutY="84.0" prefHeight="69.0" prefWidth="194.0" text="Player 1">
+      <Label fx:id="players" alignment="CENTER" layoutX="127.0" layoutY="84.0" prefHeight="69.0" prefWidth="194.0" text="Player 1">
          <font>
             <Font size="34.0" />
          </font>
@@ -64,7 +64,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button fx:id="readyPlayerTwo" layoutX="130.0" layoutY="525.0" mnemonicParsing="false" onAction="#startGame" prefHeight="75.0" prefWidth="175.0" text="READY">
+      <Button fx:id="readyPlayer" layoutX="130.0" layoutY="525.0" mnemonicParsing="false" onAction="#startGame" prefHeight="75.0" prefWidth="175.0" text="READY">
          <font>
             <Font size="18.0" />
          </font>

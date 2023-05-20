@@ -55,6 +55,8 @@ public class matchmaking implements Initializable{
     public void joinQueue(ActionEvent event) {
       c.subscribeToChannel("join");
       c.sendMessage("join", "join_game", new JoinGameRequest(c.getID()));
+
+      updateMessage("Searching for player...");
   
       stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
   

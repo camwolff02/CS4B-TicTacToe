@@ -11,9 +11,11 @@ import javax.imageio.ImageIO;
 import com.example.client.TicTacToeClient;
 import com.example.messages.ClientInfoMessage;
 import com.example.messages.StartGameRequest;
+import com.example.router.Message;
 
 import java.awt.image.BufferedImage;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,11 +24,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 
 public class onlineselection {
 
@@ -56,6 +60,16 @@ public class onlineselection {
     private TextField player1name;
     @FXML 
     private ImageView player1Image;
+    @FXML
+    private Label players;
+    @FXML
+    private Button readyPlayer;
+    @FXML
+    private Button player1Left;
+    @FXML
+    private Button player1Right;
+    @FXML
+    private Button UploadAvatarP1;
 
     private TicTacToeClient c;
     private String boardID;
@@ -84,37 +98,61 @@ public class onlineselection {
 
     public void startGame(ActionEvent event) throws IOException
     {
-        c.sendMessage(boardID, "start_game", new StartGameRequest(c.getID(), true));
-        c.sendMessage(boardID, "client_info", new ClientInfoMessage(c.getID(), player1Name, player1AvatarIndex));
-
-
-        // wait for messages from other client
-        // update playerdata to have both clients data
-        // go to board
         setPlayerName();
         setAvatar();
-        
-        
-        
-        if(checkAvatar()== false)
-        {
-            PopupWindow.display("Unable to Start", "Players must have different Avatars to start game.");
-        }
-        else if(checkName() == false)
-        {
-            PopupWindow.display("Unable to Start", "Players must have different names to start.");
-        }
-        else
-        {
-            
-            root  = FXMLLoader.load(getClass().getResource("board.fxml"));
-            stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            stage.centerOnScreen();
-            stage.show();
-        }
-      
+        lockUI();
+        c.sendMessage(boardID, "start_game", new StartGameRequest(c.getID(), true));
+        c.sendMessage(boardID, "client_info", new ClientInfoMessage(c.getID(), player1Name, player1AvatarIndex));
+    
+        Thread messageCheckingThread = new Thread(() -> {
+            while (true) {
+                if (c.numUnreadMessages() > 1) {
+                    Message newMessage = c.getLatestMessage();
+    
+                    if (newMessage instanceof StartGameRequest) {
+                        Platform.runLater(() -> {
+                            if(c.hasUnreadMessages())
+                            {
+                                Message newMessage1 = c.getLatestMessage();
+                                if(newMessage1 instanceof ClientInfoMessage)
+                                {
+                                    ClientInfoMessage clientInfoMessage = (ClientInfoMessage) newMessage1;
+                                    data.setPlayerNames(player1Name, clientInfoMessage.getUsername());
+                                    data.setPlayerAvatareInts(player1AvatarIndex, clientInfoMessage.getProfilePic());
+                                    System.out.println(c.getID() + " " + clientInfoMessage.getSenderID());
+                                    data.setPlayerIDs(c.getID(), clientInfoMessage.getSenderID());
+
+                                    try {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("onlineboard.fxml"));root = loader.load();
+                                    
+                                    onlineboard onlineboardController = loader.getController();
+                                    onlineboardController.setClient(c, boardID);
+
+                                    stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+                                    scene = new Scene(root);
+                                    stage.setScene(scene);
+                                    stage.centerOnScreen();
+                                    stage.show();
+                                    } catch (IOException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+    
+                try {
+                    Thread.sleep(100); // Adjust the sleep time as needed
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    
+        messageCheckingThread.setDaemon(true);
+        messageCheckingThread.start();
     }
 
     public boolean checkAvatar()throws IOException
@@ -180,11 +218,11 @@ public class onlineselection {
     
     public boolean checkName()throws IOException
     {
-        if(player1Name.equals(player1Name))
-        {
-            //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
-            return false;
-        }
+        // if(player1Name.equals(player1Name))
+        // {
+        //     //PopupWindow.display("Unable to Start", "Players must have a name to start the game.");
+        //     return false;
+        // }
         return true;
     }
 
@@ -202,13 +240,21 @@ public class onlineselection {
     {
         checkNull();
         player1Name = player1name.getText();
-
-        data.setPlayerNames(player1Name, player1Name);
+        players.setText(player1Name);
     }
 
     public void setAvatar()throws IOException
     {
-        data.setPlayerAvatares(player1Avatar, player1Avatar);
+        player1AvatarIndex = p1arraylocation;
+    }
+
+    public void lockUI()throws IOException
+    {
+        player1name.setDisable(true);
+        player1Left.setDisable(true);
+        player1Right.setDisable(true);
+        readyPlayer.setDisable(true);
+        UploadAvatarP1.setDisable(true);
     }
 
      // this function will let the player to upload their own image from their pc

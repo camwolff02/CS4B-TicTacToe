@@ -48,3 +48,9 @@
     border-width: 5px;
     
 }
+
+#titleLabel, #actionLabel{
+    -fx-font: 20px "Public Pixel";
+    font: 20px "Public Pixel";
+    -fx-text-fill: #CD5888;
+}
