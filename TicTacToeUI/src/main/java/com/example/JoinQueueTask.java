@@ -16,10 +16,12 @@ import javafx.stage.Stage;
 public class JoinQueueTask extends Task<Void> {
     private TicTacToeClient c;
     private Stage stage;
+    private Stage popup;
 
-    public JoinQueueTask(TicTacToeClient c, Stage stage) {
+    public JoinQueueTask(TicTacToeClient c, Stage stage, Stage popup) {
         this.c = c;
         this.stage = stage;
+        this.popup = popup;
     }
 
     @Override
@@ -49,12 +51,14 @@ public class JoinQueueTask extends Task<Void> {
                             stage.setScene(scene);
                             stage.centerOnScreen();
                             stage.show();
+                            popup.close();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     });
 
                     c.subscribeToChannel(boardID);
+                    c.unsubscribeFromChannel("join");
                     break;
                 }
             }
