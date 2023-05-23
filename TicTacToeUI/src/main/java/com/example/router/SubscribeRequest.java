@@ -1,0 +1,16 @@
+package com.example.router;
+
+public class SubscribeRequest extends Message {
+    private String channel;
+    
+    public SubscribeRequest(String id, String channel) {
+        super(id);
+        this.channel = channel;
+    }
+
+    public String getLobbyName() { return channel; }
+
+    public String toString() {
+        return super.toString() + "channel: " + channel;
+    }
+}
