@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 import com.example.client.TicTacToeClient;
 import com.example.messages.ExitRequest;
 import com.example.messages.GameOverMessage;
+import com.example.messages.MakeMoveRequest;
 import com.example.messages.MakeMoveResponse;
 import com.example.messages.PlayAgainRequest;
 import com.example.router.Message;
@@ -264,7 +265,9 @@ public class onlineboard implements Initializable {
             setPlayerSymbol(button);
             button.setMouseTransparent(true);
             button.setFocusTraversable(false);
-            
+            String buttonID = button.getId();
+            int index = Integer.parseInt(String.valueOf(buttonID.charAt(buttonID.length()-1)))-1;
+            c.sendMessage(boardID,"make_move" , new MakeMoveRequest(c.getID(),index));
         });
     }
 
@@ -350,7 +353,18 @@ public class onlineboard implements Initializable {
     }
 
     public void processWin(GameOverMessage message) {
-
+        if(message.getGameMessage().equals("WIN")){
+            if(!player1Turn)
+            {
+                gameStateText.setText("You win");
+            }
+            else{
+                gameStateText.setText("You suck");
+            }
+        }
+        else{
+            gameStateText.setText("Cat game meow ");
+        }
     }
 
     public void processRestart(PlayAgainRequest restartMessage) {

@@ -179,6 +179,8 @@ public class TicTacToeClient extends Thread {
                 return (ExitRequest)packet.getMessage();
             case "move_response":
                 return (MakeMoveResponse)packet.getMessage();
+            case "error_response":
+                return (ErrorResponse)packet.getMessage(); 
             default:
                 return (CreateLoginRequest)packet.getMessage();
         }

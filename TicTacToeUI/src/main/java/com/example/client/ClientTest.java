@@ -115,7 +115,7 @@ public class ClientTest {
 
             case "make_move":
                 int move = 1;
-                return new MakeMoveRequest(id, "Player2", move);
+                return new MakeMoveRequest(id, move);
 
             case "move_response":
             int move1 = 1;
@@ -138,7 +138,7 @@ public class ClientTest {
                 return new ClientDisconnectedMessage(id);
 
             case "game_over":
-                return new GameOverMessage(id, GameState.TIE);
+               // return new GameOverMessage(id, GameState.TIE);
 
             case "play_again": 
                 return new PlayAgainRequest(id, true);

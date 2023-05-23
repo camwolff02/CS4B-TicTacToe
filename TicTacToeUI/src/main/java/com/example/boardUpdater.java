@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.concurrent.TimeUnit;
+
 import com.example.client.TicTacToeClient;
 import com.example.messages.ExitRequest;
 import com.example.messages.GameOverMessage;
@@ -22,26 +24,15 @@ class BoardUpdater extends Thread {
     @Override
     public void run() {
         while (true) {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             if (client.hasUnreadMessages()) {
                 Platform.runLater(() -> {
-                if(client.numUnreadMessages() > 1)
-                {
-                    Message message = client.getLatestMessage();
-                    if (message instanceof MakeMoveResponse) {
-                        MakeMoveResponse moveMessage = (MakeMoveResponse) message;
-                        boardController.processMove(moveMessage);
 
-                    }
-
-                    message = client.getLatestMessage();
-                    if (message instanceof GameOverMessage) {
-                        GameOverMessage gameOverMessage = (GameOverMessage) message;
-                        boardController.processWin(gameOverMessage);
-                    }
-
-                }
-                else if(client.numUnreadMessages() == 1)
-                {
                     Message message = client.getLatestMessage();
                     if (message instanceof MakeMoveResponse) {
                         MakeMoveResponse moveMessage = (MakeMoveResponse) message;
@@ -57,8 +48,12 @@ class BoardUpdater extends Thread {
                         ExitRequest exitMessage = (ExitRequest) message;
                         boardController.processExit(exitMessage);
                     }
+                    else if (message instanceof GameOverMessage) {
+                        GameOverMessage gameOverMessage = (GameOverMessage) message;
+                        boardController.processWin(gameOverMessage);
+                    }
                     
-                }
+                
             });
 
             }
