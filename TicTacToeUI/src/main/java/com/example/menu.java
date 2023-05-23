@@ -54,15 +54,41 @@ public class menu {
         stage.show();
     }
 
-    public void onlineButton(ActionEvent event) throws IOException
-    {
-        root  = FXMLLoader.load(getClass().getResource("matchmaking.fxml"));
+
+    public void onlineButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("matchmaking.fxml"));
+        Parent root = loader.load();
+    
+        Stage newStage = new Stage();
+        newStage.setTitle("New Window");
+        Scene newScene = new Scene(root);
+    
+        newStage.setScene(newScene);
+        newStage.show();
+    
+        matchmaking controller = loader.getController();
         stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.centerOnScreen();
-        stage.show();
+        controller.setMenuStage(stage);
+    
+        Thread clientThread = new Thread(() -> {
+            try {
+                controller.startClient();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+    
+            // Perform any UI updates after connecting (if needed)
+            Platform.runLater(() -> {
+            });
+        });
+    
+        clientThread.start();
     }
+    
+    
+    
+    
 
     // public void goback(ActionEvent event) throws IOException
     // {
