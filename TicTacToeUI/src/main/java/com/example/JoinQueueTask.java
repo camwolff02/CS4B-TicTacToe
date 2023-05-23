@@ -55,6 +55,7 @@ public class JoinQueueTask extends Task<Void> {
                     });
 
                     c.subscribeToChannel(boardID);
+                    c.unsubscribeFromChannel("join");
                     break;
                 }
             }
