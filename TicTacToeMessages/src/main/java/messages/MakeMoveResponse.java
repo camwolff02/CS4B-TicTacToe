@@ -3,14 +3,14 @@ package messages;
 import router.Message;
 
 public class MakeMoveResponse extends Message {
-    private String[][] cells;
+    private int cells;
 
-    public MakeMoveResponse(String id, String[][] cells) {
+    public MakeMoveResponse(String id, int cells) {
       super(id);  
       this.cells = cells;
     }
 
-    public String[][] getCells() {
+    public int getCells() {
         return cells;
     }
 }

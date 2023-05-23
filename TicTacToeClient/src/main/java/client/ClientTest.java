@@ -112,7 +112,7 @@ public class ClientTest {
                 return new ClientInfoMessage(id, "username", "picture.png");
 
             case "make_move":
-                int[] moves = {1, 2};
+                int moves = 1;
                 return new MakeMoveRequest(id, "Homi's Lobby", "Player2", moves); 
 
             case "list_games":
@@ -132,10 +132,12 @@ public class ClientTest {
                 return new ClientDisconnectedMessage(id);
 
             case "game_over":
-                return new GameOverMessage(id, GameState.TIE);
+                return new GameOverMessage(id, "winner i guess");
 
             case "play_again": 
                 return new PlayAgainRequest(id, true);
+            case "error_response":
+                return new ErrorResponse(id, type);
 
             case "exit":
                 return new ExitRequest(id);

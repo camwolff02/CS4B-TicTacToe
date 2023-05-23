@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import client.TicTacToeClient;
 import router.Message;
 import game.BoardLogic;
@@ -9,34 +10,40 @@ import messages.*;
 
 public class BoardController implements Runnable {
     private final TicTacToeClient client;
+    private String boardID;
     private final List<String> playerIds;
-    private final String id;
     private final BoardLogic boardLogic;
-    
+    private boolean restartRequested;
+
     public BoardController(String id1, String id2) {
-        this.client = new TicTacToeClient();
-        this.client.start();
-        this.id = client.getID();
-        this.playerIds = new ArrayList<>();
-        this.playerIds.add(id1);
-        this.playerIds.add(id2);
-        this.boardLogic = new BoardLogic();
+        client = new TicTacToeClient();
+        client.connect();
+        client.start();
+
+        playerIds = new ArrayList<>();
+        playerIds.add(id1);
+        playerIds.add(id2);
+
+        boardLogic = new BoardLogic();
+        boardID = getBoardID();
+        restartRequested = false;
+
         for (String playerId : playerIds) {
-            client.subscribeToChannel(playerId);
+            String playerChannel = boardID;
+            client.subscribeToChannel(playerChannel);
         }
     }
-    
+
     public String getBoardID() {
         return client.getID();
     }
-    
+
     @Override
     public void run() {
-        // Start the game loop
+        // Game loop
         while (!boardLogic.isGameOver()) {
-            // Wait for player moves or other events
             try {
-                Thread.sleep(100); // Add a small delay to avoid excessive CPU usage
+                Thread.sleep(100); // Small delay to avoid excessive CPU usage
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -46,62 +53,103 @@ public class BoardController implements Runnable {
                 handleMessage(message);
             }
         }
-        
-        // Game over, perform any necessary cleanup or game-ending actions
     }
-    
+
     private void handleMessage(Message message) {
-        // Handle messages received from the player channels
         String playerId = message.getSenderID();
-		
-		if (message instanceof MakeMoveRequest) {
+
+        if (message instanceof MakeMoveRequest) {
+            // Handle MakeMoveRequest message
             MakeMoveRequest makeMoveRequest = (MakeMoveRequest) message;
             handleMakeMoveRequest(makeMoveRequest, playerId);
-		}
+        } else if (message instanceof PlayAgainRequest) {
+            // Handle PlayAgainRequest message
+            PlayAgainRequest playAgainRequest = (PlayAgainRequest) message;
+            handlePlayAgainRequest(playAgainRequest, playerId);
+        }
     }
-    
+
     private void handleMakeMoveRequest(MakeMoveRequest message, String playerId) {
-        int[] gamemove = message.getGameMove();
+        int index = message.getGameMove();
+        int[] gamemove = convertTo2DMove(index);
         int row = gamemove[0];
         int col = gamemove[1];
         boolean success = boardLogic.makeMove(playerId, row, col);
+
         if (success) {
             // Send updated board state to other player
-            String[][] cells = boardLogic.getCells();
+            // String[][] cells = boardLogic.getCells();
             String otherPlayerId = getOtherPlayerId(playerId);
-            MakeMoveResponse response = new MakeMoveResponse(otherPlayerId, cells);
-            try {
-                client.sendMessage(otherPlayerId,"MakeMoveResponse", response);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-            
-            // Check if the current player has won
+            int move = message.getGameMove();
+            MakeMoveResponse response = new MakeMoveResponse(otherPlayerId, move);
+            client.sendMessage(boardID, "MakeMoveResponse", response);
+
             String winner = boardLogic.getWinner();
+
             if (winner != null) {
-                // Player has won, perform actions accordingly
-                handleWin(winner);
+                // Player has won, perform game over actions
+                handleGameOver(playerId, "WIN");
+            } else if (boardLogic.isGameOver()) {
+                // The game is a tie
+                handleGameOver("", "TIE");
             }
         } else {
-            // Send error message to current player
-            ErrorResponse response = new ErrorResponse(playerId,"Invalid move");
-            try {
-                client.sendMessage(playerId, "MakeMoveResponse", response);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+            // Send error response to current player
+            ErrorResponse response = new ErrorResponse(playerId, "Invalid move");
+            client.sendMessage(playerId, "ErrorResponse", response);
+        }
+    }
+
+    private void handlePlayAgainRequest(PlayAgainRequest message, String playerId) {
+        if (playerId.equals(playerIds.get(0))) {
+            boolean playAgain = message.getPlayAgain();
+
+            if (playAgain) {
+                // Play again requested
+                restartRequested = true;
+                PlayAgainRequest response = new PlayAgainRequest(playerId, true);
+                client.sendMessage(playerId, "PlayAgainResponse", response);
+                client.sendMessage(getOtherPlayerId(playerId), "PlayAgainRequest", message);
+            } else {
+                // Play again not requested
+                PlayAgainRequest response = new PlayAgainRequest(playerId, false);
+                client.sendMessage(playerId, "PlayAgainResponse", response);
             }
         }
     }
-    
-    private void handleWin(String winner) {
-        // Perform actions for winning player
+
+    private void handleGameOver(String winner, String gameResult) {
+        // Perform actions for game over
+        for (String playerId : playerIds) {
+            // Send GameOverMessage to each player
+            GameOverMessage message = new GameOverMessage(playerId, gameResult);
+            client.sendMessage(playerId, "GameOverMessage", message);
+
+            if (restartRequested) {
+                // If restart requested, send PlayAgainRequest to each player
+                PlayAgainRequest playAgainRequest = new PlayAgainRequest(playerId, true);
+                client.sendMessage(playerId, "PlayAgainRequest", playAgainRequest);
+                boardLogic.reset();
+            }
+        }
+        // Reset the board and restartRequested flag
+        restartRequested = false;
     }
-    
-    // Get the other player's ID who is not the one making the move on the board
+
     private String getOtherPlayerId(String playerId) {
-        return playerIds.stream()
-            .filter(id -> !id.equals(playerId))
-            .findFirst()
-            .orElse(null);
+        // Get the ID of the other player
+        for (String id : playerIds) {
+            if (!id.equals(playerId)) {
+                return id;
+            }
+        }
+        return null;
+    }
+
+    public static int[] convertTo2DMove(int index) {
+        // Convert a 1D move index to 2D row and column indices
+        int row = index / 3;
+        int col = index % 3;
+        return new int[] { row, col };
     }
 }
