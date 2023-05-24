@@ -240,7 +240,7 @@ public class onlineselection {
     {
         checkNull();
         player1Name = player1name.getText();
-        players.setText(player1Name);
+        //players.setText(player1Name);
     }
 
     public void setAvatar()throws IOException
@@ -254,7 +254,7 @@ public class onlineselection {
         player1Left.setDisable(true);
         player1Right.setDisable(true);
         readyPlayer.setDisable(true);
-        UploadAvatarP1.setDisable(true);
+        //UploadAvatarP1.setDisable(true);
     }
 
      // this function will let the player to upload their own image from their pc
