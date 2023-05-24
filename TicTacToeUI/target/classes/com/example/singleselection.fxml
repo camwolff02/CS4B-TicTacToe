@@ -26,7 +26,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField id="textinput" fx:id="player1name" layoutX="100.0" layoutY="443.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#startGame" prefHeight="39.0" prefWidth="250.0" promptText="Default: Player">
+      <TextField id="textinput" fx:id="player1name" layoutX="100.0" layoutY="443.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#startGame" prefHeight="39.0" prefWidth="250.0" promptText="Default: Player 1">
          <cursor>
             <Cursor fx:constant="TEXT" />
          </cursor>

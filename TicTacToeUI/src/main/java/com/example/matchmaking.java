@@ -39,6 +39,7 @@ public class matchmaking implements Initializable{
     public void initialize(URL arg0, ResourceBundle arg1) {
       updateMessage("Connecting to server");
       btn1.setVisible(false);
+
     }
 
 
@@ -62,6 +63,7 @@ public class matchmaking implements Initializable{
     {
         Platform.exit();
     }
+    
 
     @FXML
     public void joinQueue(ActionEvent event) {
@@ -85,8 +87,6 @@ public class matchmaking implements Initializable{
       menu = menuStage;
       
     }
-    
-     
      
 
 }

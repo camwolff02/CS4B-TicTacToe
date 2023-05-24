@@ -29,8 +29,8 @@ public class menu {
     {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("singleselection.fxml"));
         root = loader.load();
-        playerselection playerselection = loader.getController();
-        playerselection.initAvatar();
+        singleselection singleselection = loader.getController();
+        singleselection.initAvatar();
         //-----------------------------------------------------
         stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
         // Playerdata.initAvatar();
@@ -82,6 +82,7 @@ public class menu {
             newStage.setX(centerX - newStage.getWidth() / 2);
             newStage.setY(centerY - newStage.getHeight() / 2 - 100);
         });
+
         newStage.show();
     
         matchmaking controller = loader.getController();

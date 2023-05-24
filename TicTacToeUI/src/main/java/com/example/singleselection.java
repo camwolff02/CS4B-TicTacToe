@@ -57,20 +57,11 @@ public class singleselection {
     @FXML
     private Button UploadAvatarP1;
 
-    private TicTacToeClient c;
-    private String boardID;
-
     playerdata data = playerdata.getInstance();
 
     // using this 
     private FileChooser fileChooser;
     private File filePath;
-        
-    public void setClient(TicTacToeClient client, String boardID) throws IOException
-    {
-        this.c = client;
-        this.boardID = boardID;
-    }
 
     public void goback(ActionEvent event) throws IOException
     {
@@ -86,59 +77,13 @@ public class singleselection {
     {
         setPlayerName();
         setAvatar();
-        lockUI();
-        c.sendMessage(boardID, "start_game", new StartGameRequest(c.getID(), true));
-        c.sendMessage(boardID, "client_info", new ClientInfoMessage(c.getID(), player1Name, player1AvatarIndex));
-    
-        Thread messageCheckingThread = new Thread(() -> {
-            while (true) {
-                if (c.numUnreadMessages() > 1) {
-                    Message newMessage = c.getLatestMessage();
-    
-                    if (newMessage instanceof StartGameRequest) {
-                        Platform.runLater(() -> {
-                            if(c.hasUnreadMessages())
-                            {
-                                Message newMessage1 = c.getLatestMessage();
-                                if(newMessage1 instanceof ClientInfoMessage)
-                                {
-                                    ClientInfoMessage clientInfoMessage = (ClientInfoMessage) newMessage1;
-                                    data.setPlayerNames(player1Name, clientInfoMessage.getUsername());
-                                    data.setPlayerAvatareInts(player1AvatarIndex, clientInfoMessage.getProfilePic());
-                                    System.out.println(c.getID() + " " + clientInfoMessage.getSenderID());
-                                    data.setPlayerIDs(c.getID(), clientInfoMessage.getSenderID());
-
-                                    try {
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("onlineboard.fxml"));root = loader.load();
-                                    
-                                    onlineboard onlineboardController = loader.getController();
-                                    onlineboardController.setClient(c, boardID);
-
-                                    stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
-                                    scene = new Scene(root);
-                                    stage.setScene(scene);
-                                    stage.centerOnScreen();
-                                    stage.show();
-                                    } catch (IOException e) {
-                                        // TODO Auto-generated catch block
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-    
-                try {
-                    Thread.sleep(100); // Adjust the sleep time as needed
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    
-        messageCheckingThread.setDaemon(true);
-        messageCheckingThread.start();
+        
+        root  = FXMLLoader.load(getClass().getResource("singleboard.fxml"));
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
     }
 
     public boolean checkAvatar()throws IOException
@@ -217,7 +162,7 @@ public class singleselection {
 
         if(player1name.getText() == "")
         {
-            player1name.setText("Player " + c.getID());
+            player1name.setText("Player 1");
         }
 
     }
@@ -227,11 +172,14 @@ public class singleselection {
         checkNull();
         player1Name = player1name.getText();
         //players.setText(player1Name);
+
+        data.setPlayerNames(player1Name, "AI");
     }
 
     public void setAvatar()throws IOException
     {
         player1AvatarIndex = p1arraylocation;
+        data.setPlayerAvatareInts(player1AvatarIndex, 0);
     }
 
     public void lockUI()throws IOException
