@@ -153,8 +153,8 @@ public class onlineboard implements Initializable {
             player2Symbol = "O";
         }
 
-        player1Name.setText(data.getP1Name() + " " + player1Symbol);
-        player2Name.setText(data.getP2Name() + " " + player2Symbol);
+        player1Name.setText(player1Symbol + " " + data.getP1Name());
+        player2Name.setText(player2Symbol + " " + data.getP2Name());
 
         gameStateText.setText("  Player Turn: X");
         p1ImageViewPfp.setImage(player1Image);

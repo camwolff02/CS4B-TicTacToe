@@ -25,7 +25,7 @@ class BoardUpdater extends Thread {
     public void run() {
         while (true) {
             try {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.MILLISECONDS.sleep(200);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
