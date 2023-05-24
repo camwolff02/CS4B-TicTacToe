@@ -24,9 +24,12 @@ public class BoardLogic {
 
     public boolean makeMove(String playerId, int row, int col) {
         if (row < 0 || row >= BOARD_SIZE || col < 0 || col >= BOARD_SIZE) {
+            System.out.println("false bad move");
             return false;
         }
         if (!cells[row][col].equals("-")) {
+            System.out.println(cells[row][col]);
+            System.out.println("false spot taken");
             return false;
         }
         cells[row][col] = playerId;

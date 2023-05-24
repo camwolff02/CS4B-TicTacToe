@@ -14,7 +14,6 @@ public class BoardController implements Runnable {
     private String boardID;
     private final List<String> playerIds;
     private final BoardLogic boardLogic;
-    private boolean restartRequested;
 
     public BoardController(String id1, String id2) {
         client = new TicTacToeClient();
@@ -27,7 +26,6 @@ public class BoardController implements Runnable {
 
         boardLogic = new BoardLogic();
         boardID = getBoardID();
-        restartRequested = false;
 
         for (String playerId : playerIds) {
             String playerChannel = boardID;
@@ -67,6 +65,9 @@ public class BoardController implements Runnable {
             // Handle PlayAgainRequest message
             PlayAgainRequest playAgainRequest = (PlayAgainRequest) message;
             handlePlayAgainRequest(playAgainRequest, playerId);
+        } else if(message instanceof ExitRequest)
+        {
+            ExitRequest exitRequest = (ExitRequest) message;
         }
     }
 
@@ -120,9 +121,11 @@ public class BoardController implements Runnable {
 
             if (playAgain) {
                 // Play again requested
-                restartRequested = true;
                 client.sendMessage(getOtherPlayerId(playerId), "play_again", message);
-                // boardLogic.reset();
+                System.out.println("Calling reset");
+                boardLogic.reset();
+                // Reset the board and restartRequested flag
+                // restartRequested = false;
             } else {
                 // Play again not requested
                 PlayAgainRequest response = new PlayAgainRequest(playerId, false);
@@ -137,16 +140,17 @@ public class BoardController implements Runnable {
             // Send GameOverMessage to each player
             GameOverMessage message = new GameOverMessage(playerId, gameResult);
             client.sendMessage(playerId, "game_over", message);
+            boardLogic.reset();
 
-            if (restartRequested) {
-                // If restart requested, send PlayAgainRequest to each player
-                PlayAgainRequest playAgainRequest = new PlayAgainRequest(playerId, true);
-                client.sendMessage(playerId, "play_again", playAgainRequest);
-                boardLogic.reset();
-            }
+            // if (restartRequested) {
+            //     // If restart requested, send PlayAgainRequest to each player
+            //     PlayAgainRequest playAgainRequest = new PlayAgainRequest(playerId, true);
+            //     client.sendMessage(playerId, "play_again", playAgainRequest);
+            //     boardLogic.reset();
+            // }
         }
-        // Reset the board and restartRequested flag
-        restartRequested = false;
+        // // Reset the board and restartRequested flag
+        // restartRequested = false;
     }
 
     private String getOtherPlayerId(String playerId) {

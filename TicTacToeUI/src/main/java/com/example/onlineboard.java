@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -111,6 +112,7 @@ public class onlineboard implements Initializable {
     private int p1WinCount;
     private int p2WinCount;
     private int tieCount;
+    private ColorAdjust colorAdjust;
 
     playerdata data;
 
@@ -118,6 +120,9 @@ public class onlineboard implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         data = playerdata.getInstance();
         
+        // Create a ColorAdjust effect and set the saturation property to -1 to make it grayscale
+        colorAdjust = new ColorAdjust();
+        colorAdjust.setSaturation(-1);
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
         images  = new ArrayList<>(Arrays.asList(image1,image2,image3,image4,image5,image6,image7,image8,image9));
 
@@ -180,6 +185,7 @@ public class onlineboard implements Initializable {
         buttons.forEach(this::resetButton);
         updateScoreText();
         restartGame.setText("Restart");
+        gameStateText.setText("  Player Turn: X");
 
         if(!data.usersTurn())
         {
@@ -263,6 +269,8 @@ public class onlineboard implements Initializable {
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.show();
+        c.sendMessage(boardID, "exit", new ExitRequest(c.getID()));
+        c.unsubscribeFromChannel(boardID);
     }
 
     private void setupButton(Button button) {
@@ -361,6 +369,11 @@ public class onlineboard implements Initializable {
     }
 
     public void processWin(GameOverMessage message) {
+        if(player1Turn)
+        {
+            lockAllUnusedButtons();
+        }
+
         if(message.getGameMessage().equals("WIN")){
             if(!player1Turn)
             {
@@ -378,6 +391,7 @@ public class onlineboard implements Initializable {
         }
 
         updateScoreText();
+        
     }
 
     public void processRestart(PlayAgainRequest restartMessage) {
@@ -390,5 +404,13 @@ public class onlineboard implements Initializable {
     }
 
     public void processExit(ExitRequest exitMessage) {
+        p2ImageViewPfp.setEffect(colorAdjust);
+        p2ImageViewPfp.setOpacity(0.5);
+        player2Name.setEffect(colorAdjust);
+        player2Name.setText("Disconnected");
+        restartGame.setMouseTransparent(true);
+        restartGame.setFocusTraversable(false);
+        restartGame.setEffect(colorAdjust);
+        lockAllUnusedButtons();
     }
 }
