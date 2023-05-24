@@ -297,7 +297,6 @@ public class onlineboard implements Initializable {
     }
 
     public void unlockAllUnusedButtons() {
-        System.out.println("yo");
         for (var button : buttons) {
             if (button.getText().isEmpty()) {
                 button.setMouseTransparent(false);
@@ -408,9 +407,7 @@ public class onlineboard implements Initializable {
         p2ImageViewPfp.setOpacity(0.5);
         player2Name.setEffect(colorAdjust);
         player2Name.setText("Disconnected");
-        restartGame.setMouseTransparent(true);
-        restartGame.setFocusTraversable(false);
-        restartGame.setEffect(colorAdjust);
+        restartGame.setDisable(true);
         lockAllUnusedButtons();
     }
 }

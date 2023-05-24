@@ -32,7 +32,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
-public class onlineselection {
+public class singleselection {
 
     private Stage stage;
     private Scene scene;
@@ -105,6 +105,7 @@ public class onlineselection {
                                     ClientInfoMessage clientInfoMessage = (ClientInfoMessage) newMessage1;
                                     data.setPlayerNames(player1Name, clientInfoMessage.getUsername());
                                     data.setPlayerAvatareInts(player1AvatarIndex, clientInfoMessage.getProfilePic());
+                                    System.out.println(c.getID() + " " + clientInfoMessage.getSenderID());
                                     data.setPlayerIDs(c.getID(), clientInfoMessage.getSenderID());
 
                                     try {

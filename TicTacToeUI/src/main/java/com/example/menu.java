@@ -27,7 +27,17 @@ public class menu {
     // titleImage.setImage(myImage);
     public void onePlayerbutton(ActionEvent event) throws IOException
     {
-        PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("singleselection.fxml"));
+        root = loader.load();
+        playerselection playerselection = loader.getController();
+        playerselection.initAvatar();
+        //-----------------------------------------------------
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        // Playerdata.initAvatar();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
         
     }
     
@@ -60,10 +70,18 @@ public class menu {
         Parent root = loader.load();
     
         Stage newStage = new Stage();
-        newStage.setTitle("New Window");
+        newStage.setTitle("Matchmaking");
         Scene newScene = new Scene(root);
     
+        // Set the position of the new stage slightly above the center of the main stage
+        Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         newStage.setScene(newScene);
+        newStage.setOnShown(e -> {
+            double centerX = mainStage.getX() + mainStage.getWidth() / 2;
+            double centerY = mainStage.getY() + mainStage.getHeight() / 2;
+            newStage.setX(centerX - newStage.getWidth() / 2);
+            newStage.setY(centerY - newStage.getHeight() / 2 - 100);
+        });
         newStage.show();
     
         matchmaking controller = loader.getController();

@@ -76,6 +76,8 @@ public class matchmaking implements Initializable{
       Thread thread = new Thread(task);
       thread.setDaemon(true);
       thread.start();
+
+      btn1.setDisable(true);
   }
 
 

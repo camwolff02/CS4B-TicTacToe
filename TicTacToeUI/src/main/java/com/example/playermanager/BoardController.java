@@ -122,7 +122,6 @@ public class BoardController implements Runnable {
             if (playAgain) {
                 // Play again requested
                 client.sendMessage(getOtherPlayerId(playerId), "play_again", message);
-                System.out.println("Calling reset");
                 boardLogic.reset();
                 // Reset the board and restartRequested flag
                 // restartRequested = false;

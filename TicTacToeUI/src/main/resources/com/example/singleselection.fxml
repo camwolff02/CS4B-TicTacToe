@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="802.0" prefWidth="455.0" stylesheets="file:TicTacToeUI/src/css/playerstyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineselection">
+<AnchorPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="802.0" prefWidth="455.0" stylesheets="file:TicTacToeUI/src/css/playerstyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.singleselection">
    <children>
       <Label fx:id="players" alignment="CENTER" layoutX="29.0" prefHeight="181.0" prefWidth="411.0" text="Choose Your Avatar!" textAlignment="CENTER" wrapText="true">
          <font>
