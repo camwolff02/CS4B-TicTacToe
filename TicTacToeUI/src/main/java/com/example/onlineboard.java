@@ -121,9 +121,6 @@ public class onlineboard implements Initializable {
         buttons = new ArrayList<>(Arrays.asList(button1,button2,button3,button4,button5,button6,button7,button8,button9));
         images  = new ArrayList<>(Arrays.asList(image1,image2,image3,image4,image5,image6,image7,image8,image9));
 
-        player1Name.setText(data.getP1Name());
-        player2Name.setText(data.getP2Name());
-
         player1Image = data.getP1Avatar();
         player2Image = data.getP2Avatar();
 
@@ -139,6 +136,9 @@ public class onlineboard implements Initializable {
             gameStateImage.setImage(player2Image);
             player1Symbol = "O";
             player2Symbol = "X";
+            restartGame.setVisible(false);
+            // restartGame.setMouseTransparent(true);
+            // restartGame.setFocusTraversable(false);
         }
         else
         {
@@ -147,6 +147,9 @@ public class onlineboard implements Initializable {
             player1Symbol = "X";
             player2Symbol = "O";
         }
+
+        player1Name.setText(data.getP1Name() + " " + player1Symbol);
+        player2Name.setText(data.getP2Name() + " " + player2Symbol);
 
         gameStateText.setText("  Player Turn: X");
         p1ImageViewPfp.setImage(player1Image);
@@ -193,6 +196,11 @@ public class onlineboard implements Initializable {
         
         hideAllImages(true);
         if (imageMode) gameStateImage.setVisible(true);
+
+        if(data.usersTurn())
+        {
+            c.sendMessage(boardID, "play_again", new PlayAgainRequest(c.getID(), true));
+        }
         
     }
 
@@ -357,17 +365,28 @@ public class onlineboard implements Initializable {
             if(!player1Turn)
             {
                 gameStateText.setText("You win");
+                p1WinCount++;
             }
             else{
                 gameStateText.setText("You suck");
+                p2WinCount++;
             }
         }
         else{
             gameStateText.setText("Cat game meow ");
+            tieCount++;
         }
+
+        updateScoreText();
     }
 
     public void processRestart(PlayAgainRequest restartMessage) {
+
+        if(restartMessage.getPlayAgain())
+        {
+            restartGame(null);
+        }
+
     }
 
     public void processExit(ExitRequest exitMessage) {
