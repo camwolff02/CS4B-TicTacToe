@@ -121,9 +121,8 @@ public class BoardController implements Runnable {
             if (playAgain) {
                 // Play again requested
                 restartRequested = true;
-                PlayAgainRequest response = new PlayAgainRequest(playerId, true);
-                client.sendMessage(playerId, "play_again", response);
                 client.sendMessage(getOtherPlayerId(playerId), "play_again", message);
+                // boardLogic.reset();
             } else {
                 // Play again not requested
                 PlayAgainRequest response = new PlayAgainRequest(playerId, false);
