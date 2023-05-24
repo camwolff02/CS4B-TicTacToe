@@ -108,12 +108,13 @@ public class BoardController implements Runnable {
                 // Play again requested
                 restartRequested = true;
                 PlayAgainRequest response = new PlayAgainRequest(playerId, true);
-                client.sendMessage(playerId, "PlayAgainResponse", response);
-                client.sendMessage(getOtherPlayerId(playerId), "PlayAgainRequest", message);
+                client.sendMessage(playerId, "play_again", response);
+                client.sendMessage(getOtherPlayerId(playerId), "play_again", message);
+                boardLogic.reset();
             } else {
                 // Play again not requested
                 PlayAgainRequest response = new PlayAgainRequest(playerId, false);
-                client.sendMessage(playerId, "PlayAgainResponse", response);
+                client.sendMessage(playerId, "play_again", response);
             }
         }
     }
@@ -128,7 +129,7 @@ public class BoardController implements Runnable {
             if (restartRequested) {
                 // If restart requested, send PlayAgainRequest to each player
                 PlayAgainRequest playAgainRequest = new PlayAgainRequest(playerId, true);
-                client.sendMessage(playerId, "PlayAgainRequest", playAgainRequest);
+                client.sendMessage(playerId, "play_again", playAgainRequest);
                 boardLogic.reset();
             }
         }
