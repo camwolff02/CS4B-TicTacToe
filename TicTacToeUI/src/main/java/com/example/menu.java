@@ -2,6 +2,8 @@ package com.example;
 
 import java.io.IOException;
 
+import com.example.client.TicTacToeClient;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +27,17 @@ public class menu {
     // titleImage.setImage(myImage);
     public void onePlayerbutton(ActionEvent event) throws IOException
     {
-        PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("singleselection.fxml"));
+        root = loader.load();
+        singleselection singleselection = loader.getController();
+        singleselection.initAvatar();
+        //-----------------------------------------------------
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        // Playerdata.initAvatar();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.show();
         
     }
     
@@ -52,10 +64,50 @@ public class menu {
         stage.show();
     }
 
-    public void onlineButton(ActionEvent event) throws IOException
-    {
-        PopupWindow.display("Under Development", "Sorry, this feature is currently under development.");
+
+    public void onlineButton(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("matchmaking.fxml"));
+        Parent root = loader.load();
+    
+        Stage newStage = new Stage();
+        newStage.setTitle("Matchmaking");
+        Scene newScene = new Scene(root);
+    
+        // Set the position of the new stage slightly above the center of the main stage
+        Stage mainStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        newStage.setScene(newScene);
+        newStage.setOnShown(e -> {
+            double centerX = mainStage.getX() + mainStage.getWidth() / 2;
+            double centerY = mainStage.getY() + mainStage.getHeight() / 2;
+            newStage.setX(centerX - newStage.getWidth() / 2);
+            newStage.setY(centerY - newStage.getHeight() / 2 - 100);
+        });
+
+        newStage.show();
+    
+        matchmaking controller = loader.getController();
+        stage = (Stage) ((Node) (event.getSource())).getScene().getWindow();
+        controller.setMenuStage(stage);
+    
+        Thread clientThread = new Thread(() -> {
+            try {
+                controller.startClient();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+    
+            // Perform any UI updates after connecting (if needed)
+            Platform.runLater(() -> {
+            });
+        });
+    
+        clientThread.start();
     }
+    
+    
+    
+    
 
     // public void goback(ActionEvent event) throws IOException
     // {

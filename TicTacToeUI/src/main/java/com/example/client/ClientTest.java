@@ -1,11 +1,13 @@
-package client;
+package com.example.client;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import messages.*;
-import router.*;
+import com.example.messages.*;
+import com.example.router.IDMessage;
+import com.example.router.Message;
+
 
 public class ClientTest {
     public static void main(String [] args) {
@@ -109,11 +111,15 @@ public class ClientTest {
                 return new JoinGameRequest(id);
 
             case "client_info":
-                return new ClientInfoMessage(id, "username", "picture.png");
+                return new ClientInfoMessage(id, "username", 0);
 
             case "make_move":
-                int moves = 1;
-                return new MakeMoveRequest(id, "Homi's Lobby", "Player2", moves); 
+                int move = 1;
+                return new MakeMoveRequest(id, move);
+
+            case "move_response":
+            int move1 = 1;
+            return new MakeMoveResponse(id, move1);
 
             case "list_games":
                 return new ListGamesRequest(id); 
@@ -126,18 +132,16 @@ public class ClientTest {
                 return new ActionSuccessResponse(id, true);
 
             case "start_game":
-                return new StartGameRequest(id, true, "Homi's Lobby");
+                return new StartGameRequest(id, true);
 
             case "client_disconnected":
                 return new ClientDisconnectedMessage(id);
 
             case "game_over":
-                return new GameOverMessage(id, "winner i guess");
+               // return new GameOverMessage(id, GameState.TIE);
 
             case "play_again": 
                 return new PlayAgainRequest(id, true);
-            case "error_response":
-                return new ErrorResponse(id, type);
 
             case "exit":
                 return new ExitRequest(id);

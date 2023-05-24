@@ -1,6 +1,6 @@
-package messages;
+package com.example.messages;
 
-import router.Message;
+import com.example.router.Message;
 
 public class GameOverMessage extends Message {
     private String gameState;
@@ -10,4 +10,7 @@ public class GameOverMessage extends Message {
         this.gameState = gameState;
     }
 
+    public String getGameMessage(){
+        return gameState;
+    }
 }

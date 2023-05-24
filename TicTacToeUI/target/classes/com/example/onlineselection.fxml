@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="background" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="802.0" prefWidth="455.0" stylesheets="file:TicTacToeUI/src/css/playerstyles.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.onlineselection">
+   <children>
+      <Label fx:id="players" alignment="CENTER" layoutX="29.0" prefHeight="181.0" prefWidth="411.0" text="Choose Your Avatar!" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="player1Image" fitHeight="120.0" fitWidth="120.0" layoutX="167.5" layoutY="163.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="file:TicTacToeUI/src/images/gigachad.png" />
+         </image>
+      </ImageView>
+      <Label id="nameText" alignment="BOTTOM_CENTER" layoutX="102.0" layoutY="354.0" prefHeight="63.0" prefWidth="250.0" text="Enter your Name:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="textinput" fx:id="player1name" layoutX="100.0" layoutY="443.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#startGame" prefHeight="39.0" prefWidth="250.0" promptText="Default: Player">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextField>
+      <Button fx:id="back" layoutY="739.0" mnemonicParsing="false" onAction="#goback" prefHeight="63.0" prefWidth="117.0" text="back">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="player1Left" layoutX="100.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="&lt;--">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="player1Right" layoutX="280.0" layoutY="315.0" mnemonicParsing="false" onAction="#changeAvatar" prefHeight="30.0" prefWidth="70.0" text="--&gt;">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="readyPlayer" layoutX="136.0" layoutY="528.0" mnemonicParsing="false" onAction="#startGame" prefHeight="75.0" prefWidth="175.0" text="READY">
+         <font>
+            <Font size="18.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>
