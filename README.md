@@ -23,7 +23,6 @@
         - sends messages to players about game logic
         - lets 2 players play a game together 
 
-===============================================================================
 # Message architecture
 MESSAGES
 CreateLogin = username, password, profile picure
