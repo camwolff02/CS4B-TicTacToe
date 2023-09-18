@@ -1,4 +1,5 @@
-1. separate different projects
+# Organizational Overview
+1. Subprojects
     A. Router Project
         - ClientHandler
         - Router
@@ -9,7 +10,7 @@
         - PlayerManager / Client (refactored)
         - BoardController
 
-2. Make program PlayerManager and BoardController
+2. PlayerManager and BoardController
     Program PlayerManager:
         - after starting, connects to router
         - subscribes to some channel to see new player info
@@ -23,21 +24,7 @@
         - lets 2 players play a game together 
 
 ===============================================================================
-
-NOTE: login system is low priority, would be useful for saving data (possibly 
-SQL, JSON, or CSV) and leaderboard
-
-NOTE: stretch goal, have AI take over if player disconnects
-NOTE: stretch goal, ingame chat, EMOTES???
-
-NOTE: if we need unique names and pfp on board, can remove pfp from login, 
-have screen to select "display name" (different from username) and pfp
-
-QUESTION: should we have user select username and profile picture after both are
-connected to make sure username and pfp are unique?
-
-
-
+# Message architecture
 MESSAGES
 CreateLogin = username, password, profile picure
 AddProfilePic = profile picture (used if user uploads custom pfp)
@@ -56,13 +43,7 @@ PlayAgain = True or False
 Exit = <empty>
 
 
-
-NOTE: DON'T have a generic action success for every message response
-- have a base class for request and for response
-- maybe break up message into chunks, like so:
-    | message type | client sending/receiving | data | etc. |
-
-MESSAGE EXAMPLES
+# MESSAGE EXAMPLES
 client (login): CreateLogin -> server
 server: ActionSuccess -> client (fails if username in use)
 
